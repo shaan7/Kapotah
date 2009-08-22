@@ -16,14 +16,14 @@ void ChatDialog::sendMessage()
 {
     MessageSender *sender = new MessageSender(manager, this);
     sender->sendMessage(ui.messageEdit->text(),manager->peerInfo(peerName));
-    ui.chatEdit->append(manager->username() + "::" + ui.messageEdit->text());
+    ui.chatEdit->append("<b>" + manager->username() + "</b> :: " + ui.messageEdit->text());
     ui.messageEdit->clear();
 }
 
 void ChatDialog::messageRecieved(QString message, QString username)
 {
     if (username == manager->peerInfo(peerName).name()) {
-        ui.chatEdit->append(username + "::" + message);
+        ui.chatEdit->append("<b>" + username + "</b> :: " + message);
     }
 }
 
