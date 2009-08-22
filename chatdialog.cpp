@@ -16,6 +16,8 @@ void ChatDialog::sendMessage()
 {
     MessageSender *sender = new MessageSender(manager, this);
     sender->sendMessage(ui.messageEdit->text(),manager->peerInfo(peerName));
+    ui.chatEdit->append(ui.messageEdit->text());
+    ui.messageEdit->clear();
 }
 
 void ChatDialog::messageRecieved(QString message, QString username)
