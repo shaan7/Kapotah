@@ -21,6 +21,8 @@ private:
 
 private slots:
     void sendMessage();
+
+public slots:
     void messageRecieved(QString message, QString username);
 };
 

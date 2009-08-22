@@ -31,10 +31,11 @@ private slots:
     void startPeerManager();
     void addNewPeer(QString peer);
     void removePeer(QString peer);
-    void openChatWindow(QListWidgetItem*);
+    ChatDialog* openChatWindow(QListWidgetItem*);
 
 public slots:
-    void unregisterChatDialog(QString peerName);
+    void unregisterChatDialog();
+    void messageRecieved(QString message,QString username);
 };
 
 #endif // DIALOG_H

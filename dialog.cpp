@@ -10,6 +10,7 @@ Dialog::Dialog(Server *server,QWidget *parent)
 
     connect(ui->refreshButton,SIGNAL(clicked()),this,SLOT(startPeerManager()));
     connect(ui->peerList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(openChatWindow(QListWidgetItem*)));
+    connect(server, SIGNAL(messageRecieved(QString,QString)), this, SLOT(messageRecieved(QString,QString)));
 }
 
 Dialog::~Dialog()
@@ -39,14 +40,28 @@ void Dialog::removePeer(QString peer)
     ui->peerList->takeItem(rowNumber);
 }
 
-void Dialog::openChatWindow(QListWidgetItem *item)
+ChatDialog* Dialog::openChatWindow(QListWidgetItem *item)
 {
+    if (openChatDialogs.contains(item->text()))
+        return 0;
     ChatDialog *dlg = new ChatDialog(item->text(), manager, m_server, this);
     openChatDialogs[item->text()] = dlg;    //Save the dialog to the QHash so that we know which chat dialogs are open
+    connect(dlg, SIGNAL(finished(int)), this, SLOT(unregisterChatDialog()));
     dlg->show();
+    return dlg;
 }
 
-void Dialog::unregisterChatDialog(QString peerName)
+void Dialog::unregisterChatDialog()
 {
-    openChatDialogs.remove(peerName);
+    openChatDialogs.remove(openChatDialogs.key(dynamic_cast<ChatDialog*>(sender())));
+}
+
+void Dialog::messageRecieved(QString message,QString username)
+{
+    if (openChatDialogs.contains(username))
+        return;
+    //Find the list item where the username is displayed, and open a chatdialog according to it
+    int rowNumber = ui->peerList->row(ui->peerList->findItems(username, Qt::MatchExactly)[0]);
+    ChatDialog *dlg = openChatWindow(ui->peerList->item(rowNumber));
+    dlg->messageRecieved(message, username);
 }
