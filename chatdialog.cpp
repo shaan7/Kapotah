@@ -16,7 +16,7 @@ void ChatDialog::sendMessage()
 {
     MessageSender *sender = new MessageSender(manager, this);
     sender->sendMessage(ui.messageEdit->text(),manager->peerInfo(peerName));
-    ui.chatEdit->append(peerName + "::" + ui.messageEdit->text());
+    ui.chatEdit->append(manager->username() + "::" + ui.messageEdit->text());
     ui.messageEdit->clear();
 }
 
