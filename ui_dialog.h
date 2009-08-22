@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'dialog.ui'
 **
-** Created: Wed Aug 19 23:19:54 2009
+** Created: Sun Aug 23 00:45:48 2009
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -58,7 +58,7 @@ public:
     void retranslateUi(QDialog *DialogClass)
     {
         DialogClass->setWindowTitle(QApplication::translate("DialogClass", "Peers", 0, QApplication::UnicodeUTF8));
-        refreshButton->setText(QApplication::translate("DialogClass", "&Refresh", 0, QApplication::UnicodeUTF8));
+        refreshButton->setText(QApplication::translate("DialogClass", "&Activate", 0, QApplication::UnicodeUTF8));
         Q_UNUSED(DialogClass);
     } // retranslateUi
 

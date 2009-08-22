@@ -20,7 +20,7 @@
    <item row="1" column="0">
     <widget class="QPushButton" name="refreshButton">
      <property name="text">
-      <string>&amp;Refresh</string>
+      <string>&amp;Activate</string>
      </property>
     </widget>
    </item>
