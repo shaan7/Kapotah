@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'chatdialog.ui'
 **
-** Created: Wed Aug 19 23:19:54 2009
+** Created: Sun Aug 23 09:33:02 2009
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -40,6 +40,7 @@ public:
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         chatEdit = new QTextEdit(ChatDialog);
         chatEdit->setObjectName(QString::fromUtf8("chatEdit"));
+        chatEdit->setFocusPolicy(Qt::NoFocus);
         chatEdit->setReadOnly(true);
 
         gridLayout->addWidget(chatEdit, 0, 0, 1, 2);
