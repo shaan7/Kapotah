@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'dialog.ui'
 **
-** Created: Sun Aug 23 00:45:48 2009
+** Created: Tue Aug 25 01:11:12 2009
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -17,6 +17,7 @@
 #include <QtGui/QDialog>
 #include <QtGui/QGridLayout>
 #include <QtGui/QHeaderView>
+#include <QtGui/QLineEdit>
 #include <QtGui/QListWidget>
 #include <QtGui/QPushButton>
 
@@ -28,6 +29,7 @@ public:
     QGridLayout *gridLayout;
     QListWidget *peerList;
     QPushButton *refreshButton;
+    QLineEdit *updateNumOfPeers;
 
     void setupUi(QDialog *DialogClass)
     {
@@ -41,12 +43,18 @@ public:
         peerList = new QListWidget(DialogClass);
         peerList->setObjectName(QString::fromUtf8("peerList"));
 
-        gridLayout->addWidget(peerList, 0, 0, 1, 1);
+        gridLayout->addWidget(peerList, 0, 0, 1, 2);
 
         refreshButton = new QPushButton(DialogClass);
         refreshButton->setObjectName(QString::fromUtf8("refreshButton"));
 
         gridLayout->addWidget(refreshButton, 1, 0, 1, 1);
+
+        updateNumOfPeers = new QLineEdit(DialogClass);
+        updateNumOfPeers->setObjectName(QString::fromUtf8("updateNumOfPeers"));
+        updateNumOfPeers->setReadOnly(true);
+
+        gridLayout->addWidget(updateNumOfPeers, 1, 1, 1, 1);
 
         QWidget::setTabOrder(peerList, refreshButton);
 

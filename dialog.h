@@ -49,6 +49,7 @@ private:
 
 private slots:
     void startPeerManager();
+    void updateNumOfPeers();
     void addNewPeer(QString peer);
     void removePeer(QString peer);
     ChatDialog* openChatWindow(QListWidgetItem*);
