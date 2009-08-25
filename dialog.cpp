@@ -59,7 +59,7 @@ void Dialog::removePeer(QString peer)
 }
 void Dialog::updateNumOfPeers()  //function to find the no. of members online
 {
-    ui->updateNumOfPeers->setText(QString::number(ui->peerList->count()) + " member online");
+    ui->updateNumOfPeers->setText(QString::number(ui->peerList->count()) + " member(s) online");
 }
 ChatDialog* Dialog::openChatWindow(QListWidgetItem *item)
 {
