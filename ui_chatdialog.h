@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'chatdialog.ui'
 **
-** Created: Tue Aug 25 23:27:26 2009
+** Created: Wed Aug 26 01:24:31 2009
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!

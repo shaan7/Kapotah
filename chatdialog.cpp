@@ -53,6 +53,8 @@ void ChatDialog::sendMessage()
 void ChatDialog::sendFile()
 {
     QString filename = QFileDialog::getOpenFileName(this, "Select a file");
+    if (filename=="")
+        return;
     ui.chatEdit->append("<b>" + manager->username() + "</b> sends a file " + filename);
     FileSenderThread *sender = new FileSenderThread(manager, fserver, filename, manager->peerInfo(peerName));
     sender->run();
