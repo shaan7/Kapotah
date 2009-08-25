@@ -1,7 +1,7 @@
 #include "fileserverthread.h"
 #include "fileserver.h"
 
-static const unsigned bytesPerBlock = 10000;
+static const unsigned bytesPerBlock = 1000;
 FileServerThread::FileServerThread(int descriptor, QObject *parent) : QThread(parent)
 {
     socket.setSocketDescriptor(descriptor);
