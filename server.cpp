@@ -22,8 +22,6 @@
 #include <QDomDocument>
 #include <QFile>
 
-static const unsigned bytesPerBlock = 100000;    //1KB
-
 Server::Server(QObject *parent) :
         QTcpServer(parent)
 {
@@ -65,22 +63,3 @@ void Server::acceptFileTransfer(QString ID)
         pendingRecieveFiles.value(ID)->write(ID.toUtf8());
     }
 }
-
-/*
-
-    //Check if its a file
-    if (pendingRecieveFiles.key(dynamic_cast<QTcpSocket*>(sender()),"") != "") {
-        if (dynamic_cast<QTcpSocket*>(sender())->bytesAvailable() < bytesPerBlock)
-            return;
-
-        QFile file("/home/hunny/Desktop/file");
-
-        if (!file.open(QIODevice::Append))
-            return;
-
-        qDebug() << file.write(dynamic_cast<QTcpSocket*>(sender())->readAll()) << " BYTES WRITTEN";
-        file.close();
-        return;
-    }
-
- */
