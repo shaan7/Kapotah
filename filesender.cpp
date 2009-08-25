@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright 2009 Shantanu Tushar <jhahoneyk@gmail.com>                  *
- *   Copyright 2009 Sudhendu Roy <sudhendu_roy@yahoo.co.ins>                *
+ *   Copyright 2009 Sudhendu Roy <sudhendu_roy@yahoo.co.in>                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,45 +18,9 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef DIALOG_H
-#define DIALOG_H
+#include "filesender.h"
 
-#include <QtGui/QDialog>
-#include <QModelIndex>
-#include "peermanager.h"
-#include <QListWidgetItem>
-#include "chatdialog.h"
-#include "server.h"
-
-namespace Ui
+FileSender::FileSender(QObject *parent) :
+        QObject(parent)
 {
-    class DialogClass;
 }
-
-class Dialog : public QDialog
-{
-    Q_OBJECT
-
-public:
-    Dialog(Server *server,QWidget *parent = 0);
-    ~Dialog();
-
-private:
-    Ui::DialogClass *ui;
-    PeerManager *manager;
-    QHash<QString,ChatDialog*> openChatDialogs;
-    Server *m_server;
-
-private slots:
-    void startPeerManager();
-    void updateNumOfPeers();
-    void addNewPeer(QString peer);
-    void removePeer(QString peer);
-    ChatDialog* openChatWindow(QListWidgetItem*);
-
-public slots:
-    void unregisterChatDialog();
-    void messageRecieved(QString message,QString username);
-};
-
-#endif // DIALOG_H

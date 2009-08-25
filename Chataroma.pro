@@ -12,12 +12,14 @@ SOURCES += main.cpp \
     peerinfo.cpp \
     chatdialog.cpp \
     messagesender.cpp \
-    server.cpp
+    server.cpp \
+    filesender.cpp
 HEADERS += dialog.h \
     peermanager.h \
     peerinfo.h \
     chatdialog.h \
     messagesender.h \
-    server.h
+    server.h \
+    filesender.h
 FORMS += dialog.ui \
     chatdialog.ui
