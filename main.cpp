@@ -28,10 +28,12 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     Server server;
-    server.listen( QHostAddress::Any, 9876 );
+    if (!server.listen( QHostAddress::Any, 9876 ))
+        qDebug() << "SERVER LISTEN FAILED";
 
     FileServer fserver;
-    fserver.listen( QHostAddress::Any, 9877 );
+    if (!fserver.listen( QHostAddress::Any, 9877 ))
+        qDebug() << "FILE SERVER LISTEN FAILED";
 
     Dialog w(&server,&fserver);
     w.show();
