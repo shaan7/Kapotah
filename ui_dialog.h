@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'dialog.ui'
 **
-** Created: Wed Aug 26 01:24:31 2009
+** Created: Wed Aug 26 01:56:31 2009
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -35,7 +35,7 @@ public:
     {
         if (DialogClass->objectName().isEmpty())
             DialogClass->setObjectName(QString::fromUtf8("DialogClass"));
-        DialogClass->resize(242, 495);
+        DialogClass->resize(264, 495);
         gridLayout = new QGridLayout(DialogClass);
         gridLayout->setSpacing(6);
         gridLayout->setMargin(11);

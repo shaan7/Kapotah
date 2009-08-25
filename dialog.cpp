@@ -27,7 +27,7 @@ Dialog::Dialog(Server *server,FileServer *fserver,QWidget *parent)
     ui->setupUi(this);
     m_server = server;
     m_fserver = fserver;
-
+    setWindowTitle("ChatAroma");
     connect(ui->refreshButton,SIGNAL(clicked()),this,SLOT(startPeerManager()));
     connect(ui->peerList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(openChatWindow(QListWidgetItem*)));
     connect(server, SIGNAL(messageRecieved(QString,QString)), this, SLOT(messageRecieved(QString,QString)));
