@@ -19,8 +19,10 @@
  ***************************************************************************/
 
 #include "server.h"
-#include <QTcpSocket>
 #include <QDomDocument>
+#include <QFile>
+
+static const unsigned bytesPerBlock = 100000;    //1KB
 
 Server::Server(QObject *parent) :
         QTcpServer(parent)
@@ -48,4 +50,37 @@ void Server::readIncomingData()
         QDomElement message = action.firstChild().toElement();
         emit messageRecieved(message.attribute("content", "ERROR"),message.attribute("senderName", "unknown"));
     }
+    if (action.attribute("type") == "file") {
+        QDomElement file = action.firstChild().toElement();
+        //TODO
+        emit fileRecieved(file.attribute("fileName", "UNKNOWN"), file.attribute("size","0").toInt()
+                             , file.attribute("ID","0"), file.attribute("senderName", "unknown"));
+        pendingRecieveFiles[file.attribute("ID","0")] = dynamic_cast<QTcpSocket*>(sender());
+    }
 }
+
+void Server::acceptFileTransfer(QString ID)
+{
+    if (pendingRecieveFiles.contains(ID)) {
+        pendingRecieveFiles.value(ID)->write(ID.toUtf8());
+    }
+}
+
+/*
+
+    //Check if its a file
+    if (pendingRecieveFiles.key(dynamic_cast<QTcpSocket*>(sender()),"") != "") {
+        if (dynamic_cast<QTcpSocket*>(sender())->bytesAvailable() < bytesPerBlock)
+            return;
+
+        QFile file("/home/hunny/Desktop/file");
+
+        if (!file.open(QIODevice::Append))
+            return;
+
+        qDebug() << file.write(dynamic_cast<QTcpSocket*>(sender())->readAll()) << " BYTES WRITTEN";
+        file.close();
+        return;
+    }
+
+ */

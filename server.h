@@ -22,12 +22,17 @@
 #define SERVER_H
 
 #include <QTcpServer>
+#include <QTcpSocket>
 
 class Server : public QTcpServer
 {
     Q_OBJECT
+
+private:
+    QHash<QString,QTcpSocket*> pendingRecieveFiles;
 public:
     Server(QObject *parent=0);
+    void acceptFileTransfer(QString ID);
 
 protected:
      void incomingConnection(int socketDescriptor);
@@ -37,6 +42,8 @@ private slots:
 
 signals:
      void messageRecieved(QString message, QString username);
+     void fileRecieved(QString name, qint64 size, QString ID, QString username);
+
 };
 
 #endif // SERVER_H

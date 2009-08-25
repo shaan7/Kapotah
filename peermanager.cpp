@@ -23,7 +23,7 @@
 #include <QStringList>
 #include "peermanager.h"
 
-static const qint32 BroadcastInterval = 2000;
+static const qint32 BroadcastInterval = 1000;
 static const unsigned broadcastPort = 45000;
 static const int ageTimeout = 4;   //seconds
 

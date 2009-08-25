@@ -27,6 +27,7 @@
 #include <QListWidgetItem>
 #include "chatdialog.h"
 #include "server.h"
+#include "fileserver.h"
 
 namespace Ui
 {
@@ -38,7 +39,7 @@ class Dialog : public QDialog
     Q_OBJECT
 
 public:
-    Dialog(Server *server,QWidget *parent = 0);
+    Dialog(Server *server,FileServer *fserver,QWidget *parent = 0);
     ~Dialog();
 
 private:
@@ -46,6 +47,7 @@ private:
     PeerManager *manager;
     QHash<QString,ChatDialog*> openChatDialogs;
     Server *m_server;
+    FileServer *m_fserver;
 
 private slots:
     void startPeerManager();

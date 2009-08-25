@@ -21,6 +21,7 @@
 #include <QtGui/QApplication>
 #include "dialog.h"
 #include "server.h"
+#include "fileserver.h"
 
 int main(int argc, char *argv[])
 {
@@ -28,7 +29,11 @@ int main(int argc, char *argv[])
 
     Server server;
     server.listen( QHostAddress::Any, 9876 );
-    Dialog w(&server);
+
+    FileServer fserver;
+    fserver.listen( QHostAddress::Any, 9877 );
+
+    Dialog w(&server,&fserver);
     w.show();
     return a.exec();
 }

@@ -13,13 +13,19 @@ SOURCES += main.cpp \
     chatdialog.cpp \
     messagesender.cpp \
     server.cpp \
-    filesender.cpp
+    filesenderthread.cpp \
+    fileserver.cpp \
+    fileserverthread.cpp \
+    filerecieverthread.cpp
 HEADERS += dialog.h \
     peermanager.h \
     peerinfo.h \
     chatdialog.h \
     messagesender.h \
     server.h \
-    filesender.h
+    filesenderthread.h \
+    fileserver.h \
+    fileserverthread.h \
+    filerecieverthread.h
 FORMS += dialog.ui \
     chatdialog.ui

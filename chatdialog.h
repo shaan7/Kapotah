@@ -25,25 +25,34 @@
 #include "ui_chatdialog.h"
 #include "peermanager.h"
 #include "server.h"
+#include "fileserver.h"
+#include "filerecieverthread.h"
 
 class ChatDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    ChatDialog(QString name, PeerManager *peerManager, Server *server, QWidget *parent = 0);
+    ChatDialog(QString name, PeerManager *peerManager, Server *serverPtr, FileServer *fserverPtr, QWidget *parent = 0);
     ~ChatDialog();
 
 private:
     Ui::ChatDialog ui;
     QString peerName;
     PeerManager *manager;
+    Server *server;
+    FileServer *fserver;
+    FileRecieverThread *reciever;
 
 private slots:
     void sendMessage();
+    void sendFile();
+    void saveFile();
+    void cancelFileTransfer();
 
 public slots:
     void messageRecieved(QString message, QString username);
+    void fileRecieved(QString filename,qint64 size,QString ID,QString username);
 };
 
 #endif // CHATDIALOG_H

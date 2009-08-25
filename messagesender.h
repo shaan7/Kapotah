@@ -28,11 +28,11 @@ class MessageSender : public QObject
 {
     Q_OBJECT
 
-private:
-    PeerManager *manager;
-
 public:
     MessageSender(PeerManager *peerManager, QObject *parent=0);
+
+private:
+    PeerManager *manager;
 
 public slots:
     void sendMessage(QString message, PeerInfo destinationPeer);
