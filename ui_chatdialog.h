@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'chatdialog.ui'
 **
-** Created: Wed Aug 26 01:24:31 2009
+** Created: Wed Aug 26 14:43:13 2009
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -45,11 +45,12 @@ public:
     QLineEdit *fileNameEdit;
     QLabel *label_2;
     QLineEdit *fileSizeEdit;
-    QPushButton *saveFileButton;
-    QPushButton *cancelFileButton;
-    QProgressBar *fileTransferProgress;
-    QSpacerItem *verticalSpacer;
     QLineEdit *IDEdit;
+    QPushButton *cancelFileButton;
+    QPushButton *saveFileButton;
+    QProgressBar *fileTransferProgress;
+    QLabel *fileStatusLabel;
+    QSpacerItem *verticalSpacer;
 
     void setupUi(QDialog *ChatDialog)
     {
@@ -121,15 +122,20 @@ public:
 
         gridLayout_3->addWidget(fileSizeEdit, 1, 1, 1, 1);
 
-        saveFileButton = new QPushButton(tabFileTransfer);
-        saveFileButton->setObjectName(QString::fromUtf8("saveFileButton"));
+        IDEdit = new QLineEdit(tabFileTransfer);
+        IDEdit->setObjectName(QString::fromUtf8("IDEdit"));
 
-        gridLayout_3->addWidget(saveFileButton, 1, 4, 1, 1);
+        gridLayout_3->addWidget(IDEdit, 1, 2, 1, 1);
 
         cancelFileButton = new QPushButton(tabFileTransfer);
         cancelFileButton->setObjectName(QString::fromUtf8("cancelFileButton"));
 
         gridLayout_3->addWidget(cancelFileButton, 1, 3, 1, 1);
+
+        saveFileButton = new QPushButton(tabFileTransfer);
+        saveFileButton->setObjectName(QString::fromUtf8("saveFileButton"));
+
+        gridLayout_3->addWidget(saveFileButton, 1, 4, 1, 1);
 
         fileTransferProgress = new QProgressBar(tabFileTransfer);
         fileTransferProgress->setObjectName(QString::fromUtf8("fileTransferProgress"));
@@ -137,14 +143,19 @@ public:
 
         gridLayout_3->addWidget(fileTransferProgress, 2, 0, 1, 5);
 
+        fileStatusLabel = new QLabel(tabFileTransfer);
+        fileStatusLabel->setObjectName(QString::fromUtf8("fileStatusLabel"));
+        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(fileStatusLabel->sizePolicy().hasHeightForWidth());
+        fileStatusLabel->setSizePolicy(sizePolicy1);
+
+        gridLayout_3->addWidget(fileStatusLabel, 3, 1, 1, 1);
+
         verticalSpacer = new QSpacerItem(20, 172, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        gridLayout_3->addItem(verticalSpacer, 3, 1, 1, 1);
-
-        IDEdit = new QLineEdit(tabFileTransfer);
-        IDEdit->setObjectName(QString::fromUtf8("IDEdit"));
-
-        gridLayout_3->addWidget(IDEdit, 1, 2, 1, 1);
+        gridLayout_3->addItem(verticalSpacer, 4, 1, 1, 1);
 
         tabWidget->addTab(tabFileTransfer, QString());
 
@@ -175,8 +186,9 @@ public:
         tabWidget->setTabText(tabWidget->indexOf(tabChat), QApplication::translate("ChatDialog", "Chat", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("ChatDialog", "Name", 0, QApplication::UnicodeUTF8));
         label_2->setText(QApplication::translate("ChatDialog", "Size", 0, QApplication::UnicodeUTF8));
-        saveFileButton->setText(QApplication::translate("ChatDialog", "Save", 0, QApplication::UnicodeUTF8));
         cancelFileButton->setText(QApplication::translate("ChatDialog", "Cancel", 0, QApplication::UnicodeUTF8));
+        saveFileButton->setText(QApplication::translate("ChatDialog", "Save", 0, QApplication::UnicodeUTF8));
+        fileStatusLabel->setText(QString());
         tabWidget->setTabText(tabWidget->indexOf(tabFileTransfer), QApplication::translate("ChatDialog", "File Transfer", 0, QApplication::UnicodeUTF8));
         Q_UNUSED(ChatDialog);
     } // retranslateUi
