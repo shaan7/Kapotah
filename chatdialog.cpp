@@ -68,12 +68,21 @@ void ChatDialog::saveFile()
     ui.fileTransferProgress->setMaximum(ui.fileSizeEdit->text().toInt());
     reciever = new FileRecieverThread(manager, ui.IDEdit->text(), ui.fileSizeEdit->text().toInt(), peerName, filename, this);
     connect(reciever, SIGNAL(progress(int)), ui.fileTransferProgress, SLOT(setValue(int)));
-    reciever->run();
+    connect(reciever, SIGNAL(done()), this, SLOT(fileTransferComplete()));
+    startTime = QDateTime::currentDateTime();
+    reciever->start();
 }
 
 void ChatDialog::cancelFileTransfer()
 {
-    reciever->quit();
+    //reciever->quit();
+}
+
+void ChatDialog::fileTransferComplete()
+{
+    endTime = QDateTime::currentDateTime();
+    int timeTaken = startTime.time().secsTo(endTime.time());
+    ui.fileStatusLabel->setText(QString::number((ui.fileSizeEdit->text().toInt() / timeTaken)/1024) + "KB/s");
 }
 
 void ChatDialog::messageRecieved(QString message, QString username)

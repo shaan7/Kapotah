@@ -22,6 +22,7 @@
 #define CHATDIALOG_H
 
 #include <QDialog>
+#include <QDateTime>
 #include "ui_chatdialog.h"
 #include "peermanager.h"
 #include "server.h"
@@ -43,12 +44,15 @@ private:
     Server *server;
     FileServer *fserver;
     FileRecieverThread *reciever;
+    QDateTime startTime;
+    QDateTime endTime;
 
 private slots:
     void sendMessage();
     void sendFile();
     void saveFile();
     void cancelFileTransfer();
+    void fileTransferComplete();
 
 public slots:
     void messageRecieved(QString message, QString username);
