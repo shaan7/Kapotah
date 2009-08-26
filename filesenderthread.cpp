@@ -35,13 +35,11 @@ FileSenderThread::FileSenderThread(PeerManager *peermanager, FileServer *fileSer
 
 void FileSenderThread::run()
 {
+    QTcpSocket socket;
     socket.abort();
     socket.connectToHost(destination.ipAddress(), 9876);
-    connect(&socket, SIGNAL(connected()), this, SLOT(sendFileInformation()));
-}
+    socket.waitForConnected();
 
-void FileSenderThread::sendFileInformation()
-{
     //Get info about the file
     QFileInfo info(filename);
     QDomDocument document;
@@ -67,5 +65,5 @@ void FileSenderThread::sendFileInformation()
     socket.write(document.toByteArray());
     socket.disconnectFromHost();
     socket.waitForDisconnected();
-    deleteLater();
+
 }

@@ -57,7 +57,7 @@ void ChatDialog::sendFile()
         return;
     ui.chatEdit->append("<b>" + manager->username() + "</b> sends a file " + filename);
     FileSenderThread *sender = new FileSenderThread(manager, fserver, filename, manager->peerInfo(peerName));
-    sender->run();
+    sender->start();
 }
 
 void ChatDialog::saveFile()
@@ -96,12 +96,13 @@ void ChatDialog::fileRecieved(QString filename, qint64 size, QString ID, QString
 {
     if (username == manager->peerInfo(peerName).name()) {
         ui.fileNameEdit->setText(filename);
-        if(size < 1024)
+        /*if(size < 1024)
             ui.fileSizeEdit->setText(QString::number(float(size)) + "bytes");
         else if(size >= 1024 && size<(1024*1024))
             ui.fileSizeEdit->setText(QString::number(float(size)/1024) + "kb");
         else if(size >= (1024*1024))
-            ui.fileSizeEdit->setText(QString::number(float(size)/(1024*1024)) + "mb");
+            ui.fileSizeEdit->setText(QString::number(float(size)/(1024*1024)) + "mb");*/
+        ui.fileSizeEdit->setText(QString::number(size));
         ui.IDEdit->setText(ID);
         ui.tabWidget->setCurrentWidget(ui.tabFileTransfer);
     }

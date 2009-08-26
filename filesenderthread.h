@@ -31,7 +31,6 @@ class FileSenderThread : public QThread
     Q_OBJECT
 public:
     FileSenderThread(PeerManager *peermanager, FileServer* fileServer, QString fileToSend, PeerInfo destinationPeer);
-
     void run();
 
 private:
@@ -39,11 +38,7 @@ private:
     FileServer *fserver;
     QString filename;
     PeerInfo destination;
-    QTcpSocket socket;
     QString ID;
-
-private slots:
-    void sendFileInformation();
 };
 
 #endif // FILESENDERTHREAD_H
