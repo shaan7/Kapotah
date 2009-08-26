@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'chatdialog.ui'
 **
-** Created: Wed Aug 26 01:24:31 2009
+** Created: Wed Aug 26 02:27:56 2009
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -148,9 +148,8 @@ public:
 
         tabWidget->addTab(tabFileTransfer, QString());
 
-        gridLayout_2->addWidget(tabWidget, 1, 0, 1, 1);
+        gridLayout_2->addWidget(tabWidget, 0, 0, 1, 1);
 
-        QWidget::setTabOrder(tabWidget, messageEdit);
         QWidget::setTabOrder(messageEdit, sendButton);
         QWidget::setTabOrder(sendButton, fileButton);
         QWidget::setTabOrder(fileButton, fileSizeEdit);
@@ -161,7 +160,7 @@ public:
 
         retranslateUi(ChatDialog);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(ChatDialog);
