@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'chatdialog.ui'
 **
-** Created: Wed Aug 26 02:27:56 2009
+** Created: Thu Aug 27 00:13:07 2009
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -160,7 +160,7 @@ public:
 
         retranslateUi(ChatDialog);
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(ChatDialog);
@@ -176,7 +176,7 @@ public:
         label_2->setText(QApplication::translate("ChatDialog", "Size", 0, QApplication::UnicodeUTF8));
         saveFileButton->setText(QApplication::translate("ChatDialog", "Save", 0, QApplication::UnicodeUTF8));
         cancelFileButton->setText(QApplication::translate("ChatDialog", "Cancel", 0, QApplication::UnicodeUTF8));
-        tabWidget->setTabText(tabWidget->indexOf(tabFileTransfer), QApplication::translate("ChatDialog", "File Transfer", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(tabFileTransfer), QApplication::translate("ChatDialog", "File Recieved", 0, QApplication::UnicodeUTF8));
         Q_UNUSED(ChatDialog);
     } // retranslateUi
 

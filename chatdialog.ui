@@ -17,7 +17,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabChat">
       <attribute name="title">
@@ -64,7 +64,7 @@
      </widget>
      <widget class="QWidget" name="tabFileTransfer">
       <attribute name="title">
-       <string>File Transfer</string>
+       <string>File Recieved</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="0" column="0">

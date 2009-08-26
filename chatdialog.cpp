@@ -97,8 +97,6 @@ void ChatDialog::fileRecieved(QString filename, qint64 size, QString ID, QString
         ui.tabWidget->setCurrentWidget(ui.tabFileTransfer);
     }
 }
-
-
 ChatDialog::~ChatDialog()
 {
 }
