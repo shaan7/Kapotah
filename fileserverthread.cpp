@@ -41,7 +41,6 @@ void FileServerThread::run()
 
         QString data(socket.readAll());
         if (dynamic_cast<FileServer*>(parent())->getFileList()->contains(data)) {
-            qDebug() << data;
             ID = data;
             filename = dynamic_cast<FileServer*>(parent())->getFileList()->value(ID);
 
@@ -49,6 +48,8 @@ void FileServerThread::run()
             if (!file.open(QIODevice::ReadOnly))
                 return;
 
+            if (socket.state() == QTcpSocket::UnconnectedState)
+                break;
             socket.write("OK");
             socket.waitForBytesWritten();
 
