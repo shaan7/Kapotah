@@ -22,7 +22,7 @@
 #include "fileserverthread.h"
 #include "fileserver.h"
 
-const qint64 bytesPerBlock = Q_INT64_C(10000);   //number of bytes to transfer in one block
+const qint64 bytesPerBlock = Q_INT64_C(100000);   //number of bytes to transfer in one block
 
 FileServerThread::FileServerThread(int descriptor, QObject *parent) : QThread(parent)
 {
@@ -52,10 +52,13 @@ void FileServerThread::run()
                 file.seek(requestedPos);
             }
 
+            char a[bytesPerBlock];
             QByteArray data;
             QDataStream out(&data, QIODevice::WriteOnly);
             out.setVersion(QDataStream::Qt_4_5);
-            out << file.read(bytesPerBlock);
+            qDebug() << "READ " << file.read(a,bytesPerBlock);
+            out << a;
+            qDebug() << "DATA " << data.length();
 
             socket.write(data);
             socket.waitForBytesWritten();
