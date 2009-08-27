@@ -39,46 +39,23 @@ void FileServerThread::run()
     {
         socket.waitForReadyRead();
 
-        QByteArray recv;
-        QDataStream stream(&socket);
-        stream.setVersion(QDataStream::Qt_4_5);
-        stream >> recv;
-        QString response(recv);
-
-        if (response.contains("SENDMORE")) {
-            qint64 requestedPos = response.right(response.length()-8).toLongLong();
-            if (file.pos()!=requestedPos) {
-                qDebug() << "MISMATCH " << requestedPos << " INSTEAD OF " << file.pos();
-                file.seek(requestedPos);
-            }
-
-            char a[bytesPerBlock];
-            QByteArray data;
-            QDataStream out(&data, QIODevice::WriteOnly);
-            out.setVersion(QDataStream::Qt_4_5);
-            qDebug() << "READ " << file.read(a,bytesPerBlock);
-            out << a;
-            qDebug() << "DATA " << data.length();
-
-            socket.write(data);
-            socket.waitForBytesWritten();
-        }
-
-        else if (dynamic_cast<FileServer*>(parent())->getFileList()->contains(response)) {
-            ID = response;
+        QString data(socket.readAll());
+        if (dynamic_cast<FileServer*>(parent())->getFileList()->contains(data)) {
+            qDebug() << data;
+            ID = data;
             filename = dynamic_cast<FileServer*>(parent())->getFileList()->value(ID);
 
             file.setFileName(filename);
             if (!file.open(QIODevice::ReadOnly))
                 return;
 
-            QByteArray data;
-            QDataStream out(&data, QIODevice::WriteOnly);
-            out.setVersion(QDataStream::Qt_4_5);
-            out << "OK";
-
-            socket.write(data);
+            socket.write("OK");
             socket.waitForBytesWritten();
+
+            while (!file.atEnd()) {
+                socket.write(file.read(bytesPerBlock));
+                socket.waitForBytesWritten();
+            }
         }
     }
 }

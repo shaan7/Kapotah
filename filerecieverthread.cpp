@@ -45,37 +45,20 @@ void FileRecieverThread::run()
     socket.connectToHost(manager->peerInfo(peer).ipAddress(), 9877);
     socket.waitForConnected();
 
-    QByteArray data;
-    QDataStream out(&data, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-    out << ID.toUtf8();
-
-    socket.write(data);  //ID
+    socket.write(ID.toUtf8());  //ID
     socket.waitForBytesWritten();
 
     while (!quit) {
         socket.waitForReadyRead();
 
-        QByteArray recv;
-        QDataStream in(&socket);
-        in.setVersion(QDataStream::Qt_4_5);
-        in >> recv;
-
         if (readyToRecieve) {
-            qint64 bytesWritten = file.write(recv);
+            qint64 bytesWritten = file.write(socket.readAll());
             bytesCopied = file.pos();
-            //qDebug() << "WROTE " << bytesWritten;
+            qDebug() << "WROTE " << bytesWritten;
 
             emit progress(bytesCopied);
 
             if (bytesCopied < size) {
-                QByteArray data;
-                QDataStream out(&data, QIODevice::WriteOnly);
-                out.setVersion(QDataStream::Qt_4_5);
-                out << (QString("SENDMORE")+QString::number(bytesCopied)).toUtf8();
-
-                socket.write(data);  //SENDMOREbytesCopied
-                socket.waitForBytesWritten();
             }
             else {
                 emit done();
@@ -84,21 +67,13 @@ void FileRecieverThread::run()
                 break;
             }
         }
-        else {
-            if (QString(recv) == "OK") {
-                readyToRecieve = true;
-                file.setFileName(filename);
-                if (!file.open(QIODevice::WriteOnly)) {
-                    qDebug() << "ERROR OPENING FILE";
-                    return;
-                }
-                QByteArray data;
-                QDataStream out(&data, QIODevice::WriteOnly);
-                out.setVersion(QDataStream::Qt_4_5);
-                out << QString("SENDMORE0").toUtf8();
-
-                socket.write(data);  //SENDMOREbytesCopied
-                socket.waitForBytesWritten();
+        else if (QString(socket.readAll()) == "OK") {
+            qDebug() << "OK";
+            readyToRecieve = true;
+            file.setFileName(filename);
+            if (!file.open(QIODevice::WriteOnly)) {
+                qDebug() << "ERROR OPENING FILE";
+                return;
             }
         }
     }
