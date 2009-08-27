@@ -46,6 +46,7 @@ private:
     FileRecieverThread *reciever;
     QDateTime startTime;
     QDateTime endTime;
+    qint64 fileSize;
 
 private slots:
     void sendMessage();

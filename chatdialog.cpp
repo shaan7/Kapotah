@@ -65,8 +65,8 @@ void ChatDialog::saveFile()
     QString filename = QFileDialog::getSaveFileName(this, "Select a file to save", QDir::home().absoluteFilePath(ui.fileNameEdit->text()));
     if (filename=="")
         return;
-    ui.fileTransferProgress->setMaximum(ui.fileSizeEdit->text().toInt());
-    reciever = new FileRecieverThread(manager, ui.IDEdit->text(), ui.fileSizeEdit->text().toInt(), peerName, filename, this);
+    ui.fileTransferProgress->setMaximum(fileSize);
+    reciever = new FileRecieverThread(manager, ui.IDEdit->text(), fileSize, peerName, filename, this);
     connect(reciever, SIGNAL(progress(int)), ui.fileTransferProgress, SLOT(setValue(int)));
     connect(reciever, SIGNAL(done()), this, SLOT(fileTransferComplete()));
     startTime = QDateTime::currentDateTime();
@@ -82,7 +82,7 @@ void ChatDialog::fileTransferComplete()
 {
     endTime = QDateTime::currentDateTime();
     int timeTaken = startTime.time().secsTo(endTime.time());
-    ui.fileStatusLabel->setText(QString::number((ui.fileSizeEdit->text().toInt() / timeTaken)/1024) + "KB/s");
+    ui.fileStatusLabel->setText(QString::number((fileSize / timeTaken)/1024) + "KB/s");
 }
 
 void ChatDialog::messageRecieved(QString message, QString username)
@@ -96,15 +96,18 @@ void ChatDialog::fileRecieved(QString filename, qint64 size, QString ID, QString
 {
     if (username == manager->peerInfo(peerName).name()) {
         ui.fileNameEdit->setText(filename);
-        /*if(size<(1024*1024))
-            ui.fileSizeEdit->setText(QString::number(float(size)/1024) + "kb");
-        else if(size >= (1024*1024))
-            ui.fileSizeEdit->setText(QString::number(float(size)/(1024*1024)) + "mb");*/
-        ui.fileSizeEdit->setText(QString::number(size));
+
+        fileSize = size;
+        if(size<(1024*1024))
+            ui.fileSizeEdit->setText(QString::number(float(size)/1024) + " KiB");
+        else
+            ui.fileSizeEdit->setText(QString::number(float(size)/(1024*1024)) + " MiB");
+
         ui.IDEdit->setText(ID);
         ui.tabWidget->setCurrentWidget(ui.tabFileTransfer);
     }
 }
+
 ChatDialog::~ChatDialog()
 {
 }
