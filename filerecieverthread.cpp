@@ -36,7 +36,12 @@ FileRecieverThread::FileRecieverThread(PeerManager *peerManager, QString fileID,
     filename = outputFilename;
     size = fileSize;
     bytesCopied = 0;
-    quit = false;
+    doQuit = false;
+}
+
+void FileRecieverThread::stopTransfer()
+{
+    doQuit = true;
 }
 
 void FileRecieverThread::run()
@@ -48,13 +53,12 @@ void FileRecieverThread::run()
     socket.write(ID.toUtf8());  //ID
     socket.waitForBytesWritten();
 
-    while (!quit) {
+    while (!doQuit) {
         socket.waitForReadyRead();
 
         if (readyToRecieve) {
             qint64 bytesWritten = file.write(socket.readAll());
             bytesCopied = file.pos();
-            qDebug() << "WROTE " << bytesWritten;
 
             emit progress(bytesCopied);
 
@@ -68,7 +72,6 @@ void FileRecieverThread::run()
             }
         }
         else if (QString(socket.readAll()) == "OK") {
-            qDebug() << "OK";
             readyToRecieve = true;
             file.setFileName(filename);
             if (!file.open(QIODevice::WriteOnly)) {
@@ -81,6 +84,6 @@ void FileRecieverThread::run()
 
 FileRecieverThread::~FileRecieverThread()
 {
-    quit = true;
+    doQuit = true;
     wait();
 }

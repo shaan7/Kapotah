@@ -48,12 +48,12 @@ void FileServerThread::run()
             if (!file.open(QIODevice::ReadOnly))
                 return;
 
-            if (socket.state() == QTcpSocket::UnconnectedState)
-                break;
             socket.write("OK");
             socket.waitForBytesWritten();
 
             while (!file.atEnd()) {
+                if (socket.state() != QTcpSocket::ConnectedState)
+                    break;
                 socket.write(file.read(bytesPerBlock));
                 socket.waitForBytesWritten();
             }

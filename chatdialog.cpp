@@ -75,7 +75,7 @@ void ChatDialog::saveFile()
 
 void ChatDialog::cancelFileTransfer()
 {
-    //reciever->quit();
+    reciever->stopTransfer();
 }
 
 void ChatDialog::fileTransferComplete()
@@ -96,9 +96,7 @@ void ChatDialog::fileRecieved(QString filename, qint64 size, QString ID, QString
 {
     if (username == manager->peerInfo(peerName).name()) {
         ui.fileNameEdit->setText(filename);
-        /*if(size < 1024)
-            ui.fileSizeEdit->setText(QString::number(float(size)) + "bytes");
-        else if(size >= 1024 && size<(1024*1024))
+        /*if(size<(1024*1024))
             ui.fileSizeEdit->setText(QString::number(float(size)/1024) + "kb");
         else if(size >= (1024*1024))
             ui.fileSizeEdit->setText(QString::number(float(size)/(1024*1024)) + "mb");*/

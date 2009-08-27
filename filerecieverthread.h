@@ -31,7 +31,7 @@ class FileRecieverThread : public QThread
     Q_OBJECT
 
 private:
-    bool quit;
+    bool doQuit;
     QString ID;
     QString peer;
     PeerManager *manager;
@@ -47,6 +47,7 @@ public:
     ~FileRecieverThread();
 
     void run();
+    void stopTransfer();
 
 signals:
     void progress(int bytesDone);
