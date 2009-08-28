@@ -23,6 +23,7 @@
 
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QUdpSocket>
 
 class Server : public QTcpServer
 {
@@ -30,6 +31,16 @@ class Server : public QTcpServer
 
 private:
     QHash<QString,QTcpSocket*> pendingRecieveFiles;
+
+    //UDP
+
+    QList<QHostAddress> broadcastAddresses;
+    QList<QHostAddress> ipAddresses;
+    QUdpSocket broadcastSocket;
+
+    void updateAddresses();
+    int serverPort;
+
 public:
     Server(QObject *parent=0);
     void acceptFileTransfer(QString ID);
@@ -40,9 +51,14 @@ protected:
 private slots:
      void readIncomingData();
 
+public slots:
+    void sendBroadcast(QByteArray datagram);
+    void readBroadcast();
+
 signals:
      void messageRecieved(QString message, QString username);
      void fileRecieved(QString name, qint64 size, QString ID, QString username);
+     void udpDataRecieved(QHostAddress senderIP, QByteArray data);
 
 };
 

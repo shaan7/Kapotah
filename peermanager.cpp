@@ -19,16 +19,16 @@
  ***************************************************************************/
 
 #include <QDomDocument>
-#include <QtNetwork>
 #include <QStringList>
+#include <QProcess>
 #include "peermanager.h"
 
 static const qint32 BroadcastInterval = 1000;
 static const unsigned broadcastPort = 45000;
 static const int ageTimeout = 4;   //seconds
 
-PeerManager::PeerManager()
-         : QObject()
+PeerManager::PeerManager(Server *serverPtr)
+         : QObject(), server(serverPtr)
 {
     QStringList envVariables;   //Used to get one of the below infos about the client operating enivronment
     envVariables << "USERNAME.*" << "USER.*" << "USERDOMAIN.*"
@@ -49,19 +49,10 @@ PeerManager::PeerManager()
     if (m_username.isEmpty())
         m_username = "unknown";
 
-    updateAddresses();  //Updates the entry for broadcasts and IPs of this host
-    serverPort = 0;
-
-    broadcastSocket.bind(QHostAddress::Any, broadcastPort, QUdpSocket::ShareAddress
-                         | QUdpSocket::ReuseAddressHint);
-    connect(&broadcastSocket, SIGNAL(readyRead()),
-            this, SLOT(readBroadcast()));
-
     broadcastTimer.setInterval(BroadcastInterval);
-    connect(&broadcastTimer, SIGNAL(timeout()),
-            this, SLOT(sendBroadcast()));
-    connect(&broadcastTimer, SIGNAL(timeout()),
-            this, SLOT(checkPeers()));
+    connect(server, SIGNAL(udpDataRecieved(QHostAddress,QByteArray)), this, SLOT(parseUdpDatagram(QHostAddress,QByteArray)));
+    connect(&broadcastTimer, SIGNAL(timeout()), this, SLOT(sendAnnounce()));
+    connect(&broadcastTimer, SIGNAL(timeout()), this, SLOT(checkPeers()));
 }
 
 void PeerManager::startBroadcast()
@@ -72,33 +63,6 @@ void PeerManager::startBroadcast()
 PeerInfo PeerManager::peerInfo(QString name)
 {
     return peers.value(name);
-}
-
-void PeerManager::sendBroadcast()
-{
-    QDomDocument document;
-
-    QDomElement doc = document.createElement("document");
-    QDomElement action = document.createElement("action");
-    action.setAttribute( "type", "announce" );
-    QDomElement announce = document.createElement("announce");
-    announce.setAttribute("senderName", m_username);
-
-    document.appendChild(doc);
-    doc.appendChild(action);
-    action.appendChild(announce);
-
-    QByteArray datagram(document.toByteArray());
-
-    bool validBroadcastAddresses = true;
-    foreach (QHostAddress address, broadcastAddresses) {
-        if (broadcastSocket.writeDatagram(datagram, address,
-                                          broadcastPort) == -1)
-            validBroadcastAddresses = false;
-    }
-
-    if (!validBroadcastAddresses)
-        updateAddresses();
 }
 
 void PeerManager::checkPeers()
@@ -120,19 +84,25 @@ void PeerManager::checkPeers()
     }
 }
 
-void PeerManager::readBroadcast()
+void PeerManager::sendAnnounce()
 {
-    //Get the datagrams until socket in empty
-    while (broadcastSocket.hasPendingDatagrams()) {
-        QHostAddress senderIp;
-        quint16 senderPort;
-        QByteArray datagram;
-        datagram.resize(broadcastSocket.pendingDatagramSize());
-        if (broadcastSocket.readDatagram(datagram.data(), datagram.size(),
-                                         &senderIp, &senderPort) == -1)
-            continue;
+    QDomDocument document;
 
-        //Parse the datagram as XML
+    QDomElement doc = document.createElement("document");
+    QDomElement action = document.createElement("action");
+    action.setAttribute( "type", "announce" );
+    QDomElement announce = document.createElement("announce");
+    announce.setAttribute("senderName", m_username);
+
+    document.appendChild(doc);
+    doc.appendChild(action);
+    action.appendChild(announce);
+
+    server->sendBroadcast(document.toByteArray());
+}
+
+void PeerManager::parseUdpDatagram(QHostAddress senderIP, QByteArray datagram)
+{
         QDomDocument document;
         document.setContent(datagram, false, 0, 0, 0);
         QDomElement documentElement = document.documentElement();
@@ -142,7 +112,7 @@ void PeerManager::readBroadcast()
         //If data is type announce
         if (action.attribute("type") == "announce") {
             QDomElement announce = action.firstChild().toElement();
-            PeerInfo tempPeer(announce.attribute("senderName", "unknown"),senderIp);
+            PeerInfo tempPeer(announce.attribute("senderName", "unknown"),senderIP);
 
             if (!peers.contains(tempPeer.name())) {
                 tempPeer.setAge(0);
@@ -153,21 +123,4 @@ void PeerManager::readBroadcast()
                 peers[tempPeer.name()].setAge(0);
             }
         }
-    }
-}
-
-void PeerManager::updateAddresses()
-{
-    broadcastAddresses.clear();
-    ipAddresses.clear();
-    foreach (QNetworkInterface interface, QNetworkInterface::allInterfaces()) {
-        foreach (QNetworkAddressEntry entry, interface.addressEntries()) {
-            QHostAddress broadcastAddress = entry.broadcast();
-            if (broadcastAddress != QHostAddress::Null &&
-                entry.ip() != QHostAddress::LocalHost) {
-                broadcastAddresses << broadcastAddress;
-                ipAddresses << entry.ip();
-            }
-        }
-    }
 }

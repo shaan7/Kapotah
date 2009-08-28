@@ -39,7 +39,7 @@ Dialog::~Dialog()
 void Dialog::startPeerManager()
 {
     ui->refreshButton->setEnabled(false);
-    manager = new PeerManager();    //Create the peer manager
+    manager = new PeerManager(m_server);    //Create the peer manager
     manager->startBroadcast();  //Start broadcasting on the network
 
     connect(manager,SIGNAL(newPeer(QString)),this,SLOT(addNewPeer(QString)));

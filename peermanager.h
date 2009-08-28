@@ -22,27 +22,22 @@
 #define PEERMANAGER_H
 
 #include <QObject>
-#include <QUdpSocket>
 #include <QTimer>
 #include "peerinfo.h"
+#include "server.h"
 
 class PeerManager : public QObject
 {
     Q_OBJECT
 
 private:
-    QList<QHostAddress> broadcastAddresses;
-    QList<QHostAddress> ipAddresses;
     QString m_username;
+    Server *server;
     QHash<QString, PeerInfo> peers;
-    QUdpSocket broadcastSocket;
     QTimer broadcastTimer;
 
-    void updateAddresses();
-    int serverPort;
-
 public:
-    PeerManager();
+    PeerManager(Server *serverPtr);
     void startBroadcast();
     void setUsername(QString name)  {   m_username = name;    }
     QString username()  {   return m_username;  }
@@ -53,9 +48,9 @@ signals:
     void peerGone(QString name);
 
 public slots:
-    void sendBroadcast();
     void checkPeers();
-    void readBroadcast();
+    void parseUdpDatagram(QHostAddress senderIP, QByteArray datagram);
+    void sendAnnounce();
 };
 
 #endif // PEERMANAGER_H

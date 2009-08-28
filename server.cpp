@@ -21,10 +21,22 @@
 #include "server.h"
 #include <QDomDocument>
 #include <QFile>
+#include <QNetworkInterface>
+
+static const qint32 BroadcastInterval = 1000;
+static const unsigned broadcastPort = 45000;
 
 Server::Server(QObject *parent) :
         QTcpServer(parent)
 {
+    updateAddresses();  //Updates the entry for broadcasts and IPs of this host
+    serverPort = 0;
+
+    broadcastSocket.bind(QHostAddress::Any, broadcastPort, QUdpSocket::ShareAddress
+                         | QUdpSocket::ReuseAddressHint);
+    connect(&broadcastSocket, SIGNAL(readyRead()),
+            this, SLOT(readBroadcast()));
+
 }
 
 void Server::incomingConnection(int socketDescriptor)
@@ -34,7 +46,7 @@ void Server::incomingConnection(int socketDescriptor)
     connect(socket, SIGNAL(readyRead()), this, SLOT(readIncomingData()));
 }
 
-void Server::readIncomingData()
+void Server::readIncomingData()     //TCP
 {
     //Parse the datagram as XML
     QDomDocument document;
@@ -61,5 +73,50 @@ void Server::acceptFileTransfer(QString ID)
 {
     if (pendingRecieveFiles.contains(ID)) {
         pendingRecieveFiles.value(ID)->write(ID.toUtf8());
+    }
+}
+
+void Server::sendBroadcast(QByteArray datagram)
+{
+    bool validBroadcastAddresses = true;
+    foreach (QHostAddress address, broadcastAddresses) {
+        if (broadcastSocket.writeDatagram(datagram, address,
+                                          broadcastPort) == -1)
+            validBroadcastAddresses = false;
+    }
+
+    if (!validBroadcastAddresses)
+        updateAddresses();
+}
+
+void Server::readBroadcast()
+{
+    //Get the datagrams until socket in empty
+    while (broadcastSocket.hasPendingDatagrams()) {
+        QHostAddress senderIp;
+        quint16 senderPort;
+        QByteArray datagram;
+        datagram.resize(broadcastSocket.pendingDatagramSize());
+        if (broadcastSocket.readDatagram(datagram.data(), datagram.size(),
+                                         &senderIp, &senderPort) == -1)
+            continue;
+
+        emit udpDataRecieved(senderIp,datagram);
+    }
+}
+
+void Server::updateAddresses()
+{
+    broadcastAddresses.clear();
+    ipAddresses.clear();
+    foreach (QNetworkInterface interface, QNetworkInterface::allInterfaces()) {
+        foreach (QNetworkAddressEntry entry, interface.addressEntries()) {
+            QHostAddress broadcastAddress = entry.broadcast();
+            if (broadcastAddress != QHostAddress::Null &&
+                entry.ip() != QHostAddress::LocalHost) {
+                broadcastAddresses << broadcastAddress;
+                ipAddresses << entry.ip();
+            }
+        }
     }
 }

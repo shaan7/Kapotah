@@ -54,7 +54,7 @@ void FileSenderThread::run()
     ID = QTime::currentTime().toString() + "::" + QString::number(qrand());
     file.setAttribute("ID", ID);
 
-    if (!fserver->getFileList()->contains(ID)) {
+    if (!fserver->idExists(ID)) {
         fserver->addFile(ID, filename);
     }
 
