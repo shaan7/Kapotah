@@ -54,6 +54,7 @@ private slots:
     void saveFile();
     void cancelFileTransfer();
     void fileTransferComplete();
+    void checkGonePeer(QString name);
 
 public slots:
     void messageRecieved(QString message, QString username);
