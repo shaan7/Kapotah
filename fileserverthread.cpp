@@ -40,9 +40,9 @@ void FileServerThread::run()
         socket.waitForReadyRead();
 
         QString data(socket.readAll());
-        if (dynamic_cast<FileServer*>(parent())->getFileList()->contains(data)) {
+        if (dynamic_cast<FileServer*>(parent())->idExists(data)) {
             ID = data;
-            filename = dynamic_cast<FileServer*>(parent())->getFileList()->value(ID);
+            filename = dynamic_cast<FileServer*>(parent())->getFileName(ID);
 
             file.setFileName(filename);
             if (!file.open(QIODevice::ReadOnly))

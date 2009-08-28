@@ -29,7 +29,8 @@ class FileServer : public QTcpServer
 public:
     FileServer();
     void addFile(QString ID, QString FileName);
-    QHash<QString,QString> *getFileList()    {   return &fileList;   }
+    bool idExists(QString ID);
+    QString getFileName(QString ID);
 
 protected:
     void incomingConnection(int descriptor);

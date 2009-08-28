@@ -25,6 +25,17 @@ FileServer::FileServer() : QTcpServer()
 {
 }
 
+bool FileServer::idExists(QString ID)
+{
+    return fileList.contains(ID);
+}
+
+QString FileServer::getFileName(QString ID)
+{
+    return fileList[ID];
+}
+
+
 void FileServer::addFile(QString ID, QString FileName)
 {
     fileList[ID] = FileName;
