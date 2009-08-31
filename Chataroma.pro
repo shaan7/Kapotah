@@ -16,7 +16,11 @@ SOURCES += main.cpp \
     filesenderthread.cpp \
     fileserver.cpp \
     fileserverthread.cpp \
-    filerecieverthread.cpp
+    filerecieverthread.cpp \
+    dirsenderthread.cpp \
+    serverthread.cpp \
+    messagesenderthread.cpp \
+    dirrecieverthread.cpp
 HEADERS += dialog.h \
     peermanager.h \
     peerinfo.h \
@@ -26,6 +30,10 @@ HEADERS += dialog.h \
     filesenderthread.h \
     fileserver.h \
     fileserverthread.h \
-    filerecieverthread.h
+    filerecieverthread.h \
+    dirsenderthread.h \
+    serverthread.h \
+    messagesenderthread.h \
+    dirrecieverthread.h
 FORMS += dialog.ui \
     chatdialog.ui

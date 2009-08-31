@@ -26,16 +26,12 @@
 const qint64 bytesPerBlock = Q_INT64_C(100000);   //number of bytes to transfer in one block
 
 FileRecieverThread::FileRecieverThread(PeerManager *peerManager, QString fileID, qint64 fileSize, QString sendingPeer, QString outputFilename, QObject *parent)
-    : QThread(parent)
+    : QThread(parent), ID(fileID), peer(sendingPeer), manager(peerManager), filename(outputFilename), size(fileSize)
 {
-    ID = fileID;
-    peer = sendingPeer;
-    manager = peerManager;
     readyToRecieve = false;
     startedRecieving = false;
-    filename = outputFilename;
-    size = fileSize;
     bytesCopied = 0;
+    statusVar = 0;
     doQuit = false;
 }
 
@@ -54,6 +50,7 @@ void FileRecieverThread::run()
     socket.waitForBytesWritten();
 
     while (!doQuit) {
+
         socket.waitForReadyRead();
 
         if (readyToRecieve) {
@@ -65,20 +62,32 @@ void FileRecieverThread::run()
             if (bytesCopied < size) {
             }
             else {
+                qDebug() << "DONE " << filename;
                 emit done();
                 file.close();
                 socket.disconnectFromHost();
-                break;
-            }
-        }
-        else if (QString(socket.readAll()) == "OK") {
-            readyToRecieve = true;
-            file.setFileName(filename);
-            if (!file.open(QIODevice::WriteOnly)) {
-                qDebug() << "ERROR OPENING FILE";
                 return;
             }
         }
+        else {
+            QString data(socket.read(2));
+            if (data == "OK") {
+                readyToRecieve = true;
+                file.setFileName(filename);
+                if (!file.open(QIODevice::WriteOnly)) {
+                    qDebug() << "ERROR OPENING FILE";
+                    return;
+                }
+            }
+            else {
+                qDebug() << ID << " not found on server: " << data;
+                return;
+            }
+        }
+    }
+
+    if (statusVar!=0) {
+        *statusVar = true;
     }
 }
 

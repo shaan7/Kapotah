@@ -21,32 +21,35 @@
 #include "chatdialog.h"
 #include "messagesender.h"
 #include "filesenderthread.h"
+#include "dirsenderthread.h"
 #include "filerecieverthread.h"
+#include "dirrecieverthread.h"
 #include <QFileDialog>
 #include <QDir>
 
 ChatDialog::ChatDialog(QString peer, PeerManager *peerManager, Server *serverPtr, FileServer *fserverPtr, QWidget *parent)
-        : QDialog(parent)
+        : QDialog(parent), peerName(peer), manager(peerManager), server(serverPtr), fserver(fserverPtr)
 {
     ui.setupUi(this);
-    peerName = peer;
-    manager = peerManager;
-    server = serverPtr;
-    fserver = fserverPtr;
+
     setWindowTitle(peer + "@" + manager->peerInfo(peer).ipAddress().toString());    //Set the window title to peer@ipaddress
+
     connect(ui.sendButton, SIGNAL(clicked()), this, SLOT(sendMessage()));
     connect(ui.fileButton, SIGNAL(clicked()), this, SLOT(sendFile()));
     connect(ui.cancelFileButton, SIGNAL(clicked()), this, SLOT(cancelFileTransfer()));
     connect(ui.saveFileButton, SIGNAL(clicked()), this, SLOT(saveFile()));
+    connect(ui.dirButton, SIGNAL(clicked()), this, SLOT(sendDir()));
+
     connect(server, SIGNAL(messageRecieved(QString,QString)), this, SLOT(messageRecieved(QString,QString)));
     connect(server, SIGNAL(fileRecieved(QString,qint64,QString,QString)), this, SLOT(fileRecieved(QString,qint64,QString,QString)));
+    connect(server, SIGNAL(dirRecieved(QDomNodeList,QDomNodeList,QString)), this, SLOT(dirRecieved(QDomNodeList,QDomNodeList,QString)));
 }
 
 void ChatDialog::sendMessage()
 {
     MessageSender *sender = new MessageSender(manager, this);
     sender->sendMessage(ui.messageEdit->text(),manager->peerInfo(peerName));
-    ui.chatEdit->append("<b>" + manager->username() + "</b> :: " + ui.messageEdit->text());
+    ui.chatEdit->append("<b>" + manager->username() + "</b> :: " + ui.messageEdit->text()); //<b> is HTML for bold
     ui.messageEdit->clear();
 }
 
@@ -56,7 +59,7 @@ void ChatDialog::sendFile()
     if (filename=="")
         return;
     ui.chatEdit->append("<b>" + manager->username() + "</b> sends a file " + filename);
-    FileSenderThread *sender = new FileSenderThread(manager, fserver, filename, manager->peerInfo(peerName));
+    FileSenderThread *sender = new FileSenderThread(manager, fserver, filename, manager->peerInfo(peerName),this);
     sender->start();
 }
 
@@ -106,6 +109,25 @@ void ChatDialog::fileRecieved(QString filename, qint64 size, QString ID, QString
         ui.IDEdit->setText(ID);
         ui.tabWidget->setCurrentWidget(ui.tabFileTransfer);
     }
+}
+
+void ChatDialog::dirRecieved(QDomNodeList fileList, QDomNodeList dirList, QString username)
+{
+    if (username == manager->peerInfo(peerName).name()) {
+        QString dirname = QFileDialog::getExistingDirectory(this, "Select a dir");
+
+        DirRecieverThread *reciever = new DirRecieverThread(manager, dirname, fileList, dirList, peerName, this);
+        reciever->start();
+    }
+}
+
+void ChatDialog::sendDir()
+{
+    QString dirname = QFileDialog::getExistingDirectory(this, "Select a dir");
+    if (dirname == "")
+        return;
+    DirSenderThread *sender = new DirSenderThread(manager, fserver, dirname, manager->peerInfo(peerName), this);
+    sender->start();
 }
 
 ChatDialog::~ChatDialog()

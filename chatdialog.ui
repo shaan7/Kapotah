@@ -60,6 +60,16 @@
          </property>
         </widget>
        </item>
+       <item row="1" column="3">
+        <widget class="QPushButton" name="dirButton">
+         <property name="text">
+          <string>Dir</string>
+         </property>
+         <property name="autoDefault">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="tabFileTransfer">
@@ -158,14 +168,16 @@
   </layout>
  </widget>
  <tabstops>
+  <tabstop>tabWidget</tabstop>
   <tabstop>messageEdit</tabstop>
   <tabstop>sendButton</tabstop>
   <tabstop>fileButton</tabstop>
-  <tabstop>fileSizeEdit</tabstop>
-  <tabstop>saveFileButton</tabstop>
-  <tabstop>cancelFileButton</tabstop>
-  <tabstop>IDEdit</tabstop>
+  <tabstop>dirButton</tabstop>
   <tabstop>fileNameEdit</tabstop>
+  <tabstop>fileSizeEdit</tabstop>
+  <tabstop>IDEdit</tabstop>
+  <tabstop>cancelFileButton</tabstop>
+  <tabstop>saveFileButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>

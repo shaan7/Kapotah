@@ -23,13 +23,9 @@
 #include <QTime>
 #include "filesenderthread.h"
 
-FileSenderThread::FileSenderThread(PeerManager *peermanager, FileServer *fileServer, QString fileToSend, PeerInfo destinationPeer)
+FileSenderThread::FileSenderThread(PeerManager *peermanager, FileServer *fileServer, QString fileToSend, PeerInfo destinationPeer, QObject *parent)
+    : QThread(parent), manager(peermanager), fserver(fileServer), filename(fileToSend), destination(destinationPeer)
 {
-    manager = peermanager;
-    fserver = fileServer;
-    filename = fileToSend;
-    destination = destinationPeer;
-
     qsrand(1000);
 }
 
@@ -47,8 +43,8 @@ void FileSenderThread::run()
     QDomElement doc = document.createElement("document");
     QDomElement action = document.createElement("action");
     action.setAttribute( "type", "file" );
+    action.setAttribute("senderName", manager->username());
     QDomElement file = document.createElement("file");
-    file.setAttribute("senderName", manager->username());
     file.setAttribute("fileName", info.fileName());
     file.setAttribute("size", QString::number(info.size()));
     ID = QTime::currentTime().toString() + "::" + QString::number(qrand());
@@ -62,8 +58,16 @@ void FileSenderThread::run()
     doc.appendChild(action);
     action.appendChild(file);
 
-    socket.write(document.toByteArray());
-    socket.disconnectFromHost();
-    socket.waitForDisconnected();
+    QByteArray data;
+    QDataStream stream(&data, QIODevice::WriteOnly);
+    stream.setVersion(QDataStream::Qt_4_5);
+    stream << (quint32)document.toByteArray().size();
+    data.append(document.toByteArray());
 
+    socket.write(data);
+    socket.waitForBytesWritten();
+    socket.disconnectFromHost();
+
+    if (socket.state()!=QTcpSocket::UnconnectedState)
+        socket.waitForDisconnected();
 }

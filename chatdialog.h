@@ -54,10 +54,12 @@ private slots:
     void saveFile();
     void cancelFileTransfer();
     void fileTransferComplete();
+    void sendDir();
 
 public slots:
     void messageRecieved(QString message, QString username);
     void fileRecieved(QString filename,qint64 size,QString ID,QString username);
+    void dirRecieved(QDomNodeList fileList, QDomNodeList dirList, QString username);
 };
 
 #endif // CHATDIALOG_H

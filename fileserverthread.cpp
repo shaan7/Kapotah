@@ -40,7 +40,7 @@ void FileServerThread::run()
         socket.waitForReadyRead();
 
         QString data(socket.readAll());
-        if (dynamic_cast<FileServer*>(parent())->idExists(data)) {
+        if (dynamic_cast<FileServer*>(parent())->idExists(data)) {  //dynamic_cast<FileServer*>(parent()) is actually the fileserver
             ID = data;
             filename = dynamic_cast<FileServer*>(parent())->getFileName(ID);
 
@@ -53,11 +53,13 @@ void FileServerThread::run()
 
             while (!file.atEnd()) {
                 if (socket.state() != QTcpSocket::ConnectedState)
-                    break;
+                    return;
                 socket.write(file.read(bytesPerBlock));
                 socket.waitForBytesWritten();
             }
         }
+        else
+            return;
     }
 }
 
