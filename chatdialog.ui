@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>453</width>
-    <height>310</height>
+    <height>349</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -153,6 +153,13 @@
        </item>
       </layout>
      </widget>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="buddyStatusLabel">
+     <property name="text">
+      <string/>
+     </property>
     </widget>
    </item>
   </layout>

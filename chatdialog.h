@@ -59,6 +59,8 @@ private slots:
 public slots:
     void messageRecieved(QString message, QString username);
     void fileRecieved(QString filename,qint64 size,QString ID,QString username);
+    void sendStatus();
+    void parseUdpDatagram(QHostAddress senderIP, QByteArray datagram);
 };
 
 #endif // CHATDIALOG_H

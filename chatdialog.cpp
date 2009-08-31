@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "chatdialog.h"
+#include <QDomDocument>
 #include "messagesender.h"
 #include "filesenderthread.h"
 #include "filerecieverthread.h"
@@ -41,6 +42,8 @@ ChatDialog::ChatDialog(QString peer, PeerManager *peerManager, Server *serverPtr
     connect(server, SIGNAL(messageRecieved(QString,QString)), this, SLOT(messageRecieved(QString,QString)));
     connect(server, SIGNAL(fileRecieved(QString,qint64,QString,QString)), this, SLOT(fileRecieved(QString,qint64,QString,QString)));
     connect(manager, SIGNAL(peerGone(QString)), this, SLOT(checkGonePeer(QString)));
+    connect(ui.messageEdit, SIGNAL(textEdited()),this, SLOT(sendStatus()));
+    connect(server, SIGNAL(udpDataRecieved(QHostAddress,QByteArray)), this, SLOT(parseUdpDatagram(QHostAddress,QByteArray)));
 }
 
 void ChatDialog::checkGonePeer(QString name)
@@ -49,6 +52,7 @@ void ChatDialog::checkGonePeer(QString name)
     {
         ui.chatEdit->append("<font color=red>" + peerName + " is offline</font>");
         ui.sendButton->setEnabled(false);
+        ui.fileButton->setEnabled(false);
     }
 }
 
@@ -116,6 +120,40 @@ void ChatDialog::fileRecieved(QString filename, qint64 size, QString ID, QString
         ui.IDEdit->setText(ID);
         ui.tabWidget->setCurrentWidget(ui.tabFileTransfer);
     }
+}
+
+void ChatDialog::sendStatus()
+{
+    QDomDocument document;
+
+    QDomElement doc = document.createElement("document");
+    QDomElement action = document.createElement("action");
+    action.setAttribute( "type", "status" );
+    QDomElement status = document.createElement("status");
+    status.setAttribute("senderName", manager->username());
+
+    document.appendChild(doc);
+    doc.appendChild(action);
+    action.appendChild(status);
+
+    server->sendStatus(document.toByteArray());
+}
+
+void ChatDialog::parseUdpDatagram(QHostAddress senderIP, QByteArray datagram)
+{
+        QDomDocument document;
+        document.setContent(datagram, false, 0, 0, 0);
+        QDomElement documentElement = document.documentElement();
+        QDomNode node = documentElement.firstChild();
+        QDomElement action = node.toElement();
+
+        //If data is type status
+        if (action.attribute("type") == "status") {
+            QDomElement announce = action.firstChild().toElement();
+            PeerInfo tempPeer(announce.attribute("senderName", "unknown"),senderIP);
+
+            ui.buddyStatusLabel->setText(announce.attribute("senderName", "unknown") + " is typing.....");
+        }
 }
 
 ChatDialog::~ChatDialog()
