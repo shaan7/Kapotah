@@ -55,6 +55,11 @@ PeerManager::PeerManager(Server *serverPtr)
     connect(&broadcastTimer, SIGNAL(timeout()), this, SLOT(checkPeers()));
 }
 
+bool PeerManager::contains(QString name)
+{
+    return peers.contains(name);
+}
+
 void PeerManager::startBroadcast()
 {
     broadcastTimer.start();

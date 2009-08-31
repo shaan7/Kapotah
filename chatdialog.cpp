@@ -43,6 +43,16 @@ ChatDialog::ChatDialog(QString peer, PeerManager *peerManager, Server *serverPtr
     connect(server, SIGNAL(messageRecieved(QString,QString)), this, SLOT(messageRecieved(QString,QString)));
     connect(server, SIGNAL(fileRecieved(QString,qint64,QString,QString)), this, SLOT(fileRecieved(QString,qint64,QString,QString)));
     connect(server, SIGNAL(dirRecieved(QDomNodeList,QDomNodeList,QString)), this, SLOT(dirRecieved(QDomNodeList,QDomNodeList,QString)));
+    connect(manager, SIGNAL(peerGone(QString)), this, SLOT(checkGonePeer(QString)));
+}
+
+void ChatDialog::checkGonePeer(QString name)
+{
+    if (name == peerName)
+    {
+        ui.chatEdit->append("<font color=red>" + peerName + " is offline</font>");
+        ui.sendButton->setEnabled(false);
+    }
 }
 
 void ChatDialog::sendMessage()

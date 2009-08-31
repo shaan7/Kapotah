@@ -42,7 +42,7 @@ public:
     void setUsername(QString name)  {   m_username = name;    }
     QString username()  {   return m_username;  }
     PeerInfo peerInfo(QString name);
-
+    bool contains(QString name);
 signals:
     void newPeer(QString name);
     void peerGone(QString name);
