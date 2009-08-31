@@ -32,10 +32,12 @@ Dialog::Dialog(Server *server,FileServer *fserver,QWidget *parent)
     connect(ui->peerList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(openChatWindow(QListWidgetItem*)));
     connect(server, SIGNAL(messageRecieved(QString,QString)), this, SLOT(messageRecieved(QString,QString)));
 }
+
 Dialog::~Dialog()
 {
     delete ui;
 }
+
 void Dialog::startPeerManager()
 {
     ui->refreshButton->setEnabled(false);
@@ -45,11 +47,13 @@ void Dialog::startPeerManager()
     connect(manager,SIGNAL(newPeer(QString)),this,SLOT(addNewPeer(QString)));
     connect(manager,SIGNAL(peerGone(QString)),this,SLOT(removePeer(QString)));
 }
+
 void Dialog::addNewPeer(QString peer)
 {
     ui->peerList->addItem(peer);
     updateNumOfPeers();  //updates the number of members online
 }
+
 void Dialog::removePeer(QString peer)
 {
     //We have to find the row in which the peer is being shown and select the first match
@@ -57,10 +61,12 @@ void Dialog::removePeer(QString peer)
     ui->peerList->takeItem(rowNumber);
     updateNumOfPeers();
 }
+
 void Dialog::updateNumOfPeers()  //function to find the no. of members online
 {
     ui->updateNumOfPeers->setText(QString::number(ui->peerList->count()) + " user(s) online");
 }
+
 ChatDialog* Dialog::openChatWindow(QListWidgetItem *item)
 {
     if (openChatDialogs.contains(item->text()))
@@ -71,10 +77,12 @@ ChatDialog* Dialog::openChatWindow(QListWidgetItem *item)
     dlg->show();
     return dlg;
 }
+
 void Dialog::unregisterChatDialog()
 {
     openChatDialogs.remove(openChatDialogs.key(dynamic_cast<ChatDialog*>(sender())));
 }
+
 void Dialog::messageRecieved(QString message,QString username)
 {
     if (openChatDialogs.contains(username))

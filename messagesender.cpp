@@ -42,12 +42,22 @@ void MessageSender::sendMessage(QString message, PeerInfo destinationPeer)
     doc.appendChild(action);
     action.appendChild(msg);
 
+    QByteArray data;
+    QDataStream stream(&data, QIODevice::WriteOnly);
+    stream.setVersion(QDataStream::Qt_4_5);
+    stream << (quint32)document.toByteArray().size();
+    data.append(document.toByteArray());
+
     QTcpSocket socket;
     socket.abort();
     socket.connectToHost(destinationPeer.ipAddress(), 9876);
     socket.waitForConnected();
-    socket.write(document.toByteArray());
+    socket.write(data);
+    socket.waitForBytesWritten();
     socket.disconnectFromHost();
-    socket.waitForDisconnected();
+
+    if (socket.state()!=QTcpSocket::UnconnectedState)
+        socket.waitForDisconnected();
+
     deleteLater();
 }

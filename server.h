@@ -24,14 +24,14 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QUdpSocket>
+#include <QDomNodeList>
+#include "serverthread.h"
 
 class Server : public QTcpServer
 {
     Q_OBJECT
 
 private:
-    QHash<QString,QTcpSocket*> pendingRecieveFiles;
-
     //UDP
 
     QList<QHostAddress> broadcastAddresses;
@@ -49,7 +49,7 @@ protected:
      void incomingConnection(int socketDescriptor);
 
 private slots:
-     void readIncomingData();
+     void readIncomingData(QByteArray data);
 
 public slots:
     void sendBroadcast(QByteArray datagram);
@@ -58,6 +58,7 @@ public slots:
 signals:
      void messageRecieved(QString message, QString username);
      void fileRecieved(QString name, qint64 size, QString ID, QString username);
+     void dirRecieved(QDomNodeList fileList, QDomNodeList dirList, QString username);
      void udpDataRecieved(QHostAddress senderIP, QByteArray data);
 
 };

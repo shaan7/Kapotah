@@ -54,13 +54,18 @@ private slots:
     void saveFile();
     void cancelFileTransfer();
     void fileTransferComplete();
+    void sendDir();
     void checkGonePeer(QString name);
 
 public slots:
     void messageRecieved(QString message, QString username);
     void fileRecieved(QString filename,qint64 size,QString ID,QString username);
+<<<<<<< HEAD:chatdialog.h
     void sendStatus();
     void parseUdpDatagram(QHostAddress senderIP, QByteArray datagram);
+=======
+    void dirRecieved(QDomNodeList fileList, QDomNodeList dirList, QString username);
+>>>>>>> a648c18f6f7c12fe77923614990b033f8b19076e:chatdialog.h
 };
 
 #endif // CHATDIALOG_H

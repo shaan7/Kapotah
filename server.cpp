@@ -41,16 +41,17 @@ Server::Server(QObject *parent) :
 
 void Server::incomingConnection(int socketDescriptor)
 {
-    QTcpSocket *socket = new QTcpSocket(this);
-    socket->setSocketDescriptor(socketDescriptor);
-    connect(socket, SIGNAL(readyRead()), this, SLOT(readIncomingData()));
+    ServerThread *serverThread = new ServerThread(socketDescriptor, this);
+    connect(serverThread, SIGNAL(dataReady(QByteArray)), this, SLOT(readIncomingData(QByteArray)));
+    serverThread->start();
 }
 
-void Server::readIncomingData()     //TCP
+void Server::readIncomingData(QByteArray data)     //TCP
 {
+    QString error;
     //Parse the datagram as XML
     QDomDocument document;
-    document.setContent(dynamic_cast<QTcpSocket*>(sender())->readAll(), false, 0, 0, 0);
+    document.setContent(data, false, &error);
     QDomElement documentElement = document.documentElement();
     QDomNode node = documentElement.firstChild();
     QDomElement action = node.toElement();
@@ -62,17 +63,15 @@ void Server::readIncomingData()     //TCP
     }
     if (action.attribute("type") == "file") {
         QDomElement file = action.firstChild().toElement();
-        //TODO
-        emit fileRecieved(file.attribute("fileName", "UNKNOWN"), file.attribute("size","0").toInt()
-                             , file.attribute("ID","0"), file.attribute("senderName", "unknown"));
-        pendingRecieveFiles[file.attribute("ID","0")] = dynamic_cast<QTcpSocket*>(sender());
-    }
-}
 
-void Server::acceptFileTransfer(QString ID)
-{
-    if (pendingRecieveFiles.contains(ID)) {
-        pendingRecieveFiles.value(ID)->write(ID.toUtf8());
+        emit fileRecieved(file.attribute("fileName", "UNKNOWN"), file.attribute("size","0").toInt()
+                             , file.attribute("ID","0"), action.attribute("senderName", "unknown"));
+    }
+    if (action.attribute("type") == "dir") {
+        QDomElement dir = action.firstChild().toElement();
+        QDomNodeList files = action.firstChild().toElement().childNodes();
+        QDomNodeList dirs = action.childNodes().at(1).childNodes();
+        emit dirRecieved(files, dirs, action.attribute("senderName", "unknown"));
     }
 }
 

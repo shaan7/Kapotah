@@ -30,7 +30,7 @@ class FileSenderThread : public QThread
 {
     Q_OBJECT
 public:
-    FileSenderThread(PeerManager *peermanager, FileServer* fileServer, QString fileToSend, PeerInfo destinationPeer);
+    FileSenderThread(PeerManager *peermanager, FileServer* fileServer, QString fileToSend, PeerInfo destinationPeer, QObject *parent);
     void run();
 
 private:
