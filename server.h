@@ -44,6 +44,7 @@ private:
 public:
     Server(QObject *parent=0);
     void acceptFileTransfer(QString ID);
+    void sendDatagram(QByteArray datagram, QHostAddress destination);
 
 protected:
      void incomingConnection(int socketDescriptor);

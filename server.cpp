@@ -88,6 +88,11 @@ void Server::sendBroadcast(QByteArray datagram)
         updateAddresses();
 }
 
+void Server::sendDatagram(QByteArray datagram, QHostAddress destination)
+{
+    broadcastSocket.writeDatagram(datagram, destination, broadcastPort);
+}
+
 void Server::readBroadcast()
 {
     //Get the datagrams until socket in empty
