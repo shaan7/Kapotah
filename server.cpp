@@ -68,7 +68,7 @@ void Server::readIncomingData(QByteArray data)     //TCP
                              , file.attribute("ID","0"), action.attribute("senderName", "unknown"));
     }
     if (action.attribute("type") == "dir") {
-        QDomElement dir = action.firstChild().toElement();
+        QDomElement file = action.firstChild().toElement();
         QDomNodeList files = action.firstChild().toElement().childNodes();
         QDomNodeList dirs = action.childNodes().at(1).childNodes();
         emit dirRecieved(files, dirs, action.attribute("senderName", "unknown"));
