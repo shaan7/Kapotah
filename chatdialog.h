@@ -47,6 +47,7 @@ private:
     QDateTime startTime;
     QDateTime endTime;
     qint64 fileSize;
+    QTimer keyStatusTimer;
 
 private slots:
     void sendMessage();
@@ -56,6 +57,7 @@ private slots:
     void fileTransferComplete();
     void sendDir();
     void checkGonePeer(QString name);
+    void checkForKeyStatus();
 
 public slots:
     void messageRecieved(QString message, QString username);

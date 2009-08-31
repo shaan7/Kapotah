@@ -18,8 +18,9 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include "chatdialog.h"
 #include <QDomDocument>
+#include <QTimer>
+#include "chatdialog.h"
 #include "messagesender.h"
 #include "filesenderthread.h"
 #include "dirsenderthread.h"
@@ -47,6 +48,9 @@ ChatDialog::ChatDialog(QString peer, PeerManager *peerManager, Server *serverPtr
     connect(manager, SIGNAL(peerGone(QString)), this, SLOT(checkGonePeer(QString)));
     connect(ui.messageEdit, SIGNAL(textEdited(QString)),this, SLOT(sendStatus()));
     connect(server, SIGNAL(udpDataRecieved(QHostAddress,QByteArray)), this, SLOT(parseUdpDatagram(QHostAddress,QByteArray)));
+    connect(&keyStatusTimer, SIGNAL(timeout()), this, SLOT(checkForKeyStatus()));
+
+    keyStatusTimer.setInterval(2000);
 }
 
 void ChatDialog::checkGonePeer(QString name)
@@ -152,10 +156,17 @@ void ChatDialog::parseUdpDatagram(QHostAddress senderIP, QByteArray datagram)
 
     //If data is type status
     if (action.attribute("type") == "status") {
+        keyStatusTimer.stop();
         QDomElement announce = action.firstChild().toElement();
         PeerInfo tempPeer(announce.attribute("senderName", "unknown"),senderIP);
         ui.buddyStatusLabel->setText(announce.attribute("senderName", "unknown") + " is typing.....");
+        keyStatusTimer.start();
     }
+}
+
+void ChatDialog::checkForKeyStatus()
+{
+    ui.buddyStatusLabel->clear();
 }
 
 void ChatDialog::dirRecieved(QDomNodeList fileList, QDomNodeList dirList, QString username)
