@@ -77,13 +77,17 @@ void Dialog::updateNumOfPeers()  //function to find the no. of members online
 
 ChatDialog* Dialog::openChatWindow(QListWidgetItem *item)
 {
-    if (openChatDialogs.contains(item->text()))
+    if (openChatDialogs.contains(item->text())) {
+        if (!chatDlg->isVisible())
+            chatDlg->show();
         return 0;
-    ChatDialog *dlg = new ChatDialog(item->text(), manager, m_server, m_fserver, this);
-    openChatDialogs[item->text()] = dlg;    //Save the dialog to the QHash so that we know which chat dialogs are open
-    connect(dlg, SIGNAL(finished(int)), this, SLOT(unregisterChatDialog()));
-    dlg->show();
-    return dlg;
+    }
+
+    chatDlg = new ChatDialog(item->text(), manager, m_server, m_fserver, this);
+    openChatDialogs[item->text()] = chatDlg;    //Save the dialog to the QHash so that we know which chat dialogs are open
+    connect(chatDlg, SIGNAL(finished(int)), this, SLOT(unregisterChatDialog()));
+    chatDlg->show();
+    return chatDlg;
 }
 
 void Dialog::unregisterChatDialog()
@@ -93,10 +97,14 @@ void Dialog::unregisterChatDialog()
 
 void Dialog::messageRecieved(QString message,QString username)
 {
-    if (openChatDialogs.contains(username))
-        return;
-    //Find the list item where the username is displayed, and open a chatdialog according to it
-    int rowNumber = ui->peerList->row(ui->peerList->findItems(username, Qt::MatchExactly)[0]);
-    ChatDialog *dlg = openChatWindow(ui->peerList->item(rowNumber));
-    dlg->messageRecieved(message, username);
+    if (openChatDialogs.contains(username)) {
+        if (!chatDlg->isVisible())
+            chatDlg->show();
+    }
+    else {
+        //Find the list item where the username is displayed, and open a chatdialog according to it
+        int rowNumber = ui->peerList->row(ui->peerList->findItems(username, Qt::MatchExactly)[0]);
+        chatDlg = openChatWindow(ui->peerList->item(rowNumber));
+        chatDlg->messageRecieved(message, username);
+    }
 }

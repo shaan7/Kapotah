@@ -48,6 +48,7 @@ private:
     QHash<QString,ChatDialog*> openChatDialogs;
     Server *m_server;
     FileServer *m_fserver;
+    ChatDialog *chatDlg;
 
 private slots:
     void startPeerManager();

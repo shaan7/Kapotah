@@ -23,6 +23,7 @@
 
 #include <QDialog>
 #include <QDateTime>
+#include <QCloseEvent>
 #include "ui_chatdialog.h"
 #include "peermanager.h"
 #include "server.h"
@@ -48,6 +49,8 @@ private:
     QDateTime endTime;
     qint64 fileSize;
     QTimer keyStatusTimer;
+
+    void closeEvent(QCloseEvent *event);
 
 private slots:
     void sendMessage();

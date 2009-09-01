@@ -54,6 +54,12 @@ ChatDialog::ChatDialog(QString peer, PeerManager *peerManager, Server *serverPtr
     keyStatusTimer.setInterval(2000);
 }
 
+void ChatDialog::closeEvent(QCloseEvent *event)
+{
+    hide();
+    event->ignore();
+}
+
 void ChatDialog::checkGonePeer(QString name)
 {
     if (name == peerName)
