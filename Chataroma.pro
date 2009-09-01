@@ -20,7 +20,8 @@ SOURCES += main.cpp \
     dirsenderthread.cpp \
     serverthread.cpp \
     messagesenderthread.cpp \
-    dirrecieverthread.cpp
+    dirrecieverthread.cpp \
+    filestatusdialog.cpp
 HEADERS += dialog.h \
     peermanager.h \
     peerinfo.h \
@@ -34,6 +35,8 @@ HEADERS += dialog.h \
     dirsenderthread.h \
     serverthread.h \
     messagesenderthread.h \
-    dirrecieverthread.h
+    dirrecieverthread.h \
+    filestatusdialog.h
 FORMS += dialog.ui \
-    chatdialog.ui
+    chatdialog.ui \
+    filestatusdialog.ui

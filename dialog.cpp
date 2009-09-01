@@ -20,6 +20,7 @@
 
 #include "dialog.h"
 #include "ui_dialog.h"
+#include "filestatusdialog.h"
 
 Dialog::Dialog(Server *server,FileServer *fserver,QWidget *parent)
     : QDialog(parent), ui(new Ui::DialogClass)
@@ -29,6 +30,7 @@ Dialog::Dialog(Server *server,FileServer *fserver,QWidget *parent)
     m_fserver = fserver;
     setWindowTitle("ChatAroma");
     connect(ui->refreshButton,SIGNAL(clicked()),this,SLOT(startPeerManager()));
+    connect(ui->filesButton, SIGNAL(clicked()), this, SLOT(showFilesDialog()));
     connect(ui->peerList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(openChatWindow(QListWidgetItem*)));
     connect(server, SIGNAL(messageRecieved(QString,QString)), this, SLOT(messageRecieved(QString,QString)));
 }
@@ -36,6 +38,12 @@ Dialog::Dialog(Server *server,FileServer *fserver,QWidget *parent)
 Dialog::~Dialog()
 {
     delete ui;
+}
+
+void Dialog::showFilesDialog()
+{
+    FileStatusDialog dialog;
+    dialog.exec();
 }
 
 void Dialog::startPeerManager()
