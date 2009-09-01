@@ -55,6 +55,7 @@ private slots:
     void addNewPeer(QString peer);
     void removePeer(QString peer);
     ChatDialog* openChatWindow(QListWidgetItem*);
+    void showFilesDialog();
 
 public slots:
     void unregisterChatDialog();
