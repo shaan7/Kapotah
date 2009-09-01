@@ -46,6 +46,7 @@ ChatDialog::ChatDialog(QString peer, PeerManager *peerManager, Server *serverPtr
     connect(server, SIGNAL(fileRecieved(QString,qint64,QString,QString)), this, SLOT(fileRecieved(QString,qint64,QString,QString)));
     connect(server, SIGNAL(dirRecieved(QDomNodeList,QDomNodeList,QString)), this, SLOT(dirRecieved(QDomNodeList,QDomNodeList,QString)));
     connect(manager, SIGNAL(peerGone(QString)), this, SLOT(checkGonePeer(QString)));
+    connect(manager, SIGNAL(newPeer(QString)), this, SLOT(checkPeerReturned(QString)));
     connect(ui.messageEdit, SIGNAL(textEdited(QString)),this, SLOT(sendStatus()));
     connect(server, SIGNAL(udpDataRecieved(QHostAddress,QByteArray)), this, SLOT(parseUdpDatagram(QHostAddress,QByteArray)));
     connect(&keyStatusTimer, SIGNAL(timeout()), this, SLOT(checkForKeyStatus()));
@@ -60,6 +61,15 @@ void ChatDialog::checkGonePeer(QString name)
         ui.chatEdit->append("<font color=red>" + peerName + " is offline</font>");
         ui.sendButton->setEnabled(false);
         ui.fileButton->setEnabled(false);
+    }
+}
+
+void ChatDialog::checkPeerReturned(QString name)
+{
+    if (name == peerName)
+    {
+        ui.sendButton->setEnabled(true);
+        ui.fileButton->setEnabled(true);
     }
 }
 
