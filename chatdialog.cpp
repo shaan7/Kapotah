@@ -61,6 +61,7 @@ void ChatDialog::checkGonePeer(QString name)
         ui.chatEdit->append("<font color=red>" + peerName + " is offline</font>");
         ui.sendButton->setEnabled(false);
         ui.fileButton->setEnabled(false);
+        ui.dirButton->setEnabled(false);
     }
 }
 
@@ -68,8 +69,10 @@ void ChatDialog::checkPeerReturned(QString name)
 {
     if (name == peerName)
     {
+        ui.chatEdit->append("<font color=green>" + peerName + " is back online</font>");
         ui.sendButton->setEnabled(true);
         ui.fileButton->setEnabled(true);
+        ui.dirButton->setEnabled(true);
     }
 }
 
