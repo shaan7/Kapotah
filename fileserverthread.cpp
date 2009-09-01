@@ -57,6 +57,8 @@ void FileServerThread::run()
                 socket.write(file.read(bytesPerBlock));
                 socket.waitForBytesWritten();
             }
+            socket.waitForDisconnected(-1);
+            return;
         }
         else
             return;

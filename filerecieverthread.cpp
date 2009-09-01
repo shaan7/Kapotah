@@ -31,7 +31,6 @@ FileRecieverThread::FileRecieverThread(PeerManager *peerManager, QString fileID,
     readyToRecieve = false;
     startedRecieving = false;
     bytesCopied = 0;
-    statusVar = 0;
     doQuit = false;
 }
 
@@ -51,21 +50,24 @@ void FileRecieverThread::run()
 
     while (!doQuit) {
 
-        socket.waitForReadyRead();
+        while (socket.bytesAvailable()==0) {
+            socket.waitForReadyRead();
+        }
 
         if (readyToRecieve) {
             qint64 bytesWritten = file.write(socket.readAll());
             bytesCopied = file.pos();
 
             emit progress(bytesCopied);
-
-            if (bytesCopied < size) {
-            }
-            else {
+//qDebug() << QString::number(bytesCopied) + " of " << QString::number(size);
+            if (bytesCopied >= size) {
                 qDebug() << "DONE " << filename;
                 emit done();
                 file.close();
                 socket.disconnectFromHost();
+
+                if (socket.state()!=QTcpSocket::UnconnectedState)
+                    socket.waitForDisconnected();
                 return;
             }
         }
@@ -84,10 +86,6 @@ void FileRecieverThread::run()
                 return;
             }
         }
-    }
-
-    if (statusVar!=0) {
-        *statusVar = true;
     }
 }
 
