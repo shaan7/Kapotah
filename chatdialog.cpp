@@ -107,7 +107,7 @@ void ChatDialog::saveFile()
         return;
     ui.fileTransferProgress->setMaximum(fileSize);
     reciever = new FileRecieverThread(manager, ui.IDEdit->text(), fileSize, peerName, filename, this);
-    connect(reciever, SIGNAL(progress(int)), ui.fileTransferProgress, SLOT(setValue(int)));
+    //connect(reciever, SIGNAL(progress(int)), ui.fileTransferProgress, SLOT(setValue(int)));
     connect(reciever, SIGNAL(done()), this, SLOT(fileTransferComplete()));
     startTime = QDateTime::currentDateTime();
     reciever->start();

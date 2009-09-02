@@ -58,8 +58,8 @@ void FileRecieverThread::run()
             qint64 bytesWritten = file.write(socket.readAll());
             bytesCopied = file.pos();
 
-            emit progress(bytesCopied);
-//qDebug() << QString::number(bytesCopied) + " of " << QString::number(size);
+            emit progress(ID, peer, filename, size, bytesCopied);
+
             if (bytesCopied >= size) {
                 qDebug() << "DONE " << filename;
                 emit done();

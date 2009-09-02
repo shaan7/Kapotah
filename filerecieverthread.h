@@ -50,7 +50,7 @@ public:
     void stopTransfer();
 
 signals:
-    void progress(int bytesDone);
+    void progress(QString ID, QString peer, QString fileName, qint64 size, qint64 bytesDone);
     void done();
 };
 

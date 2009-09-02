@@ -20,11 +20,17 @@ void FileStatusDialog::addDownload()
     QProgressBar *progress = new QProgressBar();
     QToolButton *pause = new QToolButton();
     QToolButton *cancel = new QToolButton();
+    QToolButton *type = new QToolButton();
+
+    //Set the widgets
+    type->setArrowType(Qt::DownArrow);
+    type->setToolTip("Download");
 
     //Layout the new widgets
     layout->addWidget(progress, 0, 0);
     layout->addWidget(pause, 0, 1);
     layout->addWidget(cancel, 0, 2);
+    layout->addWidget(type, 0, 3);
     box->setLayout(layout);
     box->setTitle("Welcome File");
 
