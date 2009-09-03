@@ -48,11 +48,6 @@ PeerManager::PeerManager(Pointers *ptr)
 
     if (m_username.isEmpty())
         m_username = "unknown";
-
-    broadcastTimer.setInterval(BroadcastInterval);
-    connect(server, SIGNAL(udpDataRecieved(QHostAddress,QByteArray)), this, SLOT(parseUdpDatagram(QHostAddress,QByteArray)));
-    connect(&broadcastTimer, SIGNAL(timeout()), this, SLOT(sendAnnounce()));
-    connect(&broadcastTimer, SIGNAL(timeout()), this, SLOT(checkPeers()));
 }
 
 bool PeerManager::contains(QString name)
@@ -62,6 +57,11 @@ bool PeerManager::contains(QString name)
 
 void PeerManager::startBroadcast()
 {
+    broadcastTimer.setInterval(BroadcastInterval);
+    connect(server, SIGNAL(udpDataRecieved(QHostAddress,QByteArray)), this, SLOT(parseUdpDatagram(QHostAddress,QByteArray)));
+    connect(&broadcastTimer, SIGNAL(timeout()), this, SLOT(sendAnnounce()));
+    connect(&broadcastTimer, SIGNAL(timeout()), this, SLOT(checkPeers()));
+
     broadcastTimer.start();
 }
 
