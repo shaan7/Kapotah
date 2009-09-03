@@ -24,12 +24,21 @@
 #include "fileserver.h"
 #include "pointers.h"
 #include "filestatusdialog.h"
+#include <QSystemTrayIcon>
+#include <QMessageBox>
 
 int main(int argc, char *argv[])
 {
     Pointers ptr;
-
+    Q_INIT_RESOURCE(systray);
     QApplication a(argc, argv);
+    if (!QSystemTrayIcon::isSystemTrayAvailable()) {
+        QMessageBox::critical(0, QObject::tr("Systray"),
+                              QObject::tr("I couldn't detect any system tray "
+                                          "on this system."));
+        return 1;
+    }
+    QApplication::setQuitOnLastWindowClosed(false);
 
     ptr.server = new Server;
 

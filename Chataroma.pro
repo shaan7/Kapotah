@@ -41,3 +41,4 @@ HEADERS += dialog.h \
 FORMS += dialog.ui \
     chatdialog.ui \
     filestatusdialog.ui
+RESOURCES += systray.qrc

@@ -29,6 +29,9 @@
 #include "server.h"
 #include "fileserver.h"
 #include "pointers.h"
+#include <QAction>
+#include <QMenu>
+#include <QSystemTrayIcon>
 
 namespace Ui
 {
@@ -51,6 +54,15 @@ private:
     FileServer *m_fserver;
     ChatDialog *chatDlg;
     Pointers *m_ptr;
+    void createIcon();
+    void createActions();
+    void createTrayIcon();
+    QSystemTrayIcon *trayIcon;
+    QAction *minimizeAction;
+    QAction *maximizeAction;
+    QAction *restoreAction;
+    QAction *quitAction;
+    QMenu *trayIconMenu;
 
 protected:
     void closeEvent(QCloseEvent *event);

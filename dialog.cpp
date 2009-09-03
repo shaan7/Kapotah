@@ -35,6 +35,9 @@ Dialog::Dialog(Pointers *ptr,QWidget *parent)
     connect(ui->filesButton, SIGNAL(clicked()), this, SLOT(showFilesDialog()));
     connect(ui->peerList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(openChatWindow(QListWidgetItem*)));
     connect(m_server, SIGNAL(messageRecieved(QString,QString)), this, SLOT(messageRecieved(QString,QString)));
+    createIcon();
+    createActions();
+    createTrayIcon();
 }
 
 Dialog::~Dialog()
@@ -45,6 +48,40 @@ Dialog::~Dialog()
 void Dialog::showFilesDialog()
 {
     m_ptr->fileStatusDialog->show();
+}
+
+void Dialog::createIcon()
+{
+    trayIcon = new QSystemTrayIcon(this);
+    trayIcon->setIcon(QIcon(":/trash.svg"));
+    trayIcon->show();
+}
+
+void Dialog::createActions()
+{
+    minimizeAction = new QAction(tr("Mi&nimize"), this);
+    connect(minimizeAction, SIGNAL(triggered()), this, SLOT(hide()));
+
+    maximizeAction = new QAction(tr("Ma&ximize"), this);
+    connect(maximizeAction, SIGNAL(triggered()), this, SLOT(showMaximized()));
+
+    restoreAction = new QAction(tr("&Restore"), this);
+    connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
+
+    quitAction = new QAction(tr("&Quit"), this);
+    connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+}
+
+void Dialog::createTrayIcon()
+{
+    trayIconMenu = new QMenu(this);
+    trayIconMenu->addAction(minimizeAction);
+    trayIconMenu->addAction(maximizeAction);
+    trayIconMenu->addAction(restoreAction);
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(quitAction);
+
+    trayIcon->setContextMenu(trayIconMenu);
 }
 
 void Dialog::startPeerManager()
