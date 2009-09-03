@@ -77,12 +77,9 @@ void ChatDialog::dropEvent(QDropEvent *event)
 
      if (mimeData->hasUrls()) {
          QList<QUrl> urlList = mimeData->urls();
-         /*QString text;
          for (int i = 0; i < urlList.size() && i < 32; ++i) {
-             QString url = urlList.at(i).path();
-             text += url + QString("\n");
-         }*/
-         sendFile(urlList.at(0).path());    //Send only the first file for the time being
+             sendFile(urlList.at(i).path());
+         }
      }
 }
 
