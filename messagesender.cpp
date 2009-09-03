@@ -22,9 +22,9 @@
 #include <QDomDocument>
 #include <QTcpSocket>
 
-MessageSender::MessageSender(PeerManager *peerManager, QObject *parent) : QObject(parent)
+MessageSender::MessageSender(Pointers *ptr, QObject *parent) : QObject(parent)
 {
-    manager = peerManager;
+    manager = ptr->manager;
 }
 
 void MessageSender::sendMessage(QString message, PeerInfo destinationPeer)

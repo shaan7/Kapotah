@@ -29,7 +29,7 @@ class MessageSender : public QObject
     Q_OBJECT
 
 public:
-    MessageSender(PeerManager *peerManager, QObject *parent=0);
+    MessageSender(Pointers *ptr, QObject *parent=0);
 
 private:
     PeerManager *manager;

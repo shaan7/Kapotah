@@ -25,6 +25,7 @@
 #include <QTimer>
 #include "peerinfo.h"
 #include "server.h"
+#include "pointers.h"
 
 class PeerManager : public QObject
 {
@@ -37,7 +38,7 @@ private:
     QTimer broadcastTimer;
 
 public:
-    PeerManager(Server *serverPtr);
+    PeerManager(Pointers *ptr);
     void startBroadcast();
     void setUsername(QString name)  {   m_username = name;    }
     QString username()  {   return m_username;  }

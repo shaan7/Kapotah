@@ -27,8 +27,8 @@ static const qint32 BroadcastInterval = 1000;
 static const unsigned broadcastPort = 45000;
 static const int ageTimeout = 4;   //seconds
 
-PeerManager::PeerManager(Server *serverPtr)
-         : QObject(), server(serverPtr)
+PeerManager::PeerManager(Pointers *ptr)
+         : QObject(), server(ptr->server)
 {
     QStringList envVariables;   //Used to get one of the below infos about the client operating enivronment
     envVariables << "USERNAME.*" << "USER.*" << "USERDOMAIN.*"

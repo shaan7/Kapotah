@@ -23,11 +23,12 @@
 
 #include <QtGui/QDialog>
 #include <QModelIndex>
-#include "peermanager.h"
 #include <QListWidgetItem>
+#include "peermanager.h"
 #include "chatdialog.h"
 #include "server.h"
 #include "fileserver.h"
+#include "pointers.h"
 
 namespace Ui
 {
@@ -39,7 +40,7 @@ class Dialog : public QDialog
     Q_OBJECT
 
 public:
-    Dialog(Server *server,FileServer *fserver,QWidget *parent = 0);
+    Dialog(Pointers *ptr,QWidget *parent = 0);
     ~Dialog();
 
 private:
@@ -49,6 +50,10 @@ private:
     Server *m_server;
     FileServer *m_fserver;
     ChatDialog *chatDlg;
+    Pointers *m_ptr;
+
+protected:
+    void closeEvent(QCloseEvent *event);
 
 private slots:
     void startPeerManager();

@@ -29,18 +29,20 @@
 #include "server.h"
 #include "fileserver.h"
 #include "filerecieverthread.h"
+#include "pointers.h"
 
 class ChatDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    ChatDialog(QString name, PeerManager *peerManager, Server *serverPtr, FileServer *fserverPtr, QWidget *parent = 0);
+    ChatDialog(QString name, Pointers *ptr, QWidget *parent = 0);
     ~ChatDialog();
 
 private:
     Ui::ChatDialog ui;
     QString peerName;
+    Pointers *m_ptr;
     PeerManager *manager;
     Server *server;
     FileServer *fserver;
@@ -50,11 +52,16 @@ private:
     qint64 fileSize;
     QTimer keyStatusTimer;
 
+protected:
     void closeEvent(QCloseEvent *event);
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dragMoveEvent(QDragMoveEvent *event);
+    void dropEvent(QDropEvent *event);
+    void dragLeaveEvent(QDragLeaveEvent *event);
 
 private slots:
     void sendMessage();
-    void sendFile();
+    void sendFile(QString filename);
     void saveFile();
     void cancelFileTransfer();
     void fileTransferComplete();

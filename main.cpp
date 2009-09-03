@@ -22,20 +22,35 @@
 #include "dialog.h"
 #include "server.h"
 #include "fileserver.h"
+#include "pointers.h"
+#include "filestatusdialog.h"
 
 int main(int argc, char *argv[])
 {
+    Pointers ptr;
+
     QApplication a(argc, argv);
 
-    Server server;
-    if (!server.listen( QHostAddress::Any, 9876 ))
+    ptr.server = new Server;
+
+    if (!ptr.server->listen( QHostAddress::Any, 9876 ))
         qDebug() << "SERVER LISTEN FAILED";
 
-    FileServer fserver;
-    if (!fserver.listen( QHostAddress::Any, 9877 ))
+    ptr.fserver = new FileServer;
+
+    if (!ptr.fserver->listen( QHostAddress::Any, 9877 ))
         qDebug() << "FILE SERVER LISTEN FAILED";
 
-    Dialog w(&server,&fserver);
-    w.show();
+    ptr.manager = new PeerManager(&ptr);    //Create the peer manager
+
+    ptr.fileStatusDialog =  new FileStatusDialog(&ptr);
+
+    Dialog d(&ptr);
+    d.show();
     return a.exec();
+
+    delete ptr.fileStatusDialog;
+    delete ptr.manager;
+    delete ptr.fserver;
+    delete ptr.server;
 }

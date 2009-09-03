@@ -36,7 +36,8 @@ HEADERS += dialog.h \
     serverthread.h \
     messagesenderthread.h \
     dirrecieverthread.h \
-    filestatusdialog.h
+    filestatusdialog.h \
+    pointers.h
 FORMS += dialog.ui \
     chatdialog.ui \
     filestatusdialog.ui

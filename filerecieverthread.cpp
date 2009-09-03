@@ -25,8 +25,8 @@
 
 const qint64 bytesPerBlock = Q_INT64_C(100000);   //number of bytes to transfer in one block
 
-FileRecieverThread::FileRecieverThread(PeerManager *peerManager, QString fileID, qint64 fileSize, QString sendingPeer, QString outputFilename, QObject *parent)
-    : QThread(parent), ID(fileID), peer(sendingPeer), manager(peerManager), filename(outputFilename), size(fileSize)
+FileRecieverThread::FileRecieverThread(Pointers *ptr, QString fileID, qint64 fileSize, QString sendingPeer, QString outputFilename, QObject *parent)
+    : QThread(parent), ID(fileID), peer(sendingPeer), manager(ptr->manager), filename(outputFilename), size(fileSize)
 {
     readyToRecieve = false;
     startedRecieving = false;

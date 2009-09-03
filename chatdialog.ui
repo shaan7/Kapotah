@@ -24,28 +24,8 @@
        <string>Chat</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0" colspan="4">
-        <widget class="QTextEdit" name="chatEdit">
-         <property name="focusPolicy">
-          <enum>Qt::NoFocus</enum>
-         </property>
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
        <item row="1" column="0">
         <widget class="QLineEdit" name="messageEdit"/>
-       </item>
-       <item row="1" column="2">
-        <widget class="QPushButton" name="fileButton">
-         <property name="text">
-          <string>File</string>
-         </property>
-         <property name="autoDefault">
-          <bool>false</bool>
-         </property>
-        </widget>
        </item>
        <item row="1" column="1">
         <widget class="QPushButton" name="sendButton">
@@ -60,106 +40,18 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="3">
-        <widget class="QPushButton" name="dirButton">
-         <property name="text">
-          <string>Dir</string>
-         </property>
-         <property name="autoDefault">
-          <bool>false</bool>
-         </property>
-        </widget>
+       <item row="0" column="0" colspan="2">
+        <widget class="QTextBrowser" name="chatEdit"/>
        </item>
       </layout>
      </widget>
      <widget class="QWidget" name="tabFileTransfer">
       <attribute name="title">
-       <string>File Recieved</string>
+       <string>Files</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="0" column="0">
-        <widget class="QLabel" name="label">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Name</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1" colspan="4">
-        <widget class="QLineEdit" name="fileNameEdit">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>Size</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="fileSizeEdit">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2">
-        <widget class="QLineEdit" name="IDEdit"/>
-       </item>
-       <item row="1" column="3">
-        <widget class="QPushButton" name="cancelFileButton">
-         <property name="text">
-          <string>Cancel</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="4">
-        <widget class="QPushButton" name="saveFileButton">
-         <property name="text">
-          <string>Save</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0" colspan="5">
-        <widget class="QProgressBar" name="fileTransferProgress">
-         <property name="value">
-          <number>0</number>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QLabel" name="fileStatusLabel">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>172</height>
-          </size>
-         </property>
-        </spacer>
+        <widget class="QTableWidget" name="fileTable"/>
        </item>
       </layout>
      </widget>
@@ -178,13 +70,6 @@
   <tabstop>tabWidget</tabstop>
   <tabstop>messageEdit</tabstop>
   <tabstop>sendButton</tabstop>
-  <tabstop>fileButton</tabstop>
-  <tabstop>dirButton</tabstop>
-  <tabstop>fileNameEdit</tabstop>
-  <tabstop>fileSizeEdit</tabstop>
-  <tabstop>IDEdit</tabstop>
-  <tabstop>cancelFileButton</tabstop>
-  <tabstop>saveFileButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>

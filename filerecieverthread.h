@@ -25,6 +25,7 @@
 #include <QTcpSocket>
 #include <QFile>
 #include "peermanager.h"
+#include "pointers.h"
 
 class FileRecieverThread : public QThread
 {
@@ -43,7 +44,7 @@ private:
     qint64 bytesCopied;
 
 public:
-    FileRecieverThread(PeerManager *peerManager, QString fileID, qint64 fileSize, QString sendingPeer, QString outputFilename, QObject *parent);
+    FileRecieverThread(Pointers *ptr, QString fileID, qint64 fileSize, QString sendingPeer, QString outputFilename, QObject *parent);
     ~FileRecieverThread();
 
     void run();

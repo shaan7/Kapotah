@@ -4,8 +4,8 @@
 #include <QDomDocument>
 #include <QCryptographicHash>
 
-DirSenderThread::DirSenderThread(PeerManager *peermanager, FileServer *fileServer, QString dirToSend, PeerInfo destinationPeer, QObject *parent)
-    : QThread(parent), manager(peermanager), fserver(fileServer), dirPath(dirToSend), peer(destinationPeer)
+DirSenderThread::DirSenderThread(Pointers *ptr, QString dirToSend, PeerInfo destinationPeer, QObject *parent)
+    : QThread(parent), manager(ptr->manager), fserver(ptr->fserver), dirPath(dirToSend), peer(destinationPeer)
 {
 }
 

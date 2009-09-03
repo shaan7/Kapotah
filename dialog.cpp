@@ -22,17 +22,19 @@
 #include "ui_dialog.h"
 #include "filestatusdialog.h"
 
-Dialog::Dialog(Server *server,FileServer *fserver,QWidget *parent)
+Dialog::Dialog(Pointers *ptr,QWidget *parent)
     : QDialog(parent), ui(new Ui::DialogClass)
 {
     ui->setupUi(this);
-    m_server = server;
-    m_fserver = fserver;
+    m_ptr = ptr;
+    m_server = ptr->server;
+    m_fserver = ptr->fserver;
+    manager = ptr->manager;
     setWindowTitle("ChatAroma");
     connect(ui->refreshButton,SIGNAL(clicked()),this,SLOT(startPeerManager()));
     connect(ui->filesButton, SIGNAL(clicked()), this, SLOT(showFilesDialog()));
     connect(ui->peerList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(openChatWindow(QListWidgetItem*)));
-    connect(server, SIGNAL(messageRecieved(QString,QString)), this, SLOT(messageRecieved(QString,QString)));
+    connect(m_server, SIGNAL(messageRecieved(QString,QString)), this, SLOT(messageRecieved(QString,QString)));
 }
 
 Dialog::~Dialog()
@@ -42,14 +44,12 @@ Dialog::~Dialog()
 
 void Dialog::showFilesDialog()
 {
-    FileStatusDialog dialog;
-    dialog.exec();
+    m_ptr->fileStatusDialog->show();
 }
 
 void Dialog::startPeerManager()
 {
     ui->refreshButton->setEnabled(false);
-    manager = new PeerManager(m_server);    //Create the peer manager
     manager->startBroadcast();  //Start broadcasting on the network
 
     connect(manager,SIGNAL(newPeer(QString)),this,SLOT(addNewPeer(QString)));
@@ -75,6 +75,12 @@ void Dialog::updateNumOfPeers()  //function to find the no. of members online
     ui->updateNumOfPeers->setText(QString::number(ui->peerList->count()) + " user(s) online");
 }
 
+void Dialog::closeEvent(QCloseEvent *event)
+{
+    hide();
+    event->ignore();
+}
+
 ChatDialog* Dialog::openChatWindow(QListWidgetItem *item)
 {
     if (openChatDialogs.contains(item->text())) {
@@ -83,7 +89,7 @@ ChatDialog* Dialog::openChatWindow(QListWidgetItem *item)
         return 0;
     }
 
-    chatDlg = new ChatDialog(item->text(), manager, m_server, m_fserver, this);
+    chatDlg = new ChatDialog(item->text(), m_ptr, this);
     openChatDialogs[item->text()] = chatDlg;    //Save the dialog to the QHash so that we know which chat dialogs are open
     connect(chatDlg, SIGNAL(finished(int)), this, SLOT(unregisterChatDialog()));
     chatDlg->show();
