@@ -52,7 +52,7 @@ public:
 
 signals:
     void progress(QString ID, QString peer, QString fileName, qint64 size, qint64 bytesDone);
-    void done();
+    void done(QString ID);
 };
 
 #endif // FILERECIEVERTHREAD_H

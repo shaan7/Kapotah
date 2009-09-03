@@ -30,7 +30,7 @@
 #include <QDir>
 
 ChatDialog::ChatDialog(QString peer, Pointers *ptr, QWidget *parent)
-        : QDialog(parent), peerName(peer), manager(ptr->manager), server(ptr->server), fserver(ptr->fserver), m_ptr(ptr)
+        : QDialog(parent), peerName(peer), m_ptr(ptr), manager(ptr->manager), server(ptr->server), fserver(ptr->fserver)
 {
     ui.setupUi(this);
 

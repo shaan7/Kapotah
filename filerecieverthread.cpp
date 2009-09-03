@@ -62,7 +62,7 @@ void FileRecieverThread::run()
 
             if (bytesCopied >= size) {
                 qDebug() << "DONE " << filename;
-                emit done();
+                emit done(ID);
                 file.close();
                 socket.disconnectFromHost();
 
