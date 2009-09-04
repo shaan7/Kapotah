@@ -20,14 +20,15 @@
 
 #include <QDomDocument>
 #include <QTimer>
+#include <QFileDialog>
+#include <QDir>
+#include <QFileInfo>
 #include "chatdialog.h"
 #include "messagesender.h"
 #include "filesenderthread.h"
 #include "dirsenderthread.h"
 #include "filerecieverthread.h"
 #include "dirrecieverthread.h"
-#include <QFileDialog>
-#include <QDir>
 
 ChatDialog::ChatDialog(QString peer, Pointers *ptr, QWidget *parent)
         : QDialog(parent), peerName(peer), m_ptr(ptr), manager(ptr->manager), server(ptr->server), fserver(ptr->fserver)
@@ -78,7 +79,13 @@ void ChatDialog::dropEvent(QDropEvent *event)
      if (mimeData->hasUrls()) {
          QList<QUrl> urlList = mimeData->urls();
          for (int i = 0; i < urlList.size() && i < 32; ++i) {
-             sendFile(urlList.at(i).path());
+             if (QFileInfo(urlList.at(i).path()).isDir())
+             {
+                 sendDir(urlList.at(i).path());
+             }
+             else {
+                sendFile(urlList.at(i).path());
+            }
          }
      }
 }
@@ -233,11 +240,8 @@ void ChatDialog::dirRecieved(QDomNodeList fileList, QDomNodeList dirList, QStrin
     }*/
 }
 
-void ChatDialog::sendDir()
+void ChatDialog::sendDir(QString dirname)
 {
-    QString dirname = QFileDialog::getExistingDirectory(this, "Select a dir");
-    if (dirname == "")
-        return;
     DirSenderThread *sender = new DirSenderThread(m_ptr, dirname, manager->peerInfo(peerName), this);
     sender->start();
 }

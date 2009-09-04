@@ -53,7 +53,7 @@ void Dialog::showFilesDialog()
 void Dialog::createIcon()
 {
     trayIcon = new QSystemTrayIcon(this);
-    trayIcon->setIcon(QIcon(":/trash.svg"));
+    trayIcon->setIcon(QIcon(":/chataroma.png"));
     trayIcon->show();
 }
 
@@ -109,7 +109,7 @@ void Dialog::removePeer(QString peer)
 
 void Dialog::updateNumOfPeers()  //function to find the no. of members online
 {
-    ui->updateNumOfPeers->setText(QString::number(ui->peerList->count()) + " user(s) online");
+    ui->updateNumOfPeers->setText(QString::number(ui->peerList->count()) + " user(s)");
 }
 
 void Dialog::closeEvent(QCloseEvent *event)

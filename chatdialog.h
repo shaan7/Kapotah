@@ -65,7 +65,7 @@ private slots:
     void saveFile();
     void cancelFileTransfer();
     void fileTransferComplete();
-    void sendDir();
+    void sendDir(QString dirname);
     void checkGonePeer(QString name);
     void checkPeerReturned(QString name);
     void checkForKeyStatus();

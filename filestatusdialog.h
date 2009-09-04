@@ -9,6 +9,7 @@
 #include <QToolButton>
 #include <QProgressBar>
 #include <QLabel>
+#include <QDomNodeList>
 #include "ui_filestatusdialog.h"
 #include "pointers.h"
 #include "filerecieverthread.h"
@@ -29,11 +30,16 @@ private:
         FileRecieverThread *reciever;
         bool inProgress;
         QString fileName;
+        qint64 bytesDone;
         qint64 fileSize;
         QString savePath;
         QString senderName;
         QToolButton *pause;
         QToolButton *cancel;
+        bool isDir;
+        bool isUpload;
+        QDomNodeList fileList;
+        QDomNodeList dirList;
     };
 
     Pointers *m_ptr;
@@ -49,11 +55,13 @@ private slots:
     void cancelClicked(QString ID);
     void pauseClicked(QString ID);
     void fileRecieved(QString filename,qint64 size,QString ID,QString username);
+    void dirRecieved(QDomNodeList fileList, QDomNodeList dirList, QString username);
     void progress(QString ID, QString peer, QString fileName, qint64 size, qint64 bytesDone);
     void fileDone(QString ID);
 
 public slots:
-    void addTransfer(bool isUpload, QString filename, qint64 size, QString ID, QString senderName);
+    void addTransfer(QDomNodeList fileList, QDomNodeList dirList, QString filename, qint64 size, QString ID,
+                     QString senderName, bool isUpload, bool isDir);
 };
 
 #endif // FILESTATUSDIALOG_H

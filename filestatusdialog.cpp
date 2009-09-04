@@ -14,19 +14,27 @@ FileStatusDialog::FileStatusDialog(Pointers *ptr, QWidget *parent) :
     connect(pauseMapper, SIGNAL(mapped(QString)), this, SLOT(pauseClicked(QString)));
 
     connect(ptr->server, SIGNAL(fileRecieved(QString,qint64,QString,QString)), this, SLOT(fileRecieved(QString,qint64,QString,QString)));
+    connect(ptr->server, SIGNAL(dirRecieved(QDomNodeList,QDomNodeList,QString)), this, SLOT(dirRecieved(QDomNodeList,QDomNodeList,QString)));
+}
+
+void FileStatusDialog::dirRecieved(QDomNodeList fileList, QDomNodeList dirList, QString username)
+{
+    show();
+    addTransfer(fileList, dirList, QString("Directory"), 0, QString("TODO"), username, false, true);   //TODO
 }
 
 void FileStatusDialog::fileRecieved(QString filename,qint64 size,QString ID,QString username)
 {
     show();
-    addTransfer(false, filename, size, ID, username);
+    addTransfer(QDomNodeList(), QDomNodeList(), filename, size, ID, username, false, false);
 }
 
-void FileStatusDialog::addTransfer(bool isUpload, QString filename, qint64 size, QString ID, QString senderName)
+void FileStatusDialog::addTransfer(QDomNodeList fileList, QDomNodeList dirList, QString filename, qint64 size, QString ID,
+                     QString senderName, bool isUpload, bool isDir)
 {
     Transfer *transfer = new Transfer;
 
-    //Create the new widgets, similar to existing ones
+    //Create the new widgets
     QGroupBox *box = new QGroupBox(m_ui.scrollArea);
     QGridLayout *layout = new QGridLayout();
     QProgressBar *progress = new QProgressBar();
@@ -38,11 +46,29 @@ void FileStatusDialog::addTransfer(bool isUpload, QString filename, qint64 size,
     transfer->box = box;
     transfer->progress = progress;
     transfer->fileName = filename;
-    transfer->fileSize = size;
     transfer->inProgress = false;
     transfer->senderName = senderName;
     transfer->cancel = cancel;
     transfer->pause = pause;
+    transfer->isDir = isDir;
+    transfer->isUpload = isUpload;
+
+    if (isDir) {
+        transfer->fileList = fileList;
+        transfer->dirList = dirList;
+        qint64 totalSize=0;
+
+        //Calculate total size of dir
+        for (int i=0;i<fileList.count();i++) {
+            totalSize += fileList.at(i).toElement().attribute("size").toLongLong();
+        }
+        transfer->fileSize = totalSize;
+        transfer->bytesDone = 0;
+    }
+    else {
+        transfer->fileSize = size;
+    }
+
     transfers[ID] = transfer;
 
     //Set the widgets
@@ -120,6 +146,10 @@ void FileStatusDialog::progress(QString ID, QString peer, QString fileName, qint
 {
     if (!transfers[ID]->inProgress)
         return;
+
+    if (transfers[ID]->isDir) {
+        //TODO
+    }
     transfers[ID]->progress->setMaximum(size);
     transfers[ID]->progress->setValue(bytesDone);
     transfers[ID]->box->setToolTip(QString::number(bytesDone) + " of " + QString::number(size));
