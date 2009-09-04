@@ -51,7 +51,7 @@ ChatDialog::ChatDialog(QString peer, Pointers *ptr, QWidget *parent)
     connect(ui.messageEdit, SIGNAL(textEdited(QString)),this, SLOT(sendStatus()));
     connect(server, SIGNAL(udpDataRecieved(QHostAddress,QByteArray)), this, SLOT(parseUdpDatagram(QHostAddress,QByteArray)));
     connect(&keyStatusTimer, SIGNAL(timeout()), this, SLOT(checkForKeyStatus()));
-
+    ui.sendToolButton->setToolTip("Send");
     keyStatusTimer.setInterval(2000);
     setAcceptDrops(true);
 }

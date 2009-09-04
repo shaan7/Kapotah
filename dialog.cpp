@@ -39,6 +39,7 @@ Dialog::Dialog(Pointers *ptr,QWidget *parent)
     createActions();
     createTrayIcon();
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+    ui->startToolButton->setToolTip("Start the application");
 }
 
 Dialog::~Dialog()
@@ -104,7 +105,6 @@ void Dialog::startPeerManager()
 {
     ui->startToolButton->setEnabled(false);
     manager->startBroadcast();  //Start broadcasting on the network
-
     connect(manager,SIGNAL(newPeer(QString)),this,SLOT(addNewPeer(QString)));
     connect(manager,SIGNAL(peerGone(QString)),this,SLOT(removePeer(QString)));
 }
