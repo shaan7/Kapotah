@@ -34,6 +34,7 @@ class FileRecieverThread : public QThread
 private:
     bool doQuit;
     QString ID;
+    QString m_pID;    //Parent ID in case of dir transfers
     QString peer;
     PeerManager *manager;
     bool readyToRecieve;
@@ -49,6 +50,8 @@ public:
 
     void run();
     void stopTransfer();
+    //void setPId(QString pid)    {   m_pID = pid;    }
+    //QString pID()   {   return m_pID;   }
 
 signals:
     void progress(QString ID, QString peer, QString fileName, qint64 size, qint64 bytesDone);

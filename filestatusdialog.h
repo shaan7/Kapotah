@@ -30,13 +30,13 @@ private:
         QProgressBar *progress;
         QToolButton *pause;
         QToolButton *cancel;
-        FileRecieverThread *reciever;
-        bool inProgress;
-        QString fileName;
-        qint64 bytesDone;
-        qint64 fileSize;
         QString savePath;
         QString senderName;
+        QString fileName;
+        FileRecieverThread *reciever;
+        bool inProgress;
+        qint64 bytesDone;
+        qint64 fileSize;
         bool isUpload;
     };
 
@@ -46,21 +46,25 @@ private:
         QProgressBar *progress;
         QToolButton *pause;
         QToolButton *cancel;
+        QString savePath;
+        QString senderName;
+        QDomNodeList fileList;
+        QDomNodeList dirList;
         DirRecieverThread *reciever;
+        FileRecieverThread *fReciever;
         bool inProgress;
         bool isUpload;
         qint64 bytesDone;
         qint64 totalSize;
         qint64 fileCount;
-        QString savePath;
-        QString senderName;
-        QDomNodeList fileList;
-        QDomNodeList dirList;
+        qint64 bytesDoneTillNow;
+        int filesDone;
     };
 
     Pointers *m_ptr;
 
     QHash<QString,FileTransfer*> fileTransfers;
+    QHash<QString,DirTransfer*> dirTransfers;
 
     QSignalMapper *filePauseMapper;
     QSignalMapper *fileCancelMapper;
@@ -73,13 +77,18 @@ private slots:
     void fileCancelClicked(QString ID);
     void filePauseClicked(QString ID);
     void fileRecieved(QString filename,qint64 size,QString ID,QString username);
-    void dirRecieved(QDomNodeList fileList, QDomNodeList dirList, QString username);
     void fileProgress(QString ID, QString peer, QString fileName, qint64 size, qint64 bytesDone);
     void fileDone(QString ID);
 
+    void dirCancelClicked(QString ID);
+    void dirPauseClicked(QString ID);
+    void dirRecieved(QDomNodeList fileList, QDomNodeList dirList, QString username);
+    void dirProgress(QString ID, int filesDone);
+    void dirDone(QString ID);
+
 public slots:
     void addFileTransfer(QString filename, qint64 size, QString ID, QString senderName, bool isUpload);
-    //void addDirTransfer(QDomNodeList fileList, QDomNodeList dirList, QString senderName, bool isUpload);
+    void addDirTransfer(QDomNodeList fileList, QDomNodeList dirList, QString senderName, bool isUpload);
 };
 
 #endif // FILESTATUSDIALOG_H

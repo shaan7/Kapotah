@@ -19,10 +19,16 @@ private:
     QString peerName;
     QString dirName;
     FileRecieverThread *fileReciever;
+    bool cancel;
+    QString m_ID;
 public:
-    DirRecieverThread(Pointers *ptr, QString dir, QDomNodeList files, QDomNodeList dirs, QString peername, QObject *parent);
-
+    DirRecieverThread(Pointers *ptr, QString ID, QString dir, QDomNodeList files, QDomNodeList dirs,
+                      QString peername, QObject *parent);
     void run();
+    void stopTransfer();
+signals:
+    void done(QString ID);
+    void progress(QString ID, int filesDone);
 };
 
 #endif // DIRRECIEVERTHREAD_H

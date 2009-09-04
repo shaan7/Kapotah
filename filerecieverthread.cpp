@@ -61,7 +61,7 @@ void FileRecieverThread::run()
             emit progress(ID, peer, filename, size, bytesCopied);
 
             if (bytesCopied >= size) {
-                qDebug() << "DONE " << filename;
+                //qDebug() << "DONE " << filename;
                 emit done(ID);
                 file.close();
                 socket.disconnectFromHost();

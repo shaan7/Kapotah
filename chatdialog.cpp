@@ -220,7 +220,7 @@ void ChatDialog::parseUdpDatagram(QHostAddress senderIP, QByteArray datagram)
         keyStatusTimer.stop();
         QDomElement announce = action.firstChild().toElement();
         PeerInfo tempPeer(announce.attribute("senderName", "unknown"),senderIP);
-        ui.buddyStatusLabel->setText(announce.attribute("senderName", "unknown") + " is typing.....");
+        ui.buddyStatusLabel->setText(announce.attribute("senderName", "unknown") + " is typing....");
         keyStatusTimer.start();
     }
 }
