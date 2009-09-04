@@ -38,11 +38,27 @@ Dialog::Dialog(Pointers *ptr,QWidget *parent)
     createIcon();
     createActions();
     createTrayIcon();
+    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 }
 
 Dialog::~Dialog()
 {
     delete ui;
+}
+
+void Dialog::iconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+    switch (reason) {
+    //case QSystemTrayIcon::Trigger:
+    case QSystemTrayIcon::DoubleClick:
+        showNormal();
+        break;
+    /*case QSystemTrayIcon::MiddleClick:
+        showMessage();
+        break;*/
+    default:
+        ;
+    }
 }
 
 void Dialog::showFilesDialog()
