@@ -31,18 +31,35 @@ Dialog::Dialog(Pointers *ptr,QWidget *parent)
     m_fserver = ptr->fserver;
     manager = ptr->manager;
     setWindowTitle("ChatAroma");
-    connect(ui->refreshButton,SIGNAL(clicked()),this,SLOT(startPeerManager()));
+    connect(ui->startToolButton,SIGNAL(clicked()),this,SLOT(startPeerManager()));
     connect(ui->filesButton, SIGNAL(clicked()), this, SLOT(showFilesDialog()));
     connect(ui->peerList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(openChatWindow(QListWidgetItem*)));
     connect(m_server, SIGNAL(messageRecieved(QString,QString)), this, SLOT(messageRecieved(QString,QString)));
     createIcon();
     createActions();
     createTrayIcon();
+    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+    ui->startToolButton->setToolTip("Start the application");
 }
 
 Dialog::~Dialog()
 {
     delete ui;
+}
+
+void Dialog::iconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+    switch (reason) {
+    //case QSystemTrayIcon::Trigger:
+    case QSystemTrayIcon::DoubleClick:
+        showNormal();
+        break;
+    /*case QSystemTrayIcon::MiddleClick:
+        showMessage();
+        break;*/
+    default:
+        ;
+    }
 }
 
 void Dialog::showFilesDialog()
@@ -86,9 +103,8 @@ void Dialog::createTrayIcon()
 
 void Dialog::startPeerManager()
 {
-    ui->refreshButton->setEnabled(false);
+    ui->startToolButton->setEnabled(false);
     manager->startBroadcast();  //Start broadcasting on the network
-
     connect(manager,SIGNAL(newPeer(QString)),this,SLOT(addNewPeer(QString)));
     connect(manager,SIGNAL(peerGone(QString)),this,SLOT(removePeer(QString)));
 }

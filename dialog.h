@@ -74,6 +74,7 @@ private slots:
     void removePeer(QString peer);
     ChatDialog* openChatWindow(QListWidgetItem*);
     void showFilesDialog();
+    void iconActivated(QSystemTrayIcon::ActivationReason reason);
 
 public slots:
     void unregisterChatDialog();
