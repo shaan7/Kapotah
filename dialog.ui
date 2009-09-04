@@ -19,15 +19,11 @@
    </item>
    <item row="1" column="0">
     <widget class="QPushButton" name="refreshButton">
+     <property name="toolTip">
+      <string/>
+     </property>
      <property name="text">
       <string>&amp;Activate</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="2">
-    <widget class="QLineEdit" name="updateNumOfPeers">
-     <property name="readOnly">
-      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -35,6 +31,13 @@
     <widget class="QPushButton" name="filesButton">
      <property name="text">
       <string>Files</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QLineEdit" name="updateNumOfPeers">
+     <property name="readOnly">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

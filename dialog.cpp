@@ -109,7 +109,7 @@ void Dialog::removePeer(QString peer)
 
 void Dialog::updateNumOfPeers()  //function to find the no. of members online
 {
-    ui->updateNumOfPeers->setText(QString::number(ui->peerList->count()) + " user(s)");
+    ui->updateNumOfPeers->setText(QString::number(ui->peerList->count()) + " user(s) online");
 }
 
 void Dialog::closeEvent(QCloseEvent *event)
