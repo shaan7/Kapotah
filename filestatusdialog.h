@@ -13,6 +13,7 @@
 #include "ui_filestatusdialog.h"
 #include "pointers.h"
 #include "filerecieverthread.h"
+#include "dirrecieverthread.h"
 
 class FileStatusDialog : public QDialog {
     Q_OBJECT
@@ -23,10 +24,12 @@ public:
 private:
     Ui::FileStatusDialog m_ui;
 
-    struct Transfer
+    struct FileTransfer
     {
         QGroupBox *box;
         QProgressBar *progress;
+        QToolButton *pause;
+        QToolButton *cancel;
         FileRecieverThread *reciever;
         bool inProgress;
         QString fileName;
@@ -34,34 +37,49 @@ private:
         qint64 fileSize;
         QString savePath;
         QString senderName;
+        bool isUpload;
+    };
+
+    struct DirTransfer
+    {
+        QGroupBox *box;
+        QProgressBar *progress;
         QToolButton *pause;
         QToolButton *cancel;
-        bool isDir;
+        DirRecieverThread *reciever;
+        bool inProgress;
         bool isUpload;
+        qint64 bytesDone;
+        qint64 totalSize;
+        qint64 fileCount;
+        QString savePath;
+        QString senderName;
         QDomNodeList fileList;
         QDomNodeList dirList;
     };
 
     Pointers *m_ptr;
 
-    QHash<QString,Transfer*> transfers;
+    QHash<QString,FileTransfer*> fileTransfers;
 
-    QSignalMapper *pauseMapper;
-    QSignalMapper *cancelMapper;
+    QSignalMapper *filePauseMapper;
+    QSignalMapper *fileCancelMapper;
+    QSignalMapper *dirPauseMapper;
+    QSignalMapper *dirCancelMapper;
 protected:
     void closeEvent(QCloseEvent *event);
 
 private slots:
-    void cancelClicked(QString ID);
-    void pauseClicked(QString ID);
+    void fileCancelClicked(QString ID);
+    void filePauseClicked(QString ID);
     void fileRecieved(QString filename,qint64 size,QString ID,QString username);
     void dirRecieved(QDomNodeList fileList, QDomNodeList dirList, QString username);
-    void progress(QString ID, QString peer, QString fileName, qint64 size, qint64 bytesDone);
+    void fileProgress(QString ID, QString peer, QString fileName, qint64 size, qint64 bytesDone);
     void fileDone(QString ID);
 
 public slots:
-    void addTransfer(QDomNodeList fileList, QDomNodeList dirList, QString filename, qint64 size, QString ID,
-                     QString senderName, bool isUpload, bool isDir);
+    void addFileTransfer(QString filename, qint64 size, QString ID, QString senderName, bool isUpload);
+    //void addDirTransfer(QDomNodeList fileList, QDomNodeList dirList, QString senderName, bool isUpload);
 };
 
 #endif // FILESTATUSDIALOG_H

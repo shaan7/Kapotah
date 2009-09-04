@@ -53,7 +53,7 @@ void Dialog::showFilesDialog()
 void Dialog::createIcon()
 {
     trayIcon = new QSystemTrayIcon(this);
-    trayIcon->setIcon(QIcon(":/chataroma.png"));
+    trayIcon->setIcon(QIcon(":/images/chataroma.png"));
     trayIcon->show();
 }
 
