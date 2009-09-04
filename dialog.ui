@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>264</width>
-    <height>495</height>
+    <height>469</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,18 +18,24 @@
     <widget class="QListWidget" name="peerList"/>
    </item>
    <item row="1" column="0">
-    <widget class="QPushButton" name="refreshButton">
+    <widget class="QToolButton" name="startToolButton">
      <property name="toolTip">
-      <string extracomment="Start Application"/>
+      <string/>
      </property>
      <property name="text">
-      <string>&amp;Activate</string>
+      <string>&amp;Start</string>
      </property>
-    </widget>
-   </item>
-   <item row="1" column="2">
-    <widget class="QLineEdit" name="updateNumOfPeers">
-     <property name="readOnly">
+     <property name="icon">
+      <iconset resource="systray.qrc">
+       <normaloff>:/images/user-online.png</normaloff>:/images/user-online.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>22</width>
+       <height>22</height>
+      </size>
+     </property>
+     <property name="autoRaise">
       <bool>true</bool>
      </property>
     </widget>
@@ -41,13 +47,21 @@
      </property>
     </widget>
    </item>
+   <item row="1" column="2">
+    <widget class="QLineEdit" name="updateNumOfPeers">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
   <tabstop>peerList</tabstop>
-  <tabstop>refreshButton</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="systray.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -37,7 +37,7 @@ ChatDialog::ChatDialog(QString peer, Pointers *ptr, QWidget *parent)
 
     setWindowTitle(peer + "@" + manager->peerInfo(peer).ipAddress().toString());    //Set the window title to peer@ipaddress
 
-    connect(ui.sendButton, SIGNAL(clicked()), this, SLOT(sendMessage()));
+    connect(ui.sendToolButton, SIGNAL(clicked()), this, SLOT(sendMessage()));
     //connect(ui.fileButton, SIGNAL(clicked()), this, SLOT(sendFile()));
     //connect(ui.cancelFileButton, SIGNAL(clicked()), this, SLOT(cancelFileTransfer()));
     //connect(ui.saveFileButton, SIGNAL(clicked()), this, SLOT(saveFile()));
@@ -107,7 +107,7 @@ void ChatDialog::checkGonePeer(QString name)
     if (name == peerName)
     {
         ui.chatEdit->append("<font color=red>" + peerName + " is offline</font>");
-        ui.sendButton->setEnabled(false);
+        ui.sendToolButton->setEnabled(false);
         //ui.fileButton->setEnabled(false);
         //ui.dirButton->setEnabled(false);
     }
@@ -118,7 +118,7 @@ void ChatDialog::checkPeerReturned(QString name)
     if (name == peerName)
     {
         ui.chatEdit->append("<font color=green>" + peerName + " is back online</font>");
-        ui.sendButton->setEnabled(true);
+        ui.sendToolButton->setEnabled(true);
         //ui.fileButton->setEnabled(true);
         //ui.dirButton->setEnabled(true);
     }

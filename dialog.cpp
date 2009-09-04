@@ -31,7 +31,7 @@ Dialog::Dialog(Pointers *ptr,QWidget *parent)
     m_fserver = ptr->fserver;
     manager = ptr->manager;
     setWindowTitle("ChatAroma");
-    connect(ui->refreshButton,SIGNAL(clicked()),this,SLOT(startPeerManager()));
+    connect(ui->startToolButton,SIGNAL(clicked()),this,SLOT(startPeerManager()));
     connect(ui->filesButton, SIGNAL(clicked()), this, SLOT(showFilesDialog()));
     connect(ui->peerList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(openChatWindow(QListWidgetItem*)));
     connect(m_server, SIGNAL(messageRecieved(QString,QString)), this, SLOT(messageRecieved(QString,QString)));
@@ -102,8 +102,7 @@ void Dialog::createTrayIcon()
 
 void Dialog::startPeerManager()
 {
-    //ui->refreshButton->setAutoRaise(true);
-    ui->refreshButton->setEnabled(false);
+    ui->startToolButton->setEnabled(false);
     manager->startBroadcast();  //Start broadcasting on the network
 
     connect(manager,SIGNAL(newPeer(QString)),this,SLOT(addNewPeer(QString)));
@@ -126,7 +125,7 @@ void Dialog::removePeer(QString peer)
 
 void Dialog::updateNumOfPeers()  //function to find the no. of members online
 {
-    ui->updateNumOfPeers->setText(QString::number(ui->peerList->count()) + " user(s)");
+    ui->updateNumOfPeers->setText(QString::number(ui->peerList->count()) + " user(s) online");
 }
 
 void Dialog::closeEvent(QCloseEvent *event)
