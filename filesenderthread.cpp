@@ -20,7 +20,7 @@
 
 #include <QFileInfo>
 #include <QDomDocument>
-#include <QTime>
+#include <QCryptographicHash>
 #include "filesenderthread.h"
 
 FileSenderThread::FileSenderThread(Pointers *ptr, QString fileToSend, PeerInfo destinationPeer, QObject *parent)
@@ -47,7 +47,7 @@ void FileSenderThread::run()
     QDomElement file = document.createElement("file");
     file.setAttribute("fileName", info.fileName());
     file.setAttribute("size", QString::number(info.size()));
-    ID = QTime::currentTime().toString() + "::" + QString::number(qrand());
+    ID = QString(QCryptographicHash::hash(filename.toUtf8(), QCryptographicHash::Md5).toHex());;
     file.setAttribute("ID", ID);
 
     if (!fserver->idExists(ID)) {

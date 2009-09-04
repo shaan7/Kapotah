@@ -32,6 +32,8 @@ private:
         qint64 fileSize;
         QString savePath;
         QString senderName;
+        QToolButton *pause;
+        QToolButton *cancel;
     };
 
     Pointers *m_ptr;

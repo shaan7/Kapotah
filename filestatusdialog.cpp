@@ -41,9 +41,15 @@ void FileStatusDialog::addTransfer(bool isUpload, QString filename, qint64 size,
     transfer->fileSize = size;
     transfer->inProgress = false;
     transfer->senderName = senderName;
+    transfer->cancel = cancel;
+    transfer->pause = pause;
     transfers[ID] = transfer;
 
     //Set the widgets
+
+    pause->setAutoRaise(true);
+    cancel->setAutoRaise(true);
+    type->setAutoRaise(true);
 
     pause->setArrowType(Qt::RightArrow);
     if (isUpload) {
@@ -51,7 +57,7 @@ void FileStatusDialog::addTransfer(bool isUpload, QString filename, qint64 size,
         type->setToolTip("This Is A Upload");
     }
     else {
-        type->setArrowType(Qt::DownArrow);
+        type->setIcon(QIcon(":/images/kget.png"));
         type->setToolTip("This Is A Download");
     }
 
@@ -83,7 +89,10 @@ void FileStatusDialog::addTransfer(bool isUpload, QString filename, qint64 size,
 
 void FileStatusDialog::cancelClicked(QString ID)
 {
-    qDebug() << "CANCEL " << ID;
+    transfers[ID]->reciever->stopTransfer();
+    transfers[ID]->progress->setMaximum(0);
+    transfers[ID]->progress->setValue(0);
+    transfers[ID]->inProgress = false;
 }
 
 void FileStatusDialog::pauseClicked(QString ID)
@@ -109,12 +118,17 @@ void FileStatusDialog::pauseClicked(QString ID)
 
 void FileStatusDialog::progress(QString ID, QString peer, QString fileName, qint64 size, qint64 bytesDone)
 {
+    if (!transfers[ID]->inProgress)
+        return;
     transfers[ID]->progress->setMaximum(size);
     transfers[ID]->progress->setValue(bytesDone);
+    transfers[ID]->box->setToolTip(QString::number(bytesDone) + " of " + QString::number(size));
 }
 
 void FileStatusDialog::fileDone(QString ID)
 {
+    transfers[ID]->pause->hide();
+    transfers[ID]->cancel->hide();
 }
 
 void FileStatusDialog::closeEvent(QCloseEvent *event)

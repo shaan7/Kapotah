@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/" >
         <file>trash.svg</file>
+        <file>images/kget.png</file>
     </qresource>
 </RCC>
