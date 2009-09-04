@@ -53,7 +53,7 @@ void Dialog::showFilesDialog()
 void Dialog::createIcon()
 {
     trayIcon = new QSystemTrayIcon(this);
-    trayIcon->setIcon(QIcon(":/chataroma.png"));
+    trayIcon->setIcon(QIcon(":/images/chataroma.png"));
     trayIcon->show();
 }
 
@@ -86,6 +86,7 @@ void Dialog::createTrayIcon()
 
 void Dialog::startPeerManager()
 {
+    //ui->refreshButton->setAutoRaise(true);
     ui->refreshButton->setEnabled(false);
     manager->startBroadcast();  //Start broadcasting on the network
 
