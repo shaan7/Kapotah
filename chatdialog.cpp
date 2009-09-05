@@ -49,6 +49,7 @@ ChatDialog::ChatDialog(QString peer, Pointers *ptr, QWidget *parent)
     connect(manager, SIGNAL(peerGone(QString)), this, SLOT(checkGonePeer(QString)));
     connect(manager, SIGNAL(newPeer(QString)), this, SLOT(checkPeerReturned(QString)));
     connect(ui.messageEdit, SIGNAL(textEdited(QString)),this, SLOT(sendStatus()));
+    connect(ui.messageEdit, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
     connect(server, SIGNAL(udpDataRecieved(QHostAddress,QByteArray)), this, SLOT(parseUdpDatagram(QHostAddress,QByteArray)));
     connect(&keyStatusTimer, SIGNAL(timeout()), this, SLOT(checkForKeyStatus()));
     ui.sendToolButton->setToolTip("Send");
