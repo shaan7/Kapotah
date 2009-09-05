@@ -61,7 +61,7 @@ void FileRecieverThread::run()
             emit progress(ID, peer, filename, size, bytesCopied);
 
             if (bytesCopied >= size) {
-                //qDebug() << "DONE " << filename;
+                qDebug() << "DONE " << filename;
                 emit done(ID);
                 file.close();
                 socket.disconnectFromHost();
@@ -77,7 +77,7 @@ void FileRecieverThread::run()
                 readyToRecieve = true;
                 file.setFileName(filename);
                 if (!file.open(QIODevice::WriteOnly)) {
-                    qDebug() << "ERROR OPENING FILE";
+                    qDebug() << "ERROR OPENING FILE " << file.errorString();
                     return;
                 }
             }
@@ -92,5 +92,6 @@ void FileRecieverThread::run()
 FileRecieverThread::~FileRecieverThread()
 {
     doQuit = true;
+    file.close();
     wait();
 }

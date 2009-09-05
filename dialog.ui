@@ -18,7 +18,6 @@
     <widget class="QListWidget" name="peerList"/>
    </item>
    <item row="1" column="0">
-    <widget class="QPushButton" name="refreshButton">
     <widget class="QToolButton" name="startToolButton">
      <property name="toolTip">
       <string/>
@@ -49,9 +48,6 @@
     </widget>
    </item>
    <item row="1" column="2">
-    <widget class="QLineEdit" name="updateNumOfPeers">
-     <property name="readOnly">
-      <bool>true</bool>
     <widget class="QLabel" name="updateNumOfPeers">
      <property name="text">
       <string/>
