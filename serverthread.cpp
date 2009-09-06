@@ -49,12 +49,15 @@ void ServerThread::run()
             continue;
 
         emit dataReady(socket.readAll());
-        return;
+        break;
     }
+
+    deleteLater();
 }
 
 ServerThread::~ServerThread()
 {
     doQuit = true;
     wait();
+    qDebug() << "Serverthread END";
 }

@@ -70,6 +70,8 @@ private:
     QSignalMapper *fileCancelMapper;
     QSignalMapper *dirPauseMapper;
     QSignalMapper *dirCancelMapper;
+
+    void addTransferEntry(QString ID, QString title, QString senderName, bool isUpload, bool isDir);
 protected:
     void closeEvent(QCloseEvent *event);
 
@@ -85,6 +87,9 @@ private slots:
     void dirRecieved(QDomNodeList fileList, QDomNodeList dirList, QString username);
     void dirProgress(QString ID, int filesDone);
     void dirDone(QString ID);
+
+    void fileSendStarted(QString ID, QString filename);
+    void fileSendFinished(QString ID, QString filename);
 
 public slots:
     void addFileTransfer(QString filename, qint64 size, QString ID, QString senderName, bool isUpload);

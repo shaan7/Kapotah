@@ -20,7 +20,7 @@ void DirRecieverThread::run()
         fileReciever = new FileRecieverThread(m_ptr, fileList.at(i).toElement().attribute("ID"),
                                           fileList.at(i).toElement().attribute("size").toInt(), peerName,
                                           dir.absoluteFilePath(fileList.at(i).toElement().attribute("path")), 0);
-        qDebug() << "START " << dir.absoluteFilePath(fileList.at(i).toElement().attribute("path"));
+        //qDebug() << "START " << dir.absoluteFilePath(fileList.at(i).toElement().attribute("path"));
         //fileReciever->setPId(m_ID);
         //emit recieverChanged(m_ID, fileReciever, i+1);
         fileReciever->run();
@@ -28,10 +28,16 @@ void DirRecieverThread::run()
 
         emit progress(m_ID, i+1);
     }
-    emit done(m_ID);
+    emit done(m_ID);    //This will be emitted even if canceled !!
+    deleteLater();
 }
 
 void DirRecieverThread::stopTransfer()
 {
     cancel = true;
+}
+
+DirRecieverThread::~DirRecieverThread()
+{
+    qDebug() << "DirRecieverThread END";
 }

@@ -46,24 +46,27 @@ void FileServerThread::run()
 
             file.setFileName(filename);
             if (!file.open(QIODevice::ReadOnly))
-                return;
+                break;
 
             socket.write("OK");
             socket.waitForBytesWritten();
 
+            emit startedTransfer(ID, filename);
             while (!file.atEnd()) {
                 if (socket.state() != QTcpSocket::ConnectedState)
-                    return;
+                    break;
                 socket.write(file.read(bytesPerBlock));
                 socket.waitForBytesWritten();
             }
             file.close();
             socket.waitForDisconnected(-1);
-            return;
+            emit finishedTransfer(ID, filename);
+            break;
         }
         else
-            return;
+            break;
     }
+    deleteLater();
 }
 
 FileServerThread::~FileServerThread()
@@ -71,4 +74,5 @@ FileServerThread::~FileServerThread()
     quit = true;
     file.close();
     wait();
+    qDebug() << "FileServerThread END";
 }

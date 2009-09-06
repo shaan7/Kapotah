@@ -37,6 +37,10 @@ protected:
 
 private:
     QHash<QString,QString> fileList;
+
+signals:
+    void startedTransfer(QString ID, QString filename);
+    void finishedTransfer(QString ID, QString filename);
 };
 
 #endif // FILESERVER_H

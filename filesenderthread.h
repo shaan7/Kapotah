@@ -32,6 +32,7 @@ class FileSenderThread : public QThread
     Q_OBJECT
 public:
     FileSenderThread(Pointers *ptr, QString fileToSend, PeerInfo destinationPeer, QObject *parent);
+    ~FileSenderThread();
     void run();
 
 private:

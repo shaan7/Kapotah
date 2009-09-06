@@ -1,11 +1,13 @@
 #include "filestatusdialog.h"
 #include "server.h"
+#include "fileserver.h"
 #include <QDebug>
 #include <QCloseEvent>
 #include <QFileDialog>
 #include <QCryptographicHash>
 
 //THIS FILE IS TOOOOOOOOOOOO LARGE, IT WILL BE MADE SMALLER
+//ASSIGN PARENTS TO WIDGETS
 
 FileStatusDialog::FileStatusDialog(Pointers *ptr, QWidget *parent) :
     QDialog(parent), m_ptr(ptr) {
@@ -15,7 +17,6 @@ FileStatusDialog::FileStatusDialog(Pointers *ptr, QWidget *parent) :
     dirPauseMapper = new QSignalMapper(this);
     dirCancelMapper = new QSignalMapper(this);
 
-
     connect(fileCancelMapper, SIGNAL(mapped(QString)), this, SLOT(fileCancelClicked(QString)));
     connect(filePauseMapper, SIGNAL(mapped(QString)), this, SLOT(filePauseClicked(QString)));
     connect(dirCancelMapper, SIGNAL(mapped(QString)), this, SLOT(dirCancelClicked(QString)));
@@ -23,6 +24,18 @@ FileStatusDialog::FileStatusDialog(Pointers *ptr, QWidget *parent) :
 
     connect(ptr->server, SIGNAL(fileRecieved(QString,qint64,QString,QString)), this, SLOT(fileRecieved(QString,qint64,QString,QString)));
     connect(ptr->server, SIGNAL(dirRecieved(QDomNodeList,QDomNodeList,QString)), this, SLOT(dirRecieved(QDomNodeList,QDomNodeList,QString)));
+    connect(ptr->fserver, SIGNAL(startedTransfer(QString,QString)), this, SLOT(fileSendStarted(QString,QString)));
+    connect(ptr->fserver, SIGNAL(finishedTransfer(QString,QString)), this, SLOT(fileSendFinished(QString,QString)));
+}
+
+void FileStatusDialog::fileSendStarted(QString ID, QString filename)
+{
+
+}
+
+void FileStatusDialog::fileSendFinished(QString ID, QString filename)
+{
+
 }
 
 void FileStatusDialog::dirRecieved(QDomNodeList fileList, QDomNodeList dirList, QString username)
@@ -37,10 +50,8 @@ void FileStatusDialog::fileRecieved(QString filename,qint64 size,QString ID,QStr
     addFileTransfer(filename, size, ID, username, false);
 }
 
-void FileStatusDialog::addFileTransfer(QString filename, qint64 size, QString ID, QString senderName, bool isUpload)
+void FileStatusDialog::addTransferEntry(QString ID, QString title, QString senderName, bool isUpload, bool isDir)
 {
-    FileTransfer *transfer = new FileTransfer;
-
     //Create the new widgets
     QGroupBox *box = new QGroupBox(m_ui.scrollArea);
     QGridLayout *layout = new QGridLayout();
@@ -48,19 +59,6 @@ void FileStatusDialog::addFileTransfer(QString filename, qint64 size, QString ID
     QToolButton *pause = new QToolButton();
     QToolButton *cancel = new QToolButton();
     QToolButton *type = new QToolButton();
-
-    //Store info
-    transfer->box = box;
-    transfer->progress = progress;
-    transfer->fileName = filename;
-    transfer->inProgress = false;
-    transfer->senderName = senderName;
-    transfer->cancel = cancel;
-    transfer->pause = pause;
-    transfer->isUpload = isUpload;
-
-    transfer->fileSize = size;
-    fileTransfers[ID] = transfer;
 
     //Set the widgets
 
@@ -78,13 +76,14 @@ void FileStatusDialog::addFileTransfer(QString filename, qint64 size, QString ID
         type->setToolTip("This Is A Download");
     }
 
-    //Layout the new widgets
+    //Layout the
+    widgets
     layout->addWidget(progress, 0, 0);
     layout->addWidget(pause, 0, 1);
     layout->addWidget(cancel, 0, 2);
     layout->addWidget(type, 0, 3);
     box->setLayout(layout);
-    box->setTitle(filename + " with " + senderName);
+    box->setTitle(title + " with " + senderName);
 
     //Add the widgets to the ScrollArea
 
@@ -95,38 +94,53 @@ void FileStatusDialog::addFileTransfer(QString filename, qint64 size, QString ID
     //Add a new spacer
     dynamic_cast<QVBoxLayout*>(m_ui.scrollAreaWidgetContents->layout())->addStretch();
 
+    //Store info
+    if (isDir) {
+        DirTransfer *transfer = new DirTransfer;
+
+        //Store info
+        transfer->box = box;
+        transfer->progress = progress;
+        transfer->cancel = cancel;
+        transfer->pause = pause;
+        dirTransfers[ID] = transfer;
+    }
+    else {
+        FileTransfer *transfer = new FileTransfer;
+
+        //Store info
+        transfer->box = box;
+        transfer->progress = progress;
+        transfer->cancel = cancel;
+        transfer->pause = pause;
+        fileTransfers[ID] = transfer;
+    }
+}
+
+void FileStatusDialog::addFileTransfer(QString filename, qint64 size, QString ID, QString senderName, bool isUpload)
+{
+    addTransferEntry(ID, filename, senderName, isUpload, false);
+
+    FileTransfer *transfer = fileTransfers[ID];
+
+    //Store info
+    transfer->fileName = filename;
+    transfer->inProgress = false;
+    transfer->senderName = senderName;
+    transfer->isUpload = isUpload;
+    transfer->fileSize = size;
+
     //Connect signals
-    connect(cancel, SIGNAL(clicked()), fileCancelMapper, SLOT(map()));
-    connect(pause, SIGNAL(clicked()), filePauseMapper, SLOT(map()));
+    connect(transfer->cancel, SIGNAL(clicked()), fileCancelMapper, SLOT(map()));
+    connect(transfer->pause, SIGNAL(clicked()), filePauseMapper, SLOT(map()));
 
     //Set mapping
-    fileCancelMapper->setMapping(cancel, ID);
-    filePauseMapper->setMapping(pause, ID);
+    fileCancelMapper->setMapping(transfer->cancel, ID);
+    filePauseMapper->setMapping(transfer->pause, ID);
 }
 
 void FileStatusDialog::addDirTransfer(QDomNodeList fileList, QDomNodeList dirList, QString senderName, bool isUpload)
 {
-    DirTransfer *transfer = new DirTransfer;
-
-    //Create the new widgets
-    QGroupBox *box = new QGroupBox(m_ui.scrollArea);
-    QGridLayout *layout = new QGridLayout();
-    QProgressBar *progress = new QProgressBar();
-    QToolButton *pause = new QToolButton();
-    QToolButton *cancel = new QToolButton();
-    QToolButton *type = new QToolButton();
-
-    //Store info
-    transfer->box = box;
-    transfer->progress = progress;
-    transfer->inProgress = false;
-    transfer->senderName = senderName;
-    transfer->cancel = cancel;
-    transfer->pause = pause;
-    transfer->isUpload = isUpload;
-
-    transfer->fileList = fileList;
-    transfer->dirList = dirList;
     qint64 totalSize=0;
 
     //Calculate ID and total size of dir
@@ -134,10 +148,24 @@ void FileStatusDialog::addDirTransfer(QDomNodeList fileList, QDomNodeList dirLis
     for (int i=0;i<dirList.count();i++) {
         items += dirList.at(i).toElement().attribute("path");  //Arbitrary method
     }
+
+    //Calculate ID for dir
     QString ID(QCryptographicHash::hash(items.toUtf8(), QCryptographicHash::Md5).toHex());
     for (int i=0;i<fileList.count();i++) {
         totalSize += fileList.at(i).toElement().attribute("size").toLongLong();
     }
+
+    addTransferEntry(ID, "Folder", senderName, isUpload, true);
+    DirTransfer *transfer = dirTransfers[ID];
+
+    //Store info
+    transfer->inProgress = false;
+    transfer->senderName = senderName;
+    transfer->isUpload = isUpload;
+
+    transfer->fileList = fileList;
+    transfer->dirList = dirList;
+
     transfer->totalSize = totalSize;
     transfer->bytesDone = 0;
     transfer->bytesDoneTillNow = 0;
@@ -145,47 +173,15 @@ void FileStatusDialog::addDirTransfer(QDomNodeList fileList, QDomNodeList dirLis
     dirTransfers[ID] = transfer;
 
     //Set the widgets
-
-    progress->setMaximum(fileList.count());
-
-    pause->setAutoRaise(true);
-    cancel->setAutoRaise(true);
-    type->setAutoRaise(true);
-
-    pause->setArrowType(Qt::RightArrow);
-    if (isUpload) {
-        type->setArrowType(Qt::UpArrow);
-        type->setToolTip("This Is A Upload");
-    }
-    else {
-        type->setIcon(QIcon(":/images/kget.png"));
-        type->setToolTip("This Is A Download");
-    }
-
-    //Layout the new widgets
-    layout->addWidget(progress, 0, 0);
-    layout->addWidget(pause, 0, 1);
-    layout->addWidget(cancel, 0, 2);
-    layout->addWidget(type, 0, 3);
-    box->setLayout(layout);
-    box->setTitle("Directory with " + senderName);
-
-    //Add the widgets to the ScrollArea
-
-    //Remove the spacer
-    m_ui.scrollAreaWidgetContents->layout()->takeAt(m_ui.scrollAreaWidgetContents->layout()->count()-1);
-    //Add the group box
-    m_ui.scrollAreaWidgetContents->layout()->addWidget(box);
-    //Add a new spacer
-    dynamic_cast<QVBoxLayout*>(m_ui.scrollAreaWidgetContents->layout())->addStretch();
+    transfer->progress->setMaximum(fileList.count());
 
     //Connect signals
-    connect(cancel, SIGNAL(clicked()), dirCancelMapper, SLOT(map()));
-    connect(pause, SIGNAL(clicked()), dirPauseMapper, SLOT(map()));
+    connect(transfer->cancel, SIGNAL(clicked()), dirCancelMapper, SLOT(map()));
+    connect(transfer->pause, SIGNAL(clicked()), dirPauseMapper, SLOT(map()));
 
     //Set mapping
-    dirCancelMapper->setMapping(cancel, ID);
-    dirPauseMapper->setMapping(pause, ID);
+    dirCancelMapper->setMapping(transfer->cancel, ID);
+    dirPauseMapper->setMapping(transfer->pause, ID);
 }
 
 void FileStatusDialog::dirCancelClicked(QString ID)
@@ -223,6 +219,7 @@ void FileStatusDialog::dirProgress(QString ID, int filesDone)
         return;
 
     transfer->progress->setValue(filesDone);
+    //qDebug() << QString::number(filesDone) + " of " + QString::number(transfer->totalSize);
 }
 
 void FileStatusDialog::dirDone(QString ID)
