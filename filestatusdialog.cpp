@@ -76,8 +76,7 @@ void FileStatusDialog::addTransferEntry(QString ID, QString title, QString sende
         type->setToolTip("This Is A Download");
     }
 
-    //Layout the
-    widgets
+    //Layout the widgets
     layout->addWidget(progress, 0, 0);
     layout->addWidget(pause, 0, 1);
     layout->addWidget(cancel, 0, 2);
