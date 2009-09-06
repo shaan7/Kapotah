@@ -3,6 +3,7 @@
         <file>images/chataroma.png</file>
         <file>images/kget.png</file>
         <file>images/user-online.png</file>
-        <file>images/arrow-right.png</file>
+        <file>images/send.png</file>
+        <file>images/mail-receive.png</file>
     </qresource>
 </RCC>

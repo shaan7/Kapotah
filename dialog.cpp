@@ -50,7 +50,9 @@ Dialog::~Dialog()
 void Dialog::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
     switch (reason) {
-    //case QSystemTrayIcon::Trigger:
+    /*case QSystemTrayIcon::Trigger:
+        chatDlg->show();
+        break;*/
     case QSystemTrayIcon::DoubleClick:
         showNormal();
         break;
@@ -158,12 +160,19 @@ void Dialog::messageRecieved(QString message,QString username)
 {
     if (openChatDialogs.contains(username)) {
         if (!chatDlg->isVisible())
-            chatDlg->show();
-    }
-    else {
+        {
+            trayIcon->showMessage("messsage from " + username,"one message recieved");
+            trayIcon->setIcon(QIcon(":/images/mail-recieve.png"));
+            trayIcon->show();
+            connect(trayIcon, SIGNAL(messageClicked()), this, SLOT(showNormal()));
+            trayIcon->setIcon(QIcon(":/images/chataroma.png"));
+        }
+      }
+    /*else {
         //Find the list item where the username is displayed, and open a chatdialog according to it
-        int rowNumber = ui->peerList->row(ui->peerList->findItems(username, Qt::MatchExactly)[0]);
-        chatDlg = openChatWindow(ui->peerList->item(rowNumber));
-        chatDlg->messageRecieved(message, username);
-    }
+        //int rowNumber = ui->peerList->row(ui->peerList->findItems(username, Qt::MatchExactly)[0]);
+        //chatDlg = openChatWindow(ui->peerList->item(rowNumber));
+        //chatDlg->messageRecieved(message, username);
+        //trayIcon->showMessage(QString::append("messsage recieved from" + username), bodyEdit->toPlainText(), 15 * 1000);
+    }*/
 }

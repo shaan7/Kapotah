@@ -14,10 +14,17 @@
    <string>Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
+   <item row="1" column="0">
+    <widget class="QLabel" name="buddyStatusLabel">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tabChat">
       <attribute name="title">
@@ -37,7 +44,7 @@
          </property>
          <property name="icon">
           <iconset resource="systray.qrc">
-           <normaloff>:/images/arrow-right.png</normaloff>:/images/arrow-right.png</iconset>
+           <normaloff>:/images/send.png</normaloff>:/images/send.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -62,13 +69,6 @@
        </item>
       </layout>
      </widget>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="buddyStatusLabel">
-     <property name="text">
-      <string/>
-     </property>
     </widget>
    </item>
   </layout>
