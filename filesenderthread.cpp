@@ -70,4 +70,11 @@ void FileSenderThread::run()
 
     if (socket.state()!=QTcpSocket::UnconnectedState)
         socket.waitForDisconnected();
+
+    deleteLater();
+}
+
+FileSenderThread::~FileSenderThread()
+{
+    qDebug() << "FileSenderThread END";
 }

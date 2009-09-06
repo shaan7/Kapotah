@@ -41,6 +41,8 @@ void FileRecieverThread::stopTransfer()
 
 void FileRecieverThread::run()
 {
+    if (size==0)
+        return;         //TODO: better to create an empty file
     QTcpSocket socket;
     socket.connectToHost(manager->peerInfo(peer).ipAddress(), 9877);
     socket.waitForConnected();
@@ -68,7 +70,7 @@ void FileRecieverThread::run()
 
                 if (socket.state()!=QTcpSocket::UnconnectedState)
                     socket.waitForDisconnected();
-                return;
+                break;
             }
         }
         else {
@@ -78,15 +80,16 @@ void FileRecieverThread::run()
                 file.setFileName(filename);
                 if (!file.open(QIODevice::WriteOnly)) {
                     qDebug() << "ERROR OPENING FILE " << file.errorString();
-                    return;
+                    break;
                 }
             }
             else {
                 qDebug() << ID << " not found on server: " << data;
-                return;
+                break;
             }
         }
     }
+    deleteLater();
 }
 
 FileRecieverThread::~FileRecieverThread()
@@ -94,4 +97,5 @@ FileRecieverThread::~FileRecieverThread()
     doQuit = true;
     file.close();
     wait();
+    qDebug() << "FileRecieverThread END";
 }

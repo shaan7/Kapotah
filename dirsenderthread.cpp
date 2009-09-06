@@ -68,6 +68,8 @@ void DirSenderThread::run()
 
     if (socket.state()!=QTcpSocket::UnconnectedState)
         socket.waitForDisconnected();
+
+    deleteLater();
 }
 
 void DirSenderThread::prepareItemsList(QString path)
@@ -92,4 +94,5 @@ void DirSenderThread::prepareItemsList(QString path)
 DirSenderThread::~DirSenderThread()
 {
     wait();
+    qDebug() << "DirSenderThread END";
 }

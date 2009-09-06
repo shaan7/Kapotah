@@ -24,6 +24,7 @@ private:
 public:
     DirRecieverThread(Pointers *ptr, QString ID, QString dir, QDomNodeList files, QDomNodeList dirs,
                       QString peername, QObject *parent);
+    ~DirRecieverThread();
     void run();
     void stopTransfer();
 signals:

@@ -39,6 +39,10 @@ private:
     QString ID;
     QFile file;
     QString filename;
+
+signals:
+    void startedTransfer(QString ID, QString filename);
+    void finishedTransfer(QString ID, QString filename);
 };
 
 #endif // FILESERVERTHREAD_H
