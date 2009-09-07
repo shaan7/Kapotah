@@ -37,7 +37,7 @@
          </property>
          <property name="icon">
           <iconset resource="systray.qrc">
-           <normaloff>:/images/arrow-right.png</normaloff>:/images/arrow-right.png</iconset>
+           <normaloff>:/images/dialog-ok-apply.png</normaloff>:/images/dialog-ok-apply.png</iconset>
          </property>
          <property name="iconSize">
           <size>

@@ -3,6 +3,10 @@
         <file>images/chataroma.png</file>
         <file>images/kget.png</file>
         <file>images/user-online.png</file>
-        <file>images/arrow-right.png</file>
+        <file>images/dialog-ok-apply.png</file>
+        <file>images/system-switch-user.png</file>
+        <file>images/arrow-up-double.png</file>
+        <file>images/arrow-down-double.png</file>
+        <file>images/dialog-cancel.png</file>
     </qresource>
 </RCC>

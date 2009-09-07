@@ -44,6 +44,7 @@ public:
     QString username()  {   return m_username;  }
     PeerInfo peerInfo(QString name);
     bool contains(QString name);
+    //PeerInfo peerWithIP(QHostAddress ipAddress);
 signals:
     void newPeer(QString name);
     void peerGone(QString name);

@@ -40,8 +40,6 @@ ChatDialog::ChatDialog(QString peer, Pointers *ptr, QWidget *parent)
     connect(ui.sendToolButton, SIGNAL(clicked()), this, SLOT(sendMessage()));
 
     connect(server, SIGNAL(messageRecieved(QString,QString)), this, SLOT(messageRecieved(QString,QString)));
-    connect(server, SIGNAL(fileRecieved(QString,qint64,QString,QString)), this, SLOT(fileRecieved(QString,qint64,QString,QString)));
-    connect(server, SIGNAL(dirRecieved(QDomNodeList,QDomNodeList,QString)), this, SLOT(dirRecieved(QDomNodeList,QDomNodeList,QString)));
     connect(manager, SIGNAL(peerGone(QString)), this, SLOT(checkGonePeer(QString)));
     connect(manager, SIGNAL(newPeer(QString)), this, SLOT(checkPeerReturned(QString)));
     connect(ui.messageEdit, SIGNAL(textEdited(QString)),this, SLOT(sendStatus()));
@@ -127,37 +125,9 @@ void ChatDialog::sendMessage()
 
 void ChatDialog::sendFile(QString filename)
 {
-    /*QString filename = QFileDialog::getOpenFileName(this, "Select a file");
-    if (filename=="")
-        return;*/
-    ui.chatEdit->append("<b>" + manager->username() + "</b> sends a file " + filename);
     FileSenderThread *sender = new FileSenderThread(m_ptr, filename, manager->peerInfo(peerName),this);
     sender->start();
-}
-
-void ChatDialog::saveFile()
-{
-    QString filename = QFileDialog::getSaveFileName(this, "Select a file to save", QDir::home().absoluteFilePath(".")); //CHANGES
-    if (filename=="")
-        return;
-    //ui.fileTransferProgress->setMaximum(fileSize);
-    reciever = new FileRecieverThread(m_ptr, "ID", fileSize, peerName, filename, this);  //CHANGES
-    //connect(reciever, SIGNAL(progress(int)), ui.fileTransferProgress, SLOT(setValue(int)));
-    connect(reciever, SIGNAL(done()), this, SLOT(fileTransferComplete()));
-    startTime = QDateTime::currentDateTime();
-    reciever->start();
-}
-
-void ChatDialog::cancelFileTransfer()
-{
-    reciever->stopTransfer();
-}
-
-void ChatDialog::fileTransferComplete()
-{
-    endTime = QDateTime::currentDateTime();
-    int timeTaken = startTime.time().secsTo(endTime.time());
-    //ui.fileStatusLabel->setText(QString::number((fileSize / timeTaken)/1024) + "KB/s");
+    ui.chatEdit->append("<b>" + manager->username() + "</b> sends a file " + filename);
 }
 
 void ChatDialog::messageRecieved(QString message, QString username)
@@ -211,6 +181,7 @@ void ChatDialog::sendDir(QString dirname)
 {
     DirSenderThread *sender = new DirSenderThread(m_ptr, dirname, manager->peerInfo(peerName), this);
     sender->start();
+    ui.chatEdit->append("<b>" + manager->username() + "</b> sends a directory " + dirname);
 }
 
 ChatDialog::~ChatDialog()
