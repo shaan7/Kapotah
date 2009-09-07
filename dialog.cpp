@@ -173,6 +173,6 @@ void Dialog::messageRecieved(QString message,QString username)
         //int rowNumber = ui->peerList->row(ui->peerList->findItems(username, Qt::MatchExactly)[0]);
         //chatDlg = openChatWindow(ui->peerList->item(rowNumber));
         //chatDlg->messageRecieved(message, username);
-        //trayIcon->showMessage(QString::append("messsage recieved from" + username), bodyEdit->toPlainText(), 15 * 1000);
+        //trayIcon->showMessage(QString::append("messsage recieved from " + username, "one message recieved");
     }*/
 }
