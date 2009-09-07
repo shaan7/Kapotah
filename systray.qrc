@@ -4,9 +4,10 @@
         <file>images/kget.png</file>
         <file>images/user-online.png</file>
         <file>images/dialog-ok-apply.png</file>
-        <file>images/system-switch-user.png</file>
         <file>images/arrow-up-double.png</file>
         <file>images/arrow-down-double.png</file>
         <file>images/dialog-cancel.png</file>
+        <file>images/mail-receive.png</file>
+        <file>images/system-switch-user1.png</file>
     </qresource>
 </RCC>

@@ -158,20 +158,19 @@ void Dialog::unregisterChatDialog()
 void Dialog::messageRecieved(QString message,QString username)
 {
     if (openChatDialogs.contains(username)) {
-        if (!chatDlg->isVisible())
+        if (!chatDlg->isVisible())  //Means the dialog has been hidden by the user
         {
             trayIcon->showMessage("messsage from " + username,"one message recieved");
             trayIcon->setIcon(QIcon(":/images/mail-recieve.png"));
-            trayIcon->show();
+            //trayIcon->show();
             connect(trayIcon, SIGNAL(messageClicked()), this, SLOT(showNormal()));
-            trayIcon->setIcon(QIcon(":/images/chataroma.png"));
         }
       }
-    /*else {
+    else {    //Means the dialog isn't open till now
         //Find the list item where the username is displayed, and open a chatdialog according to it
-        //int rowNumber = ui->peerList->row(ui->peerList->findItems(username, Qt::MatchExactly)[0]);
-        //chatDlg = openChatWindow(ui->peerList->item(rowNumber));
-        //chatDlg->messageRecieved(message, username);
+        int rowNumber = ui->peerList->row(ui->peerList->findItems(username, Qt::MatchExactly)[0]);
+        chatDlg = openChatWindow(ui->peerList->item(rowNumber));
+        chatDlg->messageRecieved(message, username);
         //trayIcon->showMessage(QString::append("messsage recieved from " + username, "one message recieved");
-    }*/
+    }
 }

@@ -67,7 +67,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="icon">
       <iconset resource="systray.qrc">
-       <normaloff>:/images/system-switch-user.png</normaloff>:/images/system-switch-user.png</iconset>
+       <normaloff>:/images/system-switch-user1.png</normaloff>:/images/system-switch-user1.png</iconset>
      </property>
      <property name="iconSize">
       <size>
