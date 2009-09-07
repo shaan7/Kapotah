@@ -33,12 +33,13 @@ Dialog::Dialog(Pointers *ptr,QWidget *parent)
     setWindowTitle("ChatAroma");
     connect(ui->startToolButton,SIGNAL(clicked()),this,SLOT(startPeerManager()));
     connect(ui->filesButton, SIGNAL(clicked()), this, SLOT(showFilesDialog()));
-    connect(ui->peerList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(openChatWindow(QListWidgetItem*)));
+    connect(ui->peerList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(openChatWindowFromItem(QListWidgetItem*)));
     connect(m_server, SIGNAL(messageRecieved(QString,QString)), this, SLOT(messageRecieved(QString,QString)));
     createIcon();
     createActions();
     createTrayIcon();
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+    connect(&newMessageMapper, SIGNAL(mapped(QString)), this, SLOT(openChatWindow(QString)));
 }
 
 Dialog::~Dialog()
@@ -135,19 +136,24 @@ void Dialog::closeEvent(QCloseEvent *event)
     event->ignore();
 }
 
-ChatDialog* Dialog::openChatWindow(QListWidgetItem *item)
+ChatDialog* Dialog::openChatWindow(QString name)
 {
-    if (openChatDialogs.contains(item->text())) {
-        if (!chatDlg->isVisible())
-            chatDlg->show();
-        return 0;
+    if (openChatDialogs.contains(name)) {
+        if (!openChatDialogs[name]->isVisible())
+            openChatDialogs[name]->show();
+        return openChatDialogs[name];
     }
 
-    chatDlg = new ChatDialog(item->text(), m_ptr, this);
-    openChatDialogs[item->text()] = chatDlg;    //Save the dialog to the QHash so that we know which chat dialogs are open
+    chatDlg = new ChatDialog(name, m_ptr, this);
+    openChatDialogs[name] = chatDlg;    //Save the dialog to the QHash so that we know which chat dialogs are open
     connect(chatDlg, SIGNAL(finished(int)), this, SLOT(unregisterChatDialog()));
     chatDlg->show();
     return chatDlg;
+}
+
+ChatDialog* Dialog::openChatWindowFromItem(QListWidgetItem *item)
+{
+    return openChatWindow(item->text());
 }
 
 void Dialog::unregisterChatDialog()
@@ -161,16 +167,27 @@ void Dialog::messageRecieved(QString message,QString username)
         if (!chatDlg->isVisible())  //Means the dialog has been hidden by the user
         {
             trayIcon->showMessage("messsage from " + username,"one message recieved");
-            trayIcon->setIcon(QIcon(":/images/mail-recieve.png"));
+            trayIcon->setIcon(QIcon(":/images/mail-receive.png"));
             //trayIcon->show();
             connect(trayIcon, SIGNAL(messageClicked()), this, SLOT(showNormal()));
+            addNewMessageEntry(username);
         }
       }
     else {    //Means the dialog isn't open till now
         //Find the list item where the username is displayed, and open a chatdialog according to it
         int rowNumber = ui->peerList->row(ui->peerList->findItems(username, Qt::MatchExactly)[0]);
-        chatDlg = openChatWindow(ui->peerList->item(rowNumber));
+        chatDlg = openChatWindowFromItem(ui->peerList->item(rowNumber));
         chatDlg->messageRecieved(message, username);
         //trayIcon->showMessage(QString::append("messsage recieved from " + username, "one message recieved");
     }
+}
+
+void Dialog::addNewMessageEntry(QString senderName)
+{
+    QAction *entry = new QAction(senderName, this);
+    //trayIconMenu->insertSeparator(minimizeAction);
+    trayIconMenu->insertAction(minimizeAction, entry);
+    newMessageActions[senderName]=entry;
+    newMessageMapper.setMapping(entry, senderName);
+    connect(entry, SIGNAL(triggered()), &newMessageMapper, SLOT(map()));
 }

@@ -62,15 +62,15 @@ QString FileStatusDialog::returnToolTipHTML(QString title, QString description)
 
 void FileStatusDialog::fileSendStarted(QString ID, QString filename)
 {
-    //if (upFileTransfers.contains(ID))
-    //    return;
-    //addTransferEntry(ID, QFileInfo(filename).fileName(), " someone", true, false);
+    if (upFileTransfers.contains(ID))
+        return;
+    addTransferEntry(ID, QFileInfo(filename).fileName(), " someone", true, false);
 }
 
 void FileStatusDialog::fileSendFinished(QString ID, QString filename)
 {
-    //upFileTransfers[ID]->progress->setMaximum(1);
-    //upFileTransfers[ID]->progress->setValue(1);
+    upFileTransfers[ID]->progress->setMaximum(1);
+    upFileTransfers[ID]->progress->setValue(1);
 }
 
 void FileStatusDialog::dirRecieved(QDomNodeList fileList, QDomNodeList dirList, QString username)

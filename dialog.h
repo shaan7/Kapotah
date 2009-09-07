@@ -32,6 +32,7 @@
 #include <QAction>
 #include <QMenu>
 #include <QSystemTrayIcon>
+#include <QSignalMapper>
 
 namespace Ui
 {
@@ -50,6 +51,8 @@ private:
     Ui::DialogClass *ui;
     PeerManager *manager;
     QHash<QString,ChatDialog*> openChatDialogs;
+    QHash<QString,QAction*> newMessageActions;
+    QSignalMapper newMessageMapper;
     Server *m_server;
     FileServer *m_fserver;
     ChatDialog *chatDlg;
@@ -72,9 +75,11 @@ private slots:
     void updateNumOfPeers();
     void addNewPeer(QString peer);
     void removePeer(QString peer);
-    ChatDialog* openChatWindow(QListWidgetItem*);
+    ChatDialog* openChatWindowFromItem(QListWidgetItem*);
+    ChatDialog* openChatWindow(QString);
     void showFilesDialog();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
+    void addNewMessageEntry(QString senderName);
 
 public slots:
     void unregisterChatDialog();
