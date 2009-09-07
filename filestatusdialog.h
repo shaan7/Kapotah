@@ -66,12 +66,16 @@ private:
     QHash<QString,FileTransfer*> fileTransfers;
     QHash<QString,DirTransfer*> dirTransfers;
 
+    QHash<QString,FileTransfer*> upFileTransfers;
+    QHash<QString,DirTransfer*> upDirTransfers;
+
     QSignalMapper *filePauseMapper;
     QSignalMapper *fileCancelMapper;
     QSignalMapper *dirPauseMapper;
     QSignalMapper *dirCancelMapper;
 
     void addTransferEntry(QString ID, QString title, QString senderName, bool isUpload, bool isDir);
+    QString returnToolTipHTML(QString title, QString description);
 protected:
     void closeEvent(QCloseEvent *event);
 

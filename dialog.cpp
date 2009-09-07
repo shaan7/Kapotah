@@ -39,7 +39,6 @@ Dialog::Dialog(Pointers *ptr,QWidget *parent)
     createActions();
     createTrayIcon();
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
-    ui->startToolButton->setToolTip("Start the application");
 }
 
 Dialog::~Dialog()

@@ -38,14 +38,8 @@ ChatDialog::ChatDialog(QString peer, Pointers *ptr, QWidget *parent)
     setWindowTitle(peer + "@" + manager->peerInfo(peer).ipAddress().toString());    //Set the window title to peer@ipaddress
 
     connect(ui.sendToolButton, SIGNAL(clicked()), this, SLOT(sendMessage()));
-    //connect(ui.fileButton, SIGNAL(clicked()), this, SLOT(sendFile()));
-    //connect(ui.cancelFileButton, SIGNAL(clicked()), this, SLOT(cancelFileTransfer()));
-    //connect(ui.saveFileButton, SIGNAL(clicked()), this, SLOT(saveFile()));
-    //connect(ui.dirButton, SIGNAL(clicked()), this, SLOT(sendDir()));
 
     connect(server, SIGNAL(messageRecieved(QString,QString)), this, SLOT(messageRecieved(QString,QString)));
-    connect(server, SIGNAL(fileRecieved(QString,qint64,QString,QString)), this, SLOT(fileRecieved(QString,qint64,QString,QString)));
-    connect(server, SIGNAL(dirRecieved(QDomNodeList,QDomNodeList,QString)), this, SLOT(dirRecieved(QDomNodeList,QDomNodeList,QString)));
     connect(manager, SIGNAL(peerGone(QString)), this, SLOT(checkGonePeer(QString)));
     connect(manager, SIGNAL(newPeer(QString)), this, SLOT(checkPeerReturned(QString)));
     connect(ui.messageEdit, SIGNAL(textEdited(QString)),this, SLOT(sendStatus()));
@@ -80,12 +74,12 @@ void ChatDialog::dropEvent(QDropEvent *event)
      if (mimeData->hasUrls()) {
          QList<QUrl> urlList = mimeData->urls();
          for (int i = 0; i < urlList.size() && i < 32; ++i) {
-             if (QFileInfo(urlList.at(i).path()).isDir())
+             if (QFileInfo(urlList.at(i).toLocalFile()).isDir())
              {
-                 sendDir(urlList.at(i).path());
+                 sendDir(urlList.at(i).toLocalFile());
              }
              else {
-                sendFile(urlList.at(i).path());
+                sendFile(urlList.at(i).toLocalFile());
             }
          }
      }
@@ -131,37 +125,9 @@ void ChatDialog::sendMessage()
 
 void ChatDialog::sendFile(QString filename)
 {
-    /*QString filename = QFileDialog::getOpenFileName(this, "Select a file");
-    if (filename=="")
-        return;*/
-    ui.chatEdit->append("<b>" + manager->username() + "</b> sends a file " + filename);
     FileSenderThread *sender = new FileSenderThread(m_ptr, filename, manager->peerInfo(peerName),this);
     sender->start();
-}
-
-void ChatDialog::saveFile()
-{
-    QString filename = QFileDialog::getSaveFileName(this, "Select a file to save", QDir::home().absoluteFilePath(".")); //CHANGES
-    if (filename=="")
-        return;
-    //ui.fileTransferProgress->setMaximum(fileSize);
-    reciever = new FileRecieverThread(m_ptr, "ID", fileSize, peerName, filename, this);  //CHANGES
-    //connect(reciever, SIGNAL(progress(int)), ui.fileTransferProgress, SLOT(setValue(int)));
-    connect(reciever, SIGNAL(done()), this, SLOT(fileTransferComplete()));
-    startTime = QDateTime::currentDateTime();
-    reciever->start();
-}
-
-void ChatDialog::cancelFileTransfer()
-{
-    reciever->stopTransfer();
-}
-
-void ChatDialog::fileTransferComplete()
-{
-    endTime = QDateTime::currentDateTime();
-    int timeTaken = startTime.time().secsTo(endTime.time());
-    //ui.fileStatusLabel->setText(QString::number((fileSize / timeTaken)/1024) + "KB/s");
+    ui.chatEdit->append("<b>" + manager->username() + "</b> sends a file " + filename);
 }
 
 void ChatDialog::messageRecieved(QString message, QString username)
@@ -169,22 +135,6 @@ void ChatDialog::messageRecieved(QString message, QString username)
     if (username == manager->peerInfo(peerName).name()) {
         ui.chatEdit->append("<b>" + username + "</b> :: " + message);
     }
-}
-
-void ChatDialog::fileRecieved(QString filename, qint64 size, QString ID, QString username)
-{
-/*    if (username == manager->peerInfo(peerName).name()) {
-        ui.fileNameEdit->setText(filename);
-
-        fileSize = size;
-        if(size<(1024*1024))
-            ui.fileSizeEdit->setText(QString::number(float(size)/1024) + " KiB");
-        else
-            ui.fileSizeEdit->setText(QString::number(float(size)/(1024*1024)) + " MiB");
-
-        ui.IDEdit->setText(ID);
-        ui.tabWidget->setCurrentWidget(ui.tabFileTransfer);
-    }*/
 }
 
 void ChatDialog::sendStatus()
@@ -227,20 +177,11 @@ void ChatDialog::checkForKeyStatus()
     ui.buddyStatusLabel->clear();
 }
 
-void ChatDialog::dirRecieved(QDomNodeList fileList, QDomNodeList dirList, QString username)
-{
-    /*if (username == manager->peerInfo(peerName).name()) {
-        QString dirname = QFileDialog::getExistingDirectory(this, "Select a dir");
-
-        DirRecieverThread *reciever = new DirRecieverThread(manager, dirname, fileList, dirList, peerName, this);
-        reciever->start();
-    }*/
-}
-
 void ChatDialog::sendDir(QString dirname)
 {
     DirSenderThread *sender = new DirSenderThread(m_ptr, dirname, manager->peerInfo(peerName), this);
     sender->start();
+    ui.chatEdit->append("<b>" + manager->username() + "</b> sends a directory " + dirname);
 }
 
 ChatDialog::~ChatDialog()

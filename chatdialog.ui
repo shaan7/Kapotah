@@ -44,7 +44,7 @@
          </property>
          <property name="icon">
           <iconset resource="systray.qrc">
-           <normaloff>:/images/send.png</normaloff>:/images/send.png</iconset>
+           <normaloff>:/images/dialog-ok-apply.png</normaloff>:/images/dialog-ok-apply.png</iconset>
          </property>
          <property name="iconSize">
           <size>

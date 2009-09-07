@@ -5,6 +5,7 @@
 #include <QCloseEvent>
 #include <QFileDialog>
 #include <QCryptographicHash>
+#include <QFileInfo>
 
 //THIS FILE IS TOOOOOOOOOOOO LARGE, IT WILL BE MADE SMALLER
 //ASSIGN PARENTS TO WIDGETS
@@ -28,14 +29,28 @@ FileStatusDialog::FileStatusDialog(Pointers *ptr, QWidget *parent) :
     connect(ptr->fserver, SIGNAL(finishedTransfer(QString,QString)), this, SLOT(fileSendFinished(QString,QString)));
 }
 
+QString FileStatusDialog::returnToolTipHTML(QString title, QString description)
+{
+    return QString("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">") +
+        QString("<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">p, li { white-space: pre-wrap; }") +
+        QString("</style></head><body style=\" font-family:'DejaVu Sans'; font-size:9pt; font-weight:400; font-style:normal;\">") +
+        QString("<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">") +
+        QString("<span style=\" font-size:11pt; font-weight:600; text-decoration: underline; color:#00007f;\">" + title + "</span></p>") +
+        QString("<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">") +
+        description + QString("</p></body></html>");
+}
+
 void FileStatusDialog::fileSendStarted(QString ID, QString filename)
 {
-
+    //if (upFileTransfers.contains(ID))
+    //    return;
+    //addTransferEntry(ID, QFileInfo(filename).fileName(), " someone", true, false);
 }
 
 void FileStatusDialog::fileSendFinished(QString ID, QString filename)
 {
-
+    //upFileTransfers[ID]->progress->setMaximum(1);
+    //upFileTransfers[ID]->progress->setValue(1);
 }
 
 void FileStatusDialog::dirRecieved(QDomNodeList fileList, QDomNodeList dirList, QString username)
@@ -56,34 +71,51 @@ void FileStatusDialog::addTransferEntry(QString ID, QString title, QString sende
     QGroupBox *box = new QGroupBox(m_ui.scrollArea);
     QGridLayout *layout = new QGridLayout();
     QProgressBar *progress = new QProgressBar();
-    QToolButton *pause = new QToolButton();
-    QToolButton *cancel = new QToolButton();
+    QToolButton *pause;
+    QToolButton *cancel;
+
+    if (!isUpload) {    //We don't yet support manual control of uploads
+        pause = new QToolButton();
+        cancel = new QToolButton();
+    }
     QToolButton *type = new QToolButton();
 
     //Set the widgets
 
-    pause->setAutoRaise(true);
-    cancel->setAutoRaise(true);
+    if (!isUpload) {
+        pause->setAutoRaise(true);
+        cancel->setAutoRaise(true);
+    }
     type->setAutoRaise(true);
 
-    pause->setArrowType(Qt::RightArrow);
     if (isUpload) {
-        type->setArrowType(Qt::UpArrow);
-        type->setToolTip("This Is A Upload");
+        type->setIcon(QIcon(":/images/arrow-up-double.png"));
+        type->setToolTip(returnToolTipHTML("Transfer Type", "This transfer is an upload"));
+        progress->setMaximum(0);
+        progress->setValue(0);
     }
     else {
-        type->setIcon(QIcon(":/images/kget.png"));
-        type->setToolTip("This Is A Download");
+        pause->setIcon(QIcon(":/images/kget.png"));
+        pause->setToolTip(returnToolTipHTML("Download", "Click here to select a location and download"));
+        cancel->setIcon(QIcon(":/images/dialog-cancel.png"));
+        cancel->setToolTip(returnToolTipHTML("Cancel", "Cancels the transfer without confirmation"));
+        type->setIcon(QIcon(":/images/arrow-down-double.png"));
+        type->setToolTip(returnToolTipHTML("Transfer Type", "This transfer is a download"));
     }
 
-    //Layout the
-    //widgets
+    //Layout the widgets
     layout->addWidget(progress, 0, 0);
-    layout->addWidget(pause, 0, 1);
-    layout->addWidget(cancel, 0, 2);
-    layout->addWidget(type, 0, 3);
+    if (!isUpload) {
+        layout->addWidget(pause, 0, 1);
+        layout->addWidget(cancel, 0, 2);
+        layout->addWidget(type, 0, 3);
+        box->setTitle("Downloading " + title + " from " + senderName);
+    }
+    else {
+        layout->addWidget(type, 0, 1);
+        box->setTitle("Sending " + title + " to " + senderName);
+    }
     box->setLayout(layout);
-    box->setTitle(title + " with " + senderName);
 
     //Add the widgets to the ScrollArea
 
@@ -101,9 +133,13 @@ void FileStatusDialog::addTransferEntry(QString ID, QString title, QString sende
         //Store info
         transfer->box = box;
         transfer->progress = progress;
-        transfer->cancel = cancel;
-        transfer->pause = pause;
-        dirTransfers[ID] = transfer;
+        if (!isUpload) {
+            transfer->cancel = cancel;
+            transfer->pause = pause;
+            dirTransfers[ID] = transfer;
+        }
+        else
+            upDirTransfers[ID] = transfer;
     }
     else {
         FileTransfer *transfer = new FileTransfer;
@@ -111,14 +147,21 @@ void FileStatusDialog::addTransferEntry(QString ID, QString title, QString sende
         //Store info
         transfer->box = box;
         transfer->progress = progress;
-        transfer->cancel = cancel;
-        transfer->pause = pause;
-        fileTransfers[ID] = transfer;
+        if (!isUpload) {
+            transfer->cancel = cancel;
+            transfer->pause = pause;
+            fileTransfers[ID] = transfer;
+        }
+        else
+            upFileTransfers[ID] = transfer;
     }
 }
 
 void FileStatusDialog::addFileTransfer(QString filename, qint64 size, QString ID, QString senderName, bool isUpload)
 {
+    if (fileTransfers.contains(ID))
+        return;
+
     addTransferEntry(ID, filename, senderName, isUpload, false);
 
     FileTransfer *transfer = fileTransfers[ID];
@@ -151,6 +194,10 @@ void FileStatusDialog::addDirTransfer(QDomNodeList fileList, QDomNodeList dirLis
 
     //Calculate ID for dir
     QString ID(QCryptographicHash::hash(items.toUtf8(), QCryptographicHash::Md5).toHex());
+
+    if (dirTransfers.contains(ID))
+        return;
+
     for (int i=0;i<fileList.count();i++) {
         totalSize += fileList.at(i).toElement().attribute("size").toLongLong();
     }
@@ -191,25 +238,25 @@ void FileStatusDialog::dirCancelClicked(QString ID)
     transfer->progress->setMaximum(0);
     transfer->progress->setValue(0);
     transfer->inProgress = false;
+    transfer->pause->setEnabled(true);
 }
 
 void FileStatusDialog::dirPauseClicked(QString ID)
 {
     DirTransfer *transfer = dirTransfers[ID];
-    if (transfer->inProgress) {        //If already started download
-        transfer->reciever->start();
-        return;
-    }
+
     QString dirname = QFileDialog::getExistingDirectory(this, "Select a dir");
     if (dirname=="")
         return;
 
+    transfer->pause->setEnabled(false);
     transfer->reciever = new DirRecieverThread(m_ptr, ID, dirname, transfer->fileList, transfer->dirList, transfer->senderName, this);
     transfer->savePath = dirname;
     connect(transfer->reciever, SIGNAL(progress(QString,int)), this, SLOT(dirProgress(QString,int)));
     connect(transfer->reciever, SIGNAL(done(QString)), this, SLOT(dirDone(QString)));
     //startTime = QDateTime::currentDateTime();
     transfer->inProgress = true;
+    transfer->reciever->start();
 }
 
 void FileStatusDialog::dirProgress(QString ID, int filesDone)
@@ -236,20 +283,19 @@ void FileStatusDialog::fileCancelClicked(QString ID)
     transfer->progress->setMaximum(0);
     transfer->progress->setValue(0);
     transfer->inProgress = false;
+    transfer->pause->setEnabled(true);
 }
 
 void FileStatusDialog::filePauseClicked(QString ID)
 {
     FileTransfer *transfer = fileTransfers[ID];
-    if (transfer->inProgress) {        //If already started download
-        transfer->reciever->start();
-        return;
-    }
 
     QString filename = QFileDialog::getSaveFileName(this, "Select a file to save",
                                                     QDir::home().absoluteFilePath(transfer->fileName)); //CHANGES
     if (filename=="")
         return;
+
+    transfer->pause->setEnabled(false);
     transfer->savePath = filename;
     transfer->reciever = new FileRecieverThread(m_ptr, ID, transfer->fileSize,
                                                      transfer->senderName, transfer->savePath, this);
@@ -258,6 +304,7 @@ void FileStatusDialog::filePauseClicked(QString ID)
     connect(transfer->reciever, SIGNAL(done(QString)), this, SLOT(fileDone(QString)));
     //startTime = QDateTime::currentDateTime();
     transfer->inProgress = true;
+    transfer->reciever->start();
 }
 
 void FileStatusDialog::fileProgress(QString ID, QString peer, QString fileName, qint64 size, qint64 bytesDone)
