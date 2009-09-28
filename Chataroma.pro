@@ -21,7 +21,8 @@ SOURCES += main.cpp \
     serverthread.cpp \
     messagesenderthread.cpp \
     dirrecieverthread.cpp \
-    filestatusdialog.cpp
+    filestatusdialog.cpp \
+    aboutdialog.cpp
 HEADERS += dialog.h \
     peermanager.h \
     peerinfo.h \
@@ -37,8 +38,10 @@ HEADERS += dialog.h \
     messagesenderthread.h \
     dirrecieverthread.h \
     filestatusdialog.h \
-    pointers.h
+    pointers.h \
+    aboutdialog.h
 FORMS += dialog.ui \
     chatdialog.ui \
-    filestatusdialog.ui
+    filestatusdialog.ui \
+    aboutdialog.ui
 RESOURCES += systray.qrc

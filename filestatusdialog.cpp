@@ -64,11 +64,17 @@ void FileStatusDialog::fileSendStarted(QString ID, QString filename)
 {
     if (upFileTransfers.contains(ID))
         return;
+    if (ID.left(3) == "DIR")
+        return;
+
     addTransferEntry(ID, QFileInfo(filename).fileName(), " someone", true, false);
 }
 
 void FileStatusDialog::fileSendFinished(QString ID, QString filename)
 {
+    if (ID.left(3) == "DIR")
+        return;
+
     upFileTransfers[ID]->progress->setMaximum(1);
     upFileTransfers[ID]->progress->setValue(1);
 }

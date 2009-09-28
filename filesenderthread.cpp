@@ -47,7 +47,8 @@ void FileSenderThread::run()
     QDomElement file = document.createElement("file");
     file.setAttribute("fileName", info.fileName());
     file.setAttribute("size", QString::number(info.size()));
-    ID = QString(QCryptographicHash::hash(filename.toUtf8(), QCryptographicHash::Md5).toHex());;
+    ID = "FILE";     //So that we can distinguish normal files and files within dirs
+    ID.append(QString(QCryptographicHash::hash(filename.toUtf8(), QCryptographicHash::Md5).toHex()));
     file.setAttribute("ID", ID);
 
     if (!fserver->idExists(ID)) {

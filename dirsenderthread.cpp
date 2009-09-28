@@ -51,7 +51,8 @@ void DirSenderThread::run()
         file.setAttribute("size", fileInfo.size());
         file.setAttribute("path", parentDir.relativeFilePath(temp));
 
-        QString ID = QString(QCryptographicHash::hash(temp.toUtf8(), QCryptographicHash::Md5).toHex());
+        QString ID = "DIR";     //So that we can distinguish normal files and files within dirs
+        ID.append(QString(QCryptographicHash::hash(temp.toUtf8(), QCryptographicHash::Md5).toHex()));
         file.setAttribute("ID", ID);
 
         if (!fserver->idExists(ID))
