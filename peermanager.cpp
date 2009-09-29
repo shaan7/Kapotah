@@ -108,24 +108,24 @@ void PeerManager::sendAnnounce()
 
 void PeerManager::parseUdpDatagram(QHostAddress senderIP, QByteArray datagram)
 {
-        QDomDocument document;
-        document.setContent(datagram, false, 0, 0, 0);
-        QDomElement documentElement = document.documentElement();
-        QDomNode node = documentElement.firstChild();
-        QDomElement action = node.toElement();
+    QDomDocument document;
+    document.setContent(datagram, false, 0, 0, 0);
+    QDomElement documentElement = document.documentElement();
+    QDomNode node = documentElement.firstChild();
+    QDomElement action = node.toElement();
 
-        //If data is type announce
-        if (action.attribute("type") == "announce") {
-            QDomElement announce = action.firstChild().toElement();
-            PeerInfo tempPeer(announce.attribute("senderName", "unknown"),senderIP);
+    //If data is type announce
+    if (action.attribute("type") == "announce") {
+        QDomElement announce = action.firstChild().toElement();
+        PeerInfo tempPeer(announce.attribute("senderName", "unknown"),senderIP);
 
-            if (!peers.contains(tempPeer.name())) {
-                tempPeer.setAge(0);
-                peers.insert(tempPeer.name(),tempPeer);
-                emit newPeer(tempPeer.name());
-            }
-            else {
-                peers[tempPeer.name()].setAge(0);
-            }
+        if (!peers.contains(tempPeer.name())) {
+            tempPeer.setAge(0);
+            peers.insert(tempPeer.name(),tempPeer);
+            emit newPeer(tempPeer.name());
         }
+        else {
+            peers[tempPeer.name()].setAge(0);
+        }
+    }
 }
