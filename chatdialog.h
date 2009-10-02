@@ -36,12 +36,12 @@ class ChatDialog : public QDialog
     Q_OBJECT
 
 public:
-    ChatDialog(QString name, Pointers *ptr, QWidget *parent = 0);
+    ChatDialog(QHostAddress peerIP, Pointers *ptr, QWidget *parent = 0);
     ~ChatDialog();
 
 private:
     Ui::ChatDialog ui;
-    QString peerName;
+    QHostAddress peerIP;
     Pointers *m_ptr;
     PeerManager *manager;
     Server *server;
@@ -63,12 +63,12 @@ private slots:
     void sendMessage();
     void sendFile(QString filename);
     void sendDir(QString dirname);
-    void checkGonePeer(QString name);
-    void checkPeerReturned(QString name);
+    void checkGonePeer(QHostAddress ipAddress);
+    void checkPeerReturned(QHostAddress ipAddress);
     void checkForKeyStatus();
 
 public slots:
-    void messageRecieved(QString message, QString username);
+    void messageRecieved(QString message, QHostAddress ipAddress);
     void sendStatus();
     void parseUdpDatagram(QHostAddress senderIP, QByteArray datagram);
 };

@@ -77,5 +77,6 @@ void FileSenderThread::run()
 
 FileSenderThread::~FileSenderThread()
 {
+    wait();
     qDebug() << "FileSenderThread END";
 }

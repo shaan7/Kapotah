@@ -34,17 +34,24 @@ Dialog::Dialog(Pointers *ptr,QWidget *parent)
     connect(ui->startToolButton,SIGNAL(clicked()),this,SLOT(startPeerManager()));
     connect(ui->filesButton, SIGNAL(clicked()), this, SLOT(showFilesDialog()));
     connect(ui->peerList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(openChatWindowFromItem(QListWidgetItem*)));
-    connect(m_server, SIGNAL(messageRecieved(QString,QString)), this, SLOT(messageRecieved(QString,QString)));
+    connect(m_server, SIGNAL(messageRecieved(QString,QHostAddress)), this, SLOT(messageRecieved(QString,QHostAddress)));
     createIcon();
     createActions();
     createTrayIcon();
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
-    connect(&newMessageMapper, SIGNAL(mapped(QString)), this, SLOT(openChatWindow(QString)));
+    connect(trayIcon, SIGNAL(messageClicked()), this, SLOT(notificationClicked()));
+    //connect(&newMessageMapper, SIGNAL(mapped(QString)), this, SLOT(openChatWindow(QString)));
 }
 
 Dialog::~Dialog()
 {
     delete ui;
+}
+
+void Dialog::notificationClicked()
+{
+    trayIcon->setIcon(QIcon(":/images/chataroma.png"));
+    showNormal();
 }
 
 void Dialog::iconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -54,6 +61,7 @@ void Dialog::iconActivated(QSystemTrayIcon::ActivationReason reason)
         chatDlg->show();
         break;*/
     case QSystemTrayIcon::DoubleClick:
+        trayIcon->setIcon(QIcon(":/images/chataroma.png"));
         showNormal();
         break;
     /*case QSystemTrayIcon::MiddleClick:
@@ -107,20 +115,20 @@ void Dialog::startPeerManager()
 {
     ui->startToolButton->setEnabled(false);
     manager->startBroadcast();  //Start broadcasting on the network
-    connect(manager,SIGNAL(newPeer(QString)),this,SLOT(addNewPeer(QString)));
-    connect(manager,SIGNAL(peerGone(QString)),this,SLOT(removePeer(QString)));
+    connect(manager,SIGNAL(newPeer(QHostAddress)),this,SLOT(addNewPeer(QHostAddress)));
+    connect(manager,SIGNAL(peerGone(QHostAddress)),this,SLOT(removePeer(QHostAddress)));
 }
 
-void Dialog::addNewPeer(QString peer)
+void Dialog::addNewPeer(QHostAddress peerIP)
 {
-    ui->peerList->addItem(peer);
+    ui->peerList->addItem(peerIP.toString());
     updateNumOfPeers();  //updates the number of members online
 }
 
-void Dialog::removePeer(QString peer)
+void Dialog::removePeer(QHostAddress peerIP)
 {
     //We have to find the row in which the peer is being shown and select the first match
-    int rowNumber = ui->peerList->row(ui->peerList->findItems(peer, Qt::MatchExactly)[0]);
+    int rowNumber = ui->peerList->row(ui->peerList->findItems(peerIP.toString(), Qt::MatchExactly)[0]);
     ui->peerList->takeItem(rowNumber);
     updateNumOfPeers();
 }
@@ -136,16 +144,22 @@ void Dialog::closeEvent(QCloseEvent *event)
     event->ignore();
 }
 
-ChatDialog* Dialog::openChatWindow(QString name)
+ChatDialog* Dialog::openChatWindow(QHostAddress ipAddress)
 {
-    if (openChatDialogs.contains(name)) {
-        if (!openChatDialogs[name]->isVisible())
-            openChatDialogs[name]->show();
-        return openChatDialogs[name];
+    QList<QListWidgetItem *> found;
+    found = ui->peerList->findItems(ipAddress.toString(), Qt::MatchExactly);
+    if (found.count()>0) {
+        found[0]->setIcon(QIcon(""));
     }
 
-    chatDlg = new ChatDialog(name, m_ptr, this);
-    openChatDialogs[name] = chatDlg;    //Save the dialog to the QHash so that we know which chat dialogs are open
+    if (openChatDialogs.contains(ipAddress.toString())) {
+        if (!openChatDialogs[ipAddress.toString()]->isVisible())
+            openChatDialogs[ipAddress.toString()]->show();
+        return openChatDialogs[ipAddress.toString()];
+    }
+
+    chatDlg = new ChatDialog(QHostAddress(ipAddress.toString()), m_ptr, this);
+    openChatDialogs[ipAddress.toString()] = chatDlg;    //Save the dialog to the QHash so that we know which chat dialogs are open
     connect(chatDlg, SIGNAL(finished(int)), this, SLOT(unregisterChatDialog()));
     chatDlg->show();
     return chatDlg;
@@ -153,7 +167,7 @@ ChatDialog* Dialog::openChatWindow(QString name)
 
 ChatDialog* Dialog::openChatWindowFromItem(QListWidgetItem *item)
 {
-    return openChatWindow(item->text());
+    return openChatWindow(QHostAddress(item->text()));
 }
 
 void Dialog::unregisterChatDialog()
@@ -161,33 +175,35 @@ void Dialog::unregisterChatDialog()
     openChatDialogs.remove(openChatDialogs.key(dynamic_cast<ChatDialog*>(sender())));
 }
 
-void Dialog::messageRecieved(QString message,QString username)
+void Dialog::messageRecieved(QString message,QHostAddress ipAddress)
 {
-    if (openChatDialogs.contains(username)) {
+    if (openChatDialogs.contains(ipAddress.toString())) {
         if (!chatDlg->isVisible())  //Means the dialog has been hidden by the user
         {
-            trayIcon->showMessage("messsage from " + username,"one message recieved");
+            trayIcon->showMessage("Messsage from " + ipAddress.toString(),"Message recieved");
             trayIcon->setIcon(QIcon(":/images/mail-receive.png"));
-            //trayIcon->show();
-            connect(trayIcon, SIGNAL(messageClicked()), this, SLOT(showNormal()));
-            addNewMessageEntry(username);
+
+            QList<QListWidgetItem *> found;
+            found = ui->peerList->findItems(ipAddress.toString(), Qt::MatchExactly);
+            if (found.count()>0) {
+                found[0]->setIcon(QIcon(":/images/mail_get.png"));
+            }
         }
       }
     else {    //Means the dialog isn't open till now
         //Find the list item where the username is displayed, and open a chatdialog according to it
-        int rowNumber = ui->peerList->row(ui->peerList->findItems(username, Qt::MatchExactly)[0]);
+        int rowNumber = ui->peerList->row(ui->peerList->findItems(ipAddress.toString(), Qt::MatchExactly)[0]);
         chatDlg = openChatWindowFromItem(ui->peerList->item(rowNumber));
-        chatDlg->messageRecieved(message, username);
-        //trayIcon->showMessage(QString::append("messsage recieved from " + username, "one message recieved");
+        chatDlg->messageRecieved(message, ipAddress);
     }
 }
 
-void Dialog::addNewMessageEntry(QString senderName)
+/*void Dialog::addNewMessageEntry(QString senderIP)
 {
-    QAction *entry = new QAction(senderName, this);
+    QAction *entry = new QAction(senderIP, this);
     //trayIconMenu->insertSeparator(minimizeAction);
     trayIconMenu->insertAction(minimizeAction, entry);
-    newMessageActions[senderName]=entry;
-    newMessageMapper.setMapping(entry, senderName);
+    newMessageActions[senderIP]=entry;
+    newMessageMapper.setMapping(entry, senderIP);
     connect(entry, SIGNAL(triggered()), &newMessageMapper, SLOT(map()));
-}
+}*/

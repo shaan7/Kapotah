@@ -48,7 +48,7 @@ void ServerThread::run()
         if (socket.bytesAvailable() < dataSize)
             continue;
 
-        emit dataReady(socket.readAll());
+        emit dataReady(socket.readAll(),socket.peerAddress());
         break;
     }
 

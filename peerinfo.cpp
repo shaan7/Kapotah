@@ -22,7 +22,7 @@
 
 bool PeerInfo::operator==(PeerInfo peer)
 {
-    if (peer.ipAddress() == m_ipAddress && peer.name() == m_name)
+    if (peer.ipAddress() == m_ipAddress)
         return true;
     else
         return false;

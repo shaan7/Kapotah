@@ -30,18 +30,18 @@
 #include "filerecieverthread.h"
 #include "dirrecieverthread.h"
 
-ChatDialog::ChatDialog(QString peer, Pointers *ptr, QWidget *parent)
-        : QDialog(parent), peerName(peer), m_ptr(ptr), manager(ptr->manager), server(ptr->server), fserver(ptr->fserver)
+ChatDialog::ChatDialog(QHostAddress peerIP, Pointers *ptr, QWidget *parent)
+        : QDialog(parent), peerIP(peerIP), m_ptr(ptr), manager(ptr->manager), server(ptr->server), fserver(ptr->fserver)
 {
     ui.setupUi(this);
 
-    setWindowTitle(peer + "@" + manager->peerInfo(peer).ipAddress().toString());    //Set the window title to peer@ipaddress
+    setWindowTitle(manager->peerInfo(peerIP.toString()).name() + "@" + peerIP.toString());    //Set the window title to peer@ipaddress
 
     connect(ui.sendToolButton, SIGNAL(clicked()), this, SLOT(sendMessage()));
 
-    connect(server, SIGNAL(messageRecieved(QString,QString)), this, SLOT(messageRecieved(QString,QString)));
-    connect(manager, SIGNAL(peerGone(QString)), this, SLOT(checkGonePeer(QString)));
-    connect(manager, SIGNAL(newPeer(QString)), this, SLOT(checkPeerReturned(QString)));
+    connect(server, SIGNAL(messageRecieved(QString,QHostAddress)), this, SLOT(messageRecieved(QString,QHostAddress)));
+    connect(manager, SIGNAL(peerGone(QHostAddress)), this, SLOT(checkGonePeer(QHostAddress)));
+    connect(manager, SIGNAL(newPeer(QHostAddress)), this, SLOT(checkPeerReturned(QHostAddress)));
     connect(ui.messageEdit, SIGNAL(textEdited(QString)),this, SLOT(sendStatus()));
     connect(ui.messageEdit, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
     connect(server, SIGNAL(udpDataRecieved(QHostAddress,QByteArray)), this, SLOT(parseUdpDatagram(QHostAddress,QByteArray)));
@@ -97,20 +97,20 @@ void ChatDialog::closeEvent(QCloseEvent *event)
     event->ignore();
 }
 
-void ChatDialog::checkGonePeer(QString name)
+void ChatDialog::checkGonePeer(QHostAddress IP)
 {
-    if (name == peerName)
+    if (IP == peerIP)
     {
-        ui.chatEdit->append("<font color=red>" + peerName + " is offline</font>");
+        ui.chatEdit->append("<font color=red>" + peerIP.toString() + " is offline</font>");
         ui.sendToolButton->setEnabled(false);
     }
 }
 
-void ChatDialog::checkPeerReturned(QString name)
+void ChatDialog::checkPeerReturned(QHostAddress IP)
 {
-    if (name == peerName)
+    if (IP == peerIP)
     {
-        ui.chatEdit->append("<font color=green>" + peerName + " is back online</font>");
+        ui.chatEdit->append("<font color=green>" + peerIP.toString() + " is back online</font>");
         ui.sendToolButton->setEnabled(true);
     }
 }
@@ -118,22 +118,22 @@ void ChatDialog::checkPeerReturned(QString name)
 void ChatDialog::sendMessage()
 {
     MessageSender *sender = new MessageSender(m_ptr, this);
-    sender->sendMessage(ui.messageEdit->text(),manager->peerInfo(peerName));
+    sender->sendMessage(ui.messageEdit->text(),manager->peerInfo(peerIP.toString()));
     ui.chatEdit->append("<b>" + manager->username() + "</b> :: " + ui.messageEdit->text()); //<b> is HTML for bold
     ui.messageEdit->clear();
 }
 
 void ChatDialog::sendFile(QString filename)
 {
-    FileSenderThread *sender = new FileSenderThread(m_ptr, filename, manager->peerInfo(peerName),this);
+    FileSenderThread *sender = new FileSenderThread(m_ptr, filename, manager->peerInfo(peerIP.toString()),this);
     sender->start();
-    ui.chatEdit->append("<b>" + manager->username() + "</b> sends a file " + filename);
+    ui.chatEdit->append("You're sending a file " + filename);
 }
 
-void ChatDialog::messageRecieved(QString message, QString username)
+void ChatDialog::messageRecieved(QString message, QHostAddress senderIP)
 {
-    if (username == manager->peerInfo(peerName).name()) {
-        ui.chatEdit->append("<b>" + username + "</b> :: " + message);
+    if (senderIP == peerIP) {
+        ui.chatEdit->append("<b>" + manager->peerInfo(senderIP.toString()).name() + "</b> :: " + message);
     }
 }
 
@@ -143,7 +143,7 @@ void ChatDialog::sendStatus()
 
     QDomElement doc = document.createElement("document");
     QDomElement action = document.createElement("action");
-    action.setAttribute( "type", "status" );
+    action.setAttribute("type", "status");
     QDomElement status = document.createElement("status");
     status.setAttribute("senderName", manager->username());
 
@@ -151,7 +151,7 @@ void ChatDialog::sendStatus()
     doc.appendChild(action);
     action.appendChild(status);
 
-    server->sendDatagram(document.toByteArray(), manager->peerInfo(peerName).ipAddress());
+    server->sendDatagram(document.toByteArray(), QHostAddress(peerIP));
 }
 
 void ChatDialog::parseUdpDatagram(QHostAddress senderIP, QByteArray datagram)
@@ -166,8 +166,7 @@ void ChatDialog::parseUdpDatagram(QHostAddress senderIP, QByteArray datagram)
     if (action.attribute("type") == "status") {
         keyStatusTimer.stop();
         QDomElement announce = action.firstChild().toElement();
-        PeerInfo tempPeer(announce.attribute("senderName", "unknown"),senderIP);
-        ui.buddyStatusLabel->setText(announce.attribute("senderName", "unknown") + " is typing....");
+        ui.buddyStatusLabel->setText(manager->peerInfo(senderIP.toString()).name() + " is typing....");
         keyStatusTimer.start();
     }
 }
@@ -179,9 +178,9 @@ void ChatDialog::checkForKeyStatus()
 
 void ChatDialog::sendDir(QString dirname)
 {
-    DirSenderThread *sender = new DirSenderThread(m_ptr, dirname, manager->peerInfo(peerName), this);
+    DirSenderThread *sender = new DirSenderThread(m_ptr, dirname, manager->peerInfo(peerIP.toString()), this);
     sender->start();
-    ui.chatEdit->append("<b>" + manager->username() + "</b> sends a directory " + dirname);
+    ui.chatEdit->append("You're sending a directory " + dirname);
 }
 
 ChatDialog::~ChatDialog()

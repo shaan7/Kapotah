@@ -21,8 +21,8 @@
 #include "dirrecieverthread.h"
 #include <QDir>
 
-DirRecieverThread::DirRecieverThread(Pointers *ptr, QString ID, QString dir, QDomNodeList files, QDomNodeList dirs, QString peername, QObject *parent)
-    : QThread(parent), manager(ptr->manager), fileList(files), dirList(dirs), peerName(peername), dirName(dir), m_ptr(ptr), m_ID(ID)
+DirRecieverThread::DirRecieverThread(Pointers *ptr, QString ID, QString dir, QDomNodeList files, QDomNodeList dirs, QHostAddress peerip, QObject *parent)
+    : QThread(parent), manager(ptr->manager), fileList(files), dirList(dirs), peerIP(peerip), dirName(dir), m_ptr(ptr), m_ID(ID)
 {
     cancel = false;
 }
@@ -38,7 +38,7 @@ void DirRecieverThread::run()
         if (cancel)
             break;
         fileReciever = new FileRecieverThread(m_ptr, fileList.at(i).toElement().attribute("ID"),
-                                          fileList.at(i).toElement().attribute("size").toInt(), peerName,
+                                          fileList.at(i).toElement().attribute("size").toInt(), peerIP,
                                           dir.absoluteFilePath(fileList.at(i).toElement().attribute("path")), 0);
         //qDebug() << "START " << dir.absoluteFilePath(fileList.at(i).toElement().attribute("path"));
         //fileReciever->setPId(m_ID);
@@ -59,5 +59,7 @@ void DirRecieverThread::stopTransfer()
 
 DirRecieverThread::~DirRecieverThread()
 {
+    cancel = true;
+    wait();
     qDebug() << "DirRecieverThread END";
 }

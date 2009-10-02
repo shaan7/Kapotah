@@ -50,16 +50,16 @@ protected:
      void incomingConnection(int socketDescriptor);
 
 private slots:
-     void readIncomingData(QByteArray data);
+     void readIncomingData(QByteArray data, QHostAddress ipAddress);
 
 public slots:
     void sendBroadcast(QByteArray datagram);
     void readBroadcast();
 
 signals:
-     void messageRecieved(QString message, QString username);
-     void fileRecieved(QString name, qint64 size, QString ID, QString username);
-     void dirRecieved(QDomNodeList fileList, QDomNodeList dirList, QString username);
+     void messageRecieved(QString message, QHostAddress senderIP);
+     void fileRecieved(QString name, qint64 size, QString ID, QHostAddress senderIP);
+     void dirRecieved(QDomNodeList fileList, QDomNodeList dirList, QHostAddress senderIP);
      void udpDataRecieved(QHostAddress senderIP, QByteArray data);
 
 };

@@ -23,6 +23,7 @@
 
 #include <QThread>
 #include <QTcpSocket>
+#include <QHostAddress>
 
 class ServerThread : public QThread
 {
@@ -38,7 +39,7 @@ private:
     int dataSize;
 
 signals:
-    void dataReady(QByteArray data);
+    void dataReady(QByteArray data, QHostAddress address);
 };
 
 #endif // SERVERTHREAD_H

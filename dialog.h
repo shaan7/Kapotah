@@ -52,7 +52,7 @@ private:
     PeerManager *manager;
     QHash<QString,ChatDialog*> openChatDialogs;
     QHash<QString,QAction*> newMessageActions;
-    QSignalMapper newMessageMapper;
+    //QSignalMapper newMessageMapper;
     Server *m_server;
     FileServer *m_fserver;
     ChatDialog *chatDlg;
@@ -73,17 +73,18 @@ protected:
 private slots:
     void startPeerManager();
     void updateNumOfPeers();
-    void addNewPeer(QString peer);
-    void removePeer(QString peer);
+    void addNewPeer(QHostAddress peerIP);
+    void removePeer(QHostAddress peerIP);
     ChatDialog* openChatWindowFromItem(QListWidgetItem*);
-    ChatDialog* openChatWindow(QString);
+    ChatDialog* openChatWindow(QHostAddress ipAddress);
     void showFilesDialog();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
-    void addNewMessageEntry(QString senderName);
+    void notificationClicked();
+    //void addNewMessageEntry(QString senderName);
 
 public slots:
     void unregisterChatDialog();
-    void messageRecieved(QString message,QString username);
+    void messageRecieved(QString message,QHostAddress senderIP);
 };
 
 #endif // DIALOG_H

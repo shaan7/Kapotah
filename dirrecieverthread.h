@@ -36,14 +36,14 @@ private:
     PeerManager *manager;
     QDomNodeList fileList;
     QDomNodeList dirList;
-    QString peerName;
+    QHostAddress peerIP;
     QString dirName;
     FileRecieverThread *fileReciever;
     bool cancel;
     QString m_ID;
 public:
     DirRecieverThread(Pointers *ptr, QString ID, QString dir, QDomNodeList files, QDomNodeList dirs,
-                      QString peername, QObject *parent);
+                      QHostAddress peerIP, QObject *parent);
     ~DirRecieverThread();
     void run();
     void stopTransfer();

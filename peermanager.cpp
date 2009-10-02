@@ -50,9 +50,9 @@ PeerManager::PeerManager(Pointers *ptr)
         m_username = "unknown";
 }
 
-bool PeerManager::contains(QString name)
+bool PeerManager::contains(QString ipAddress)
 {
-    return peers.contains(name);
+    return peers.contains(ipAddress);
 }
 
 void PeerManager::startBroadcast()
@@ -65,9 +65,9 @@ void PeerManager::startBroadcast()
     broadcastTimer.start();
 }
 
-PeerInfo PeerManager::peerInfo(QString name)
+PeerInfo PeerManager::peerInfo(QString ipAddress)
 {
-    return peers.value(name);
+    return peers.value(ipAddress);
 }
 
 void PeerManager::checkPeers()
@@ -79,8 +79,8 @@ void PeerManager::checkPeers()
         PeerInfo &peer = peers[key];
         peer.incrementAge();
         if (peer.age() > ageTimeout) {
-            emit peerGone(peer.name());
-            toDelete.append(peer.name());
+            emit peerGone(peer.ipAddress());
+            toDelete.append(peer.ipAddress().toString());
         }
     }
 
@@ -119,13 +119,13 @@ void PeerManager::parseUdpDatagram(QHostAddress senderIP, QByteArray datagram)
         QDomElement announce = action.firstChild().toElement();
         PeerInfo tempPeer(announce.attribute("senderName", "unknown"),senderIP);
 
-        if (!peers.contains(tempPeer.name())) {
+        if (!peers.contains(tempPeer.ipAddress().toString())) {
             tempPeer.setAge(0);
-            peers.insert(tempPeer.name(),tempPeer);
-            emit newPeer(tempPeer.name());
+            peers.insert(tempPeer.ipAddress().toString(),tempPeer);
+            emit newPeer(tempPeer.ipAddress());
         }
         else {
-            peers[tempPeer.name()].setAge(0);
+            peers[tempPeer.ipAddress().toString()].setAge(0);
         }
     }
 }

@@ -25,8 +25,8 @@
 
 const qint64 bytesPerBlock = Q_INT64_C(100000);   //number of bytes to transfer in one block
 
-FileRecieverThread::FileRecieverThread(Pointers *ptr, QString fileID, qint64 fileSize, QString sendingPeer, QString outputFilename, QObject *parent)
-    : QThread(parent), ID(fileID), peer(sendingPeer), manager(ptr->manager), filename(outputFilename), size(fileSize)
+FileRecieverThread::FileRecieverThread(Pointers *ptr, QString fileID, qint64 fileSize, QHostAddress senderIP, QString outputFilename, QObject *parent)
+    : QThread(parent), ID(fileID), peerIP(senderIP), manager(ptr->manager), filename(outputFilename), size(fileSize)
 {
     readyToRecieve = false;
     startedRecieving = false;
@@ -44,7 +44,7 @@ void FileRecieverThread::run()
     if (size==0)
         return;         //TODO: better to create an empty file
     QTcpSocket socket;
-    socket.connectToHost(manager->peerInfo(peer).ipAddress(), 9877);
+    socket.connectToHost(peerIP, 9877);
     socket.waitForConnected();
 
     socket.write(ID.toUtf8());  //ID
@@ -60,7 +60,7 @@ void FileRecieverThread::run()
             qint64 bytesWritten = file.write(socket.readAll());
             bytesCopied = file.pos();
 
-            emit progress(ID, peer, filename, size, bytesCopied);
+            emit progress(ID, peerIP, filename, size, bytesCopied);
 
             if (bytesCopied >= size) {
                 qDebug() << "DONE " << filename;

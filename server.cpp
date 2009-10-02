@@ -22,6 +22,7 @@
 #include <QDomDocument>
 #include <QFile>
 #include <QNetworkInterface>
+#include <QMetaType>
 
 static const qint32 BroadcastInterval = 1000;
 static const unsigned broadcastPort = 45000;
@@ -37,16 +38,17 @@ Server::Server(QObject *parent) :
     connect(&broadcastSocket, SIGNAL(readyRead()),
             this, SLOT(readBroadcast()));
 
+    qRegisterMetaType<QHostAddress>("QHostAddress");
 }
 
 void Server::incomingConnection(int socketDescriptor)
 {
     ServerThread *serverThread = new ServerThread(socketDescriptor, this);
-    connect(serverThread, SIGNAL(dataReady(QByteArray)), this, SLOT(readIncomingData(QByteArray)));
+    connect(serverThread, SIGNAL(dataReady(QByteArray,QHostAddress)), this, SLOT(readIncomingData(QByteArray,QHostAddress)));
     serverThread->start();
 }
 
-void Server::readIncomingData(QByteArray data)     //TCP
+void Server::readIncomingData(QByteArray data, QHostAddress ipAddress)     //TCP
 {
     QString error;
     //Parse the datagram as XML
@@ -59,19 +61,19 @@ void Server::readIncomingData(QByteArray data)     //TCP
     //If data is type message
     if (action.attribute("type") == "message") {
         QDomElement message = action.firstChild().toElement();
-        emit messageRecieved(message.attribute("content", "ERROR"),message.attribute("senderName", "unknown"));
+        emit messageRecieved(message.attribute("content", "ERROR"),ipAddress);
     }
     if (action.attribute("type") == "file") {
         QDomElement file = action.firstChild().toElement();
 
         emit fileRecieved(file.attribute("fileName", "UNKNOWN"), file.attribute("size","0").toInt()
-                             , file.attribute("ID","0"), action.attribute("senderName", "unknown"));
+                             , file.attribute("ID","0"), ipAddress);
     }
     if (action.attribute("type") == "dir") {
         QDomElement file = action.firstChild().toElement();
         QDomNodeList files = action.firstChild().toElement().childNodes();
         QDomNodeList dirs = action.childNodes().at(1).childNodes();
-        emit dirRecieved(files, dirs, action.attribute("senderName", "unknown"));
+        emit dirRecieved(files, dirs, ipAddress);
     }
 }
 

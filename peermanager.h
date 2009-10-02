@@ -42,13 +42,13 @@ public:
     void startBroadcast();
     void setUsername(QString name)  {   m_username = name;    }
     QString username()  {   return m_username;  }
-    PeerInfo peerInfo(QString name);
+    PeerInfo peerInfo(QString ipAddress);
     bool contains(QString name);
     //PeerInfo peerWithIP(QHostAddress ipAddress);
 
 signals:
-    void newPeer(QString name);
-    void peerGone(QString name);
+    void newPeer(QHostAddress name);
+    void peerGone(QHostAddress name);
 
 public slots:
     void checkPeers();
