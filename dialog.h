@@ -55,7 +55,6 @@ private:
     //QSignalMapper newMessageMapper;
     Server *m_server;
     FileServer *m_fserver;
-    ChatDialog *chatDlg;
     Pointers *m_ptr;
     void createIcon();
     void createActions();
@@ -67,6 +66,10 @@ private:
     QAction *quitAction;
     QMenu *trayIconMenu;
 
+    QString namePart(QString string) const;
+    QString IPPart(QString string) const;
+    QString listEntry(QString ipAddress) const;
+
 protected:
     void closeEvent(QCloseEvent *event);
 
@@ -75,8 +78,10 @@ private slots:
     void updateNumOfPeers();
     void addNewPeer(QHostAddress peerIP);
     void removePeer(QHostAddress peerIP);
-    ChatDialog* openChatWindowFromItem(QListWidgetItem*);
-    ChatDialog* openChatWindow(QHostAddress ipAddress);
+    ChatDialog* createChatWindowFromItem(QListWidgetItem*);
+    ChatDialog* createChatWindow(QHostAddress ipAddress);
+    ChatDialog* showChatWindowFromItem(QListWidgetItem*);
+    ChatDialog* showChatWindow(QHostAddress ipAddress);
     void showFilesDialog();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void notificationClicked();

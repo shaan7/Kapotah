@@ -156,6 +156,8 @@ void ChatDialog::sendStatus()
 
 void ChatDialog::parseUdpDatagram(QHostAddress senderIP, QByteArray datagram)
 {
+    if (senderIP!=peerIP)
+        return;
     QDomDocument document;
     document.setContent(datagram, false, 0, 0, 0);
     QDomElement documentElement = document.documentElement();

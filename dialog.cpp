@@ -33,14 +33,14 @@ Dialog::Dialog(Pointers *ptr,QWidget *parent)
     setWindowTitle("ChatAroma");
     connect(ui->startToolButton,SIGNAL(clicked()),this,SLOT(startPeerManager()));
     connect(ui->filesButton, SIGNAL(clicked()), this, SLOT(showFilesDialog()));
-    connect(ui->peerList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(openChatWindowFromItem(QListWidgetItem*)));
+    connect(ui->peerList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(showChatWindowFromItem(QListWidgetItem*)));
     connect(m_server, SIGNAL(messageRecieved(QString,QHostAddress)), this, SLOT(messageRecieved(QString,QHostAddress)));
     createIcon();
     createActions();
     createTrayIcon();
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
     connect(trayIcon, SIGNAL(messageClicked()), this, SLOT(notificationClicked()));
-    //connect(&newMessageMapper, SIGNAL(mapped(QString)), this, SLOT(openChatWindow(QString)));
+    //connect(&newMessageMapper, SIGNAL(mapped(QString)), this, SLOT(createChatWindow(QString)));
 }
 
 Dialog::~Dialog()
@@ -52,6 +52,7 @@ void Dialog::notificationClicked()
 {
     trayIcon->setIcon(QIcon(":/images/chataroma.png"));
     showNormal();
+    setFocus();
 }
 
 void Dialog::iconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -121,14 +122,14 @@ void Dialog::startPeerManager()
 
 void Dialog::addNewPeer(QHostAddress peerIP)
 {
-    ui->peerList->addItem(peerIP.toString());
+    ui->peerList->addItem(new QListWidgetItem(QIcon(":/images/chataroma.png"), listEntry(peerIP.toString())));
     updateNumOfPeers();  //updates the number of members online
 }
 
 void Dialog::removePeer(QHostAddress peerIP)
 {
     //We have to find the row in which the peer is being shown and select the first match
-    int rowNumber = ui->peerList->row(ui->peerList->findItems(peerIP.toString(), Qt::MatchExactly)[0]);
+    int rowNumber = ui->peerList->row(ui->peerList->findItems(listEntry(peerIP.toString()), Qt::MatchExactly)[0]);
     ui->peerList->takeItem(rowNumber);
     updateNumOfPeers();
 }
@@ -144,12 +145,12 @@ void Dialog::closeEvent(QCloseEvent *event)
     event->ignore();
 }
 
-ChatDialog* Dialog::openChatWindow(QHostAddress ipAddress)
+ChatDialog* Dialog::createChatWindow(QHostAddress ipAddress)
 {
     QList<QListWidgetItem *> found;
-    found = ui->peerList->findItems(ipAddress.toString(), Qt::MatchExactly);
+    found = ui->peerList->findItems(listEntry(ipAddress.toString()), Qt::MatchExactly);
     if (found.count()>0) {
-        found[0]->setIcon(QIcon(""));
+        found[0]->setIcon(QIcon(":/images/chataroma.png"));
     }
 
     if (openChatDialogs.contains(ipAddress.toString())) {
@@ -158,16 +159,27 @@ ChatDialog* Dialog::openChatWindow(QHostAddress ipAddress)
         return openChatDialogs[ipAddress.toString()];
     }
 
-    chatDlg = new ChatDialog(QHostAddress(ipAddress.toString()), m_ptr, this);
+    ChatDialog *chatDlg = new ChatDialog(QHostAddress(ipAddress.toString()), m_ptr, this);
     openChatDialogs[ipAddress.toString()] = chatDlg;    //Save the dialog to the QHash so that we know which chat dialogs are open
     connect(chatDlg, SIGNAL(finished(int)), this, SLOT(unregisterChatDialog()));
+    return chatDlg;
+}
+
+ChatDialog* Dialog::showChatWindow(QHostAddress ipAddress)
+{
+    ChatDialog *chatDlg = createChatWindow(ipAddress);
     chatDlg->show();
     return chatDlg;
 }
 
-ChatDialog* Dialog::openChatWindowFromItem(QListWidgetItem *item)
+ChatDialog* Dialog::showChatWindowFromItem(QListWidgetItem *item)
 {
-    return openChatWindow(QHostAddress(item->text()));
+    return showChatWindow(QHostAddress(IPPart(item->text())));
+}
+
+ChatDialog* Dialog::createChatWindowFromItem(QListWidgetItem *item)
+{
+    return createChatWindow(QHostAddress(IPPart(item->text())));
 }
 
 void Dialog::unregisterChatDialog()
@@ -177,24 +189,27 @@ void Dialog::unregisterChatDialog()
 
 void Dialog::messageRecieved(QString message,QHostAddress ipAddress)
 {
+    ChatDialog *chatDlg;
     if (openChatDialogs.contains(ipAddress.toString())) {
-        if (!chatDlg->isVisible())  //Means the dialog has been hidden by the user
-        {
-            trayIcon->showMessage("Messsage from " + ipAddress.toString(),"Message recieved");
-            trayIcon->setIcon(QIcon(":/images/mail-receive.png"));
-
-            QList<QListWidgetItem *> found;
-            found = ui->peerList->findItems(ipAddress.toString(), Qt::MatchExactly);
-            if (found.count()>0) {
-                found[0]->setIcon(QIcon(":/images/mail_get.png"));
-            }
-        }
-      }
+        chatDlg = openChatDialogs[ipAddress.toString()];
+        if (chatDlg->isVisible() && chatDlg->isActiveWindow())
+            return;
+    }
     else {    //Means the dialog isn't open till now
         //Find the list item where the username is displayed, and open a chatdialog according to it
-        int rowNumber = ui->peerList->row(ui->peerList->findItems(ipAddress.toString(), Qt::MatchExactly)[0]);
-        chatDlg = openChatWindowFromItem(ui->peerList->item(rowNumber));
+        int rowNumber = ui->peerList->row(ui->peerList->findItems(listEntry(ipAddress.toString()), Qt::MatchExactly)[0]);
+        chatDlg = createChatWindowFromItem(ui->peerList->item(rowNumber));
         chatDlg->messageRecieved(message, ipAddress);
+    }
+
+    trayIcon->showMessage("Messsage from " + manager->peerInfo(ipAddress.toString()).name(),"Message recieved");
+    trayIcon->setIcon(QIcon(":/images/mail-receive.png"));
+
+    //Set the mail received icon next to the entry in dialog
+    QList<QListWidgetItem *> found;
+    found = ui->peerList->findItems(listEntry(ipAddress.toString()), Qt::MatchExactly);
+    if (found.count()>0) {
+        found[0]->setIcon(QIcon(":/images/mail_get.png"));
     }
 }
 
@@ -207,3 +222,18 @@ void Dialog::messageRecieved(QString message,QHostAddress ipAddress)
     newMessageMapper.setMapping(entry, senderIP);
     connect(entry, SIGNAL(triggered()), &newMessageMapper, SLOT(map()));
 }*/
+
+QString Dialog::namePart(QString string) const
+{
+    return string.split('-')[0];
+}
+
+QString Dialog::IPPart(QString string) const
+{
+    return string.split('-')[1];
+}
+
+QString Dialog::listEntry(QString ipAddress) const
+{
+    return (manager->peerInfo(ipAddress).name() + '-' + ipAddress);
+}

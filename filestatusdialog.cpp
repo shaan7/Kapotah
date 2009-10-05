@@ -129,6 +129,7 @@ void FileStatusDialog::addTransferEntry(QString ID, QString title, QHostAddress 
         type->setToolTip(returnToolTipHTML("Transfer Type", "This transfer is a download"));
     }
 
+    cancel->setEnabled(false);
     //Layout the widgets
     layout->addWidget(progress, 0, 0);
     if (!isUpload) {
@@ -282,6 +283,7 @@ void FileStatusDialog::dirPauseClicked(QString ID)
     connect(transfer->reciever, SIGNAL(done(QString)), this, SLOT(dirDone(QString)));
     //startTime = QDateTime::currentDateTime();
     transfer->inProgress = true;
+    transfer->cancel->setEnabled(true);
     transfer->reciever->start();
 }
 
@@ -330,6 +332,7 @@ void FileStatusDialog::filePauseClicked(QString ID)
     connect(transfer->reciever, SIGNAL(done(QString)), this, SLOT(fileDone(QString)));
     //startTime = QDateTime::currentDateTime();
     transfer->inProgress = true;
+    transfer->cancel->setEnabled(true);
     transfer->reciever->start();
 }
 
