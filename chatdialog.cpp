@@ -48,7 +48,6 @@ ChatDialog::ChatDialog(QHostAddress peerIP, Pointers *ptr, QWidget *parent)
     connect(&keyStatusTimer, SIGNAL(timeout()), this, SLOT(checkForKeyStatus()));
     ui.sendToolButton->setToolTip("Send");
     keyStatusTimer.setInterval(2000);
-    setAcceptDrops(true);
 }
 
 void ChatDialog::dragEnterEvent(QDragEnterEvent *event)
@@ -187,4 +186,11 @@ void ChatDialog::sendDir(QString dirname)
 
 ChatDialog::~ChatDialog()
 {
+}
+
+bool ChatDialog::event(QEvent *event)
+{
+    if (event->type() == QEvent::WindowActivate)
+        emit(activated(peerIP));
+    QDialog::event(event);
 }

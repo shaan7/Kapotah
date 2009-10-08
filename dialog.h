@@ -52,9 +52,6 @@ private:
     PeerManager *manager;
     QHash<QString,ChatDialog*> openChatDialogs;
     QHash<QString,QAction*> newMessageActions;
-    //QSignalMapper newMessageMapper;
-    Server *m_server;
-    FileServer *m_fserver;
     Pointers *m_ptr;
     void createIcon();
     void createActions();
@@ -85,10 +82,10 @@ private slots:
     void showFilesDialog();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void notificationClicked();
-    //void addNewMessageEntry(QString senderName);
 
 public slots:
     void unregisterChatDialog();
+    void markAsRead(QHostAddress ipAddress);
     void messageRecieved(QString message,QHostAddress senderIP);
 };
 

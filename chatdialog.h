@@ -58,6 +58,7 @@ protected:
     void dragMoveEvent(QDragMoveEvent *event);
     void dropEvent(QDropEvent *event);
     void dragLeaveEvent(QDragLeaveEvent *event);
+    bool event(QEvent * event);
 
 private slots:
     void sendMessage();
@@ -71,6 +72,9 @@ public slots:
     void messageRecieved(QString message, QHostAddress ipAddress);
     void sendStatus();
     void parseUdpDatagram(QHostAddress senderIP, QByteArray datagram);
+
+signals:
+    void activated(QHostAddress ipAddress);
 };
 
 #endif // CHATDIALOG_H

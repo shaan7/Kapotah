@@ -27,20 +27,19 @@ Dialog::Dialog(Pointers *ptr,QWidget *parent)
 {
     ui->setupUi(this);
     m_ptr = ptr;
-    m_server = ptr->server;
-    m_fserver = ptr->fserver;
     manager = ptr->manager;
     setWindowTitle("ChatAroma");
     connect(ui->startToolButton,SIGNAL(clicked()),this,SLOT(startPeerManager()));
     connect(ui->filesButton, SIGNAL(clicked()), this, SLOT(showFilesDialog()));
-    connect(ui->peerList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(showChatWindowFromItem(QListWidgetItem*)));
-    connect(m_server, SIGNAL(messageRecieved(QString,QHostAddress)), this, SLOT(messageRecieved(QString,QHostAddress)));
+    connect(ui->peerList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(showChatWindowFromItem(QListWidgetItem*)));
+    connect(ptr->server, SIGNAL(messageRecieved(QString,QHostAddress)), this, SLOT(messageRecieved(QString,QHostAddress)));
     createIcon();
     createActions();
     createTrayIcon();
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
     connect(trayIcon, SIGNAL(messageClicked()), this, SLOT(notificationClicked()));
-    //connect(&newMessageMapper, SIGNAL(mapped(QString)), this, SLOT(createChatWindow(QString)));
+    //setAttribute(Qt::WA_TranslucentBackground, true);
+
 }
 
 Dialog::~Dialog()
@@ -147,12 +146,6 @@ void Dialog::closeEvent(QCloseEvent *event)
 
 ChatDialog* Dialog::createChatWindow(QHostAddress ipAddress)
 {
-    QList<QListWidgetItem *> found;
-    found = ui->peerList->findItems(listEntry(ipAddress.toString()), Qt::MatchExactly);
-    if (found.count()>0) {
-        found[0]->setIcon(QIcon(":/images/chataroma.png"));
-    }
-
     if (openChatDialogs.contains(ipAddress.toString())) {
         if (!openChatDialogs[ipAddress.toString()]->isVisible())
             openChatDialogs[ipAddress.toString()]->show();
@@ -162,6 +155,7 @@ ChatDialog* Dialog::createChatWindow(QHostAddress ipAddress)
     ChatDialog *chatDlg = new ChatDialog(QHostAddress(ipAddress.toString()), m_ptr, this);
     openChatDialogs[ipAddress.toString()] = chatDlg;    //Save the dialog to the QHash so that we know which chat dialogs are open
     connect(chatDlg, SIGNAL(finished(int)), this, SLOT(unregisterChatDialog()));
+    connect(chatDlg, SIGNAL(activated(QHostAddress)), this, SLOT(markAsRead(QHostAddress)));
     return chatDlg;
 }
 
@@ -236,4 +230,13 @@ QString Dialog::IPPart(QString string) const
 QString Dialog::listEntry(QString ipAddress) const
 {
     return (manager->peerInfo(ipAddress).name() + '-' + ipAddress);
+}
+
+void Dialog::markAsRead(QHostAddress ipAddress)
+{
+    QList<QListWidgetItem *> found;
+    found = ui->peerList->findItems(listEntry(ipAddress.toString()), Qt::MatchExactly);
+    if (found.count()>0) {
+        found[0]->setIcon(QIcon(":/images/chataroma.png"));
+    }
 }

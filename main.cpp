@@ -71,6 +71,4 @@ int main(int argc, char *argv[])
 //////////////////////TODO
 //Implement messagesenderthread
 //Take a look at all XML formats
-//Fix pointers in dialog.cpp
-//Check need of connect(&newMessageMapper, SIGNAL(mapped(QString)), this, SLOT(openChatWindow(QString))); in dialog.cpp
 //better to create an empty file in filerecieverthread.cpp
