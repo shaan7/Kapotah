@@ -48,6 +48,7 @@ ChatDialog::ChatDialog(QHostAddress peerIP, Pointers *ptr, QWidget *parent)
     connect(&keyStatusTimer, SIGNAL(timeout()), this, SLOT(checkForKeyStatus()));
     ui.sendToolButton->setToolTip("Send");
     keyStatusTimer.setInterval(2000);
+    setAcceptDrops(true);
 }
 
 void ChatDialog::dragEnterEvent(QDragEnterEvent *event)
