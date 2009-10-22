@@ -80,6 +80,23 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
+   <item row="1" column="2">
+    <widget class="QToolButton" name="aboutButton">
+     <property name="icon">
+      <iconset resource="systray.qrc">
+       <normaloff>:/images/help-about.png</normaloff>:/images/help-about.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>22</width>
+       <height>22</height>
+      </size>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

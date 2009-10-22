@@ -29,6 +29,7 @@
 #include "server.h"
 #include "fileserver.h"
 #include "pointers.h"
+#include "aboutdialog.h"
 #include <QAction>
 #include <QMenu>
 #include <QSystemTrayIcon>
@@ -66,6 +67,7 @@ private:
     QString namePart(QString string) const;
     QString IPPart(QString string) const;
     QString listEntry(QString ipAddress) const;
+    AboutDialog aboutDialog;
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -82,6 +84,7 @@ private slots:
     void showFilesDialog();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void notificationClicked();
+    void showAboutDialog();
 
 public slots:
     void unregisterChatDialog();

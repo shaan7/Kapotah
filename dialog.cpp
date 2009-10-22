@@ -38,6 +38,7 @@ Dialog::Dialog(Pointers *ptr,QWidget *parent)
     createTrayIcon();
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
     connect(trayIcon, SIGNAL(messageClicked()), this, SLOT(notificationClicked()));
+    connect(ui->aboutButton, SIGNAL(clicked()), this, SLOT(showAboutDialog()));
     //setAttribute(Qt::WA_TranslucentBackground, true);
 
 }
@@ -239,4 +240,9 @@ void Dialog::markAsRead(QHostAddress ipAddress)
     if (found.count()>0) {
         found[0]->setIcon(QIcon(":/images/chataroma.png"));
     }
+}
+
+void Dialog::showAboutDialog()
+{
+    aboutDialog.show();
 }

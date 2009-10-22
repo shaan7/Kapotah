@@ -10,5 +10,6 @@
         <file>images/mail-receive.png</file>
         <file>images/system-switch-user1.png</file>
         <file>images/mail_get.png</file>
+        <file>images/help-about.png</file>
     </qresource>
 </RCC>
