@@ -52,16 +52,6 @@ p, li { white-space: pre-wrap; }
      </layout>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QProgressBar" name="progressBar">
-     <property name="maximum">
-      <number>0</number>
-     </property>
-     <property name="value">
-      <number>861</number>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="1">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="sizePolicy">

@@ -28,7 +28,7 @@ Dialog::Dialog(Pointers *ptr,QWidget *parent)
     ui->setupUi(this);
     m_ptr = ptr;
     manager = ptr->manager;
-    setWindowTitle("ChatAroma");
+    setWindowTitle("Codename ChatAroma");
     connect(ui->startToolButton,SIGNAL(clicked()),this,SLOT(startPeerManager()));
     connect(ui->filesButton, SIGNAL(clicked()), this, SLOT(showFilesDialog()));
     connect(ui->peerList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(showChatWindowFromItem(QListWidgetItem*)));

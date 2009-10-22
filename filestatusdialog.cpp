@@ -136,11 +136,11 @@ void FileStatusDialog::addTransferEntry(QString ID, QString title, QHostAddress 
         layout->addWidget(pause, 0, 1);
         layout->addWidget(cancel, 0, 2);
         layout->addWidget(type, 0, 3);
-        box->setTitle(title.left(25) + " from " + senderIP.toString());
+        box->setTitle(title.left(25) + " from " + m_ptr->manager->peerInfo(senderIP.toString()).name());
     }
     else {
         layout->addWidget(type, 0, 1);
-        box->setTitle(title.left(25) + " to " + senderIP.toString());
+        box->setTitle(title.left(25) + " to " + m_ptr->manager->peerInfo(senderIP.toString()).name());
     }
     box->setLayout(layout);
 
