@@ -66,7 +66,6 @@ void FileStatusDialog::fileSendStarted(QString ID, QString filename)
         return;
     if (ID.left(3) == "DIR")
         return;
-
     addTransferEntry(ID, QFileInfo(filename).fileName(), QHostAddress("0.0.0.0"), true, false);
 }
 
@@ -111,6 +110,7 @@ void FileStatusDialog::addTransferEntry(QString ID, QString title, QHostAddress 
     if (!isUpload) {
         pause->setAutoRaise(true);
         cancel->setAutoRaise(true);
+        cancel->setEnabled(false);
     }
     type->setAutoRaise(true);
 
@@ -129,9 +129,9 @@ void FileStatusDialog::addTransferEntry(QString ID, QString title, QHostAddress 
         type->setToolTip(returnToolTipHTML("Transfer Type", "This transfer is a download"));
     }
 
-    cancel->setEnabled(false);
     //Layout the widgets
     layout->addWidget(progress, 0, 0);
+
     if (!isUpload) {
         layout->addWidget(pause, 0, 1);
         layout->addWidget(cancel, 0, 2);
