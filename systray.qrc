@@ -11,5 +11,6 @@
         <file>images/system-switch-user1.png</file>
         <file>images/mail_get.png</file>
         <file>images/help-about.png</file>
+        <file>images/mail-receive1.png</file>
     </qresource>
 </RCC>

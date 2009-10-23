@@ -182,6 +182,25 @@ void Dialog::unregisterChatDialog()
     openChatDialogs.remove(openChatDialogs.key(dynamic_cast<ChatDialog*>(sender())));
 }
 
+void Dialog::updateTrayIcon()
+{
+    if (isRed) {
+        trayIcon->setIcon(QIcon(":/images/mail-receive.png"));
+        isRed = false;
+    }
+    else {
+        trayIcon->setIcon(QIcon(":/images/mail-receive1.png"));
+        isRed = true;
+    }
+}
+
+bool Dialog::event(QEvent *event)
+{
+    if (event->type() == QEvent::WindowActivate)
+    trayIcon->setIcon(QIcon(":/images/chataroma.png"));
+    QDialog::event(event);
+}
+
 void Dialog::messageRecieved(QString message,QHostAddress ipAddress)
 {
     ChatDialog *chatDlg;
@@ -199,6 +218,9 @@ void Dialog::messageRecieved(QString message,QHostAddress ipAddress)
 
     trayIcon->showMessage("Messsage from " + manager->peerInfo(ipAddress.toString()).name(),"Message recieved");
     trayIcon->setIcon(QIcon(":/images/mail-receive.png"));
+
+    connect(&timer, SIGNAL(timeout()), this, SLOT(updateTrayIcon()));
+    timer.start(1000);
 
     //Set the mail received icon next to the entry in dialog
     QList<QListWidgetItem *> found;
@@ -238,7 +260,9 @@ void Dialog::markAsRead(QHostAddress ipAddress)
     QList<QListWidgetItem *> found;
     found = ui->peerList->findItems(listEntry(ipAddress.toString()), Qt::MatchExactly);
     if (found.count()>0) {
+        timer.stop();
         found[0]->setIcon(QIcon(":/images/chataroma.png"));
+        trayIcon->setIcon(QIcon(":/images/chataroma.png"));
     }
 }
 

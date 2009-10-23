@@ -34,6 +34,7 @@
 #include <QMenu>
 #include <QSystemTrayIcon>
 #include <QSignalMapper>
+#include <QTimer>
 
 namespace Ui
 {
@@ -47,6 +48,7 @@ class Dialog : public QDialog
 public:
     Dialog(Pointers *ptr,QWidget *parent = 0);
     ~Dialog();
+    QTimer timer;
 
 private:
     Ui::DialogClass *ui;
@@ -69,6 +71,9 @@ private:
     QString listEntry(QString ipAddress) const;
     AboutDialog aboutDialog;
 
+    bool isRed;
+    bool event(QEvent * event);
+
 protected:
     void closeEvent(QCloseEvent *event);
 
@@ -86,10 +91,12 @@ private slots:
     void notificationClicked();
     void showAboutDialog();
 
+
 public slots:
     void unregisterChatDialog();
     void markAsRead(QHostAddress ipAddress);
     void messageRecieved(QString message,QHostAddress senderIP);
+    void updateTrayIcon();
 };
 
 #endif // DIALOG_H
