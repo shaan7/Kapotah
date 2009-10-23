@@ -191,7 +191,9 @@ ChatDialog::~ChatDialog()
 
 bool ChatDialog::event(QEvent *event)
 {
-    if (event->type() == QEvent::WindowActivate)
+    if (event->type() == QEvent::WindowActivate) {
         emit(activated(peerIP));
+        ui.sendToolButton->setFocus();
+    }
     QDialog::event(event);
 }
