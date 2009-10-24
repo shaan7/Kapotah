@@ -23,6 +23,7 @@
 #include <QFileDialog>
 #include <QDir>
 #include <QFileInfo>
+#include <QScrollBar>
 #include "chatdialog.h"
 #include "messagesender.h"
 #include "filesenderthread.h"
@@ -134,6 +135,7 @@ void ChatDialog::messageRecieved(QString message, QHostAddress senderIP)
 {
     if (senderIP == peerIP) {
         ui.chatEdit->append("<b>" + manager->peerInfo(senderIP.toString()).name() + "</b> :: " + message);
+        ui.chatEdit->verticalScrollBar()->setSliderPosition(ui.chatEdit->verticalScrollBar()->maximum());
     }
 }
 
