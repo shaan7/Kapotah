@@ -24,6 +24,7 @@
 #include <QDir>
 #include <QScrollBar>
 #include <QFileInfo>
+#include <QScrollBar>
 #include "chatdialog.h"
 #include "messagesender.h"
 #include "filesenderthread.h"
@@ -133,9 +134,8 @@ void ChatDialog::sendFile(QString filename)
 
 void ChatDialog::messageRecieved(QString message, QHostAddress senderIP)
 {
-    if (senderIP == peerIP)
-    {
-            ui.chatEdit->append("<b>" + manager->peerInfo(senderIP.toString()).name() + "</b> :: " + message);
+    if (senderIP == peerIP) {
+        ui.chatEdit->append("<b>" + manager->peerInfo(senderIP.toString()).name() + "</b> :: " + message);
     }
 }
 

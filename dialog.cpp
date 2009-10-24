@@ -39,6 +39,7 @@ Dialog::Dialog(Pointers *ptr,QWidget *parent)
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
     connect(trayIcon, SIGNAL(messageClicked()), this, SLOT(notificationClicked()));
     connect(ui->aboutButton, SIGNAL(clicked()), this, SLOT(showAboutDialog()));
+    connect(&timer, SIGNAL(timeout()), this, SLOT(updateTrayIcon()));
     //setAttribute(Qt::WA_TranslucentBackground, true);
 
 }
@@ -196,8 +197,10 @@ void Dialog::updateTrayIcon()
 
 bool Dialog::event(QEvent *event)
 {
-    if (event->type() == QEvent::WindowActivate)
-    trayIcon->setIcon(QIcon(":/images/chataroma.png"));
+    if (event->type() == QEvent::WindowActivate) {
+        trayIcon->setIcon(QIcon(":/images/chataroma.png"));
+        timer.stop();
+    }
     QDialog::event(event);
 }
 
@@ -219,7 +222,6 @@ void Dialog::messageRecieved(QString message,QHostAddress ipAddress)
     trayIcon->showMessage("Messsage from " + manager->peerInfo(ipAddress.toString()).name(),"Message recieved");
     trayIcon->setIcon(QIcon(":/images/mail-receive.png"));
 
-    connect(&timer, SIGNAL(timeout()), this, SLOT(updateTrayIcon()));
     timer.start(1000);
 
     //Set the mail received icon next to the entry in dialog
