@@ -22,6 +22,7 @@
 #include <QTimer>
 #include <QFileDialog>
 #include <QDir>
+#include <QScrollBar>
 #include <QFileInfo>
 #include "chatdialog.h"
 #include "messagesender.h"
@@ -43,6 +44,7 @@ ChatDialog::ChatDialog(QHostAddress peerIP, Pointers *ptr, QWidget *parent)
     connect(manager, SIGNAL(peerGone(QHostAddress)), this, SLOT(checkGonePeer(QHostAddress)));
     connect(manager, SIGNAL(newPeer(QHostAddress)), this, SLOT(checkPeerReturned(QHostAddress)));
     connect(ui.messageEdit, SIGNAL(textEdited(QString)),this, SLOT(sendStatus()));
+    connect(ui.chatEdit, SIGNAL(textChanged()), this, SLOT(scrollToBottom()));
     connect(ui.messageEdit, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
     connect(server, SIGNAL(udpDataRecieved(QHostAddress,QByteArray)), this, SLOT(parseUdpDatagram(QHostAddress,QByteArray)));
     connect(&keyStatusTimer, SIGNAL(timeout()), this, SLOT(checkForKeyStatus()));
@@ -68,7 +70,6 @@ void ChatDialog::dropEvent(QDropEvent *event)
     const QMimeData *mimeData = event->mimeData();
 
      if (mimeData->hasImage()) {
-         //
      }
 
      if (mimeData->hasUrls()) {
@@ -132,9 +133,15 @@ void ChatDialog::sendFile(QString filename)
 
 void ChatDialog::messageRecieved(QString message, QHostAddress senderIP)
 {
-    if (senderIP == peerIP) {
-        ui.chatEdit->append("<b>" + manager->peerInfo(senderIP.toString()).name() + "</b> :: " + message);
+    if (senderIP == peerIP)
+    {
+            ui.chatEdit->append("<b>" + manager->peerInfo(senderIP.toString()).name() + "</b> :: " + message);
     }
+}
+
+void ChatDialog::scrollToBottom()
+{
+    ui.chatEdit->verticalScrollBar()->setSliderPosition(ui.chatEdit->verticalScrollBar()->maximum());
 }
 
 void ChatDialog::sendStatus()

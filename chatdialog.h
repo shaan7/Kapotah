@@ -72,6 +72,7 @@ public slots:
     void messageRecieved(QString message, QHostAddress ipAddress);
     void sendStatus();
     void parseUdpDatagram(QHostAddress senderIP, QByteArray datagram);
+    void scrollToBottom();
 
 signals:
     void activated(QHostAddress ipAddress);
