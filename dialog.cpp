@@ -105,10 +105,10 @@ void Dialog::createActions()
     connect(sendMessageAction, SIGNAL(triggered()), this, SLOT(showChatWindowFromItem()));
 
     fileTransferAction = new QAction(tr("File Transfer"), this);
-//  connect(fileTransferAction, SIGNAL(triggered()), this SLOT(
+    connect(fileTransferAction, SIGNAL(triggered()), this, SLOT(fileTransferByRightClick()));
 
     folderTransferAction = new QAction(tr("Folder Transfer"), this);
-//  connect(folderTransferAction, SIGNAL(triggered), this, SLOT(
+    connect(folderTransferAction, SIGNAL(triggered()), this, SLOT(folderTransferByRightClick()));
 }
 
 void Dialog::createTrayIcon()
@@ -128,6 +128,14 @@ void Dialog::createPeerNameMenu()
     ui->peerList->addAction(sendMessageAction);
     ui->peerList->addAction(fileTransferAction);
     ui->peerList->addAction(folderTransferAction);
+}
+
+void Dialog::fileTransferByRightClick()
+{
+}
+
+void Dialog::folderTransferByRightClick()
+{
 }
 
 void Dialog::startPeerManager()

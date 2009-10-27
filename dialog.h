@@ -101,6 +101,8 @@ public slots:
     void markAsRead(QHostAddress ipAddress);
     void messageRecieved(QString message,QHostAddress senderIP);
     void updateTrayIcon();
+    void fileTransferByRightClick();
+    void folderTransferByRightClick();
 };
 
 #endif // DIALOG_H
