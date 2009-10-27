@@ -31,17 +31,18 @@ Dialog::Dialog(Pointers *ptr,QWidget *parent)
     setWindowTitle("Codename ChatAroma");
     connect(ui->startToolButton,SIGNAL(clicked()),this,SLOT(startPeerManager()));
     connect(ui->filesButton, SIGNAL(clicked()), this, SLOT(showFilesDialog()));
-    connect(ui->peerList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(showChatWindowFromItem(QListWidgetItem*)));
+    connect(ui->peerList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(showChatWindowFromItem()));
     connect(ptr->server, SIGNAL(messageRecieved(QString,QHostAddress)), this, SLOT(messageRecieved(QString,QHostAddress)));
     createIcon();
     createActions();
     createTrayIcon();
+    createPeerNameMenu();
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
     connect(trayIcon, SIGNAL(messageClicked()), this, SLOT(notificationClicked()));
     connect(ui->aboutButton, SIGNAL(clicked()), this, SLOT(showAboutDialog()));
     connect(&timer, SIGNAL(timeout()), this, SLOT(updateTrayIcon()));
     //setAttribute(Qt::WA_TranslucentBackground, true);
-
+    ui->peerList->setContextMenuPolicy(Qt::ActionsContextMenu);
 }
 
 Dialog::~Dialog()
@@ -99,6 +100,15 @@ void Dialog::createActions()
 
     quitAction = new QAction(tr("&Quit"), this);
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+
+    sendMessageAction = new QAction(tr("Send Message"), this);
+    connect(sendMessageAction, SIGNAL(triggered()), this, SLOT(showChatWindowFromItem()));
+
+    fileTransferAction = new QAction(tr("File Transfer"), this);
+//  connect(fileTransferAction, SIGNAL(triggered()), this SLOT(
+
+    folderTransferAction = new QAction(tr("Folder Transfer"), this);
+//  connect(folderTransferAction, SIGNAL(triggered), this, SLOT(
 }
 
 void Dialog::createTrayIcon()
@@ -111,6 +121,13 @@ void Dialog::createTrayIcon()
     trayIconMenu->addAction(quitAction);
 
     trayIcon->setContextMenu(trayIconMenu);
+}
+
+void Dialog::createPeerNameMenu()
+{
+    ui->peerList->addAction(sendMessageAction);
+    ui->peerList->addAction(fileTransferAction);
+    ui->peerList->addAction(folderTransferAction);
 }
 
 void Dialog::startPeerManager()
@@ -168,9 +185,9 @@ ChatDialog* Dialog::showChatWindow(QHostAddress ipAddress)
     return chatDlg;
 }
 
-ChatDialog* Dialog::showChatWindowFromItem(QListWidgetItem *item)
+ChatDialog* Dialog::showChatWindowFromItem()
 {
-    return showChatWindow(QHostAddress(IPPart(item->text())));
+    return showChatWindow(QHostAddress(IPPart(ui->peerList->selectedItems().at(0)->text())));
 }
 
 ChatDialog* Dialog::createChatWindowFromItem(QListWidgetItem *item)

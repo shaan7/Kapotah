@@ -59,7 +59,11 @@ private:
     void createIcon();
     void createActions();
     void createTrayIcon();
+    void createPeerNameMenu();
     QSystemTrayIcon *trayIcon;
+    QAction *sendMessageAction;
+    QAction *fileTransferAction;
+    QAction *folderTransferAction;
     QAction *minimizeAction;
     QAction *maximizeAction;
     QAction *restoreAction;
@@ -84,7 +88,7 @@ private slots:
     void removePeer(QHostAddress peerIP);
     ChatDialog* createChatWindowFromItem(QListWidgetItem*);
     ChatDialog* createChatWindow(QHostAddress ipAddress);
-    ChatDialog* showChatWindowFromItem(QListWidgetItem*);
+    ChatDialog* showChatWindowFromItem();
     ChatDialog* showChatWindow(QHostAddress ipAddress);
     void showFilesDialog();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
