@@ -84,7 +84,7 @@ private slots:
     void removePeer(QHostAddress peerIP);
     ChatDialog* createChatWindowFromItem(QListWidgetItem*);
     ChatDialog* createChatWindow(QHostAddress ipAddress);
-    ChatDialog* showChatWindowFromItem(QListWidgetItem*);
+    ChatDialog* showChatWindowFromItem();
     ChatDialog* showChatWindow(QHostAddress ipAddress);
     void showFilesDialog();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);

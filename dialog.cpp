@@ -31,7 +31,7 @@ Dialog::Dialog(Pointers *ptr,QWidget *parent)
     setWindowTitle("Codename ChatAroma");
     connect(ui->startToolButton,SIGNAL(clicked()),this,SLOT(startPeerManager()));
     connect(ui->filesButton, SIGNAL(clicked()), this, SLOT(showFilesDialog()));
-    connect(ui->peerList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(showChatWindowFromItem(QListWidgetItem*)));
+    connect(ui->peerList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(showChatWindowFromItem()));
     connect(ptr->server, SIGNAL(messageRecieved(QString,QHostAddress)), this, SLOT(messageRecieved(QString,QHostAddress)));
     createIcon();
     createActions();
@@ -168,9 +168,9 @@ ChatDialog* Dialog::showChatWindow(QHostAddress ipAddress)
     return chatDlg;
 }
 
-ChatDialog* Dialog::showChatWindowFromItem(QListWidgetItem *item)
+ChatDialog* Dialog::showChatWindowFromItem()
 {
-    return showChatWindow(QHostAddress(IPPart(item->text())));
+    return showChatWindow(QHostAddress(IPPart(ui->peerList->selectedItems().at(0)->text())));
 }
 
 ChatDialog* Dialog::createChatWindowFromItem(QListWidgetItem *item)

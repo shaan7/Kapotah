@@ -72,3 +72,4 @@ int main(int argc, char *argv[])
 //Implement messagesenderthread
 //Take a look at all XML formats
 //better to create an empty file in filerecieverthread.cpp
+//********************* CONFORM TO W3C XML Standards ********************* <<--- IMPORTANT
