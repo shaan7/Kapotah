@@ -84,7 +84,7 @@ void Dialog::createIcon()
 {
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setIcon(QIcon(":/images/chataroma.png"));
-    trayIcon->setToolTip("Chataroma::"+ QString::number(ui->peerList->count())+" user(s) online");
+    trayIcon->setToolTip("Chataroma"+ QString::number(ui->peerList->count())+" user(s) online");
     trayIcon->show();
 }
 
@@ -163,7 +163,8 @@ void Dialog::removePeer(QHostAddress peerIP)
 
 void Dialog::updateNumOfPeers()  //function to find the no. of members online
 {
-    ui->updateNumOfPeers->setText(QString::number(ui->peerList->count()) + " user(s) online");
+    ui->updateNumOfPeers->setText(QString::number(ui->peerList->count()) + " people online");
+    trayIcon->setToolTip("Chataroma "+ QString::number(ui->peerList->count()) +" people online");
 }
 
 void Dialog::closeEvent(QCloseEvent *event)
