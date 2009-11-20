@@ -84,6 +84,7 @@ void Dialog::createIcon()
 {
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setIcon(QIcon(":/images/chataroma.png"));
+    trayIcon->setToolTip("Chataroma "+ QString::number(ui->peerList->count())+" user(s) online");
     trayIcon->show();
 }
 
@@ -247,7 +248,7 @@ void Dialog::messageRecieved(QString message,QHostAddress ipAddress)
     trayIcon->showMessage("Messsage from " + manager->peerInfo(ipAddress.toString()).name(),"Message recieved");
     trayIcon->setIcon(QIcon(":/images/mail-receive.png"));
 
-    timer.start(1000);
+    timer.start(500);
 
     //Set the mail received icon next to the entry in dialog
     QList<QListWidgetItem *> found;
