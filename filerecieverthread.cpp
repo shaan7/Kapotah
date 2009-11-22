@@ -57,7 +57,7 @@ void FileRecieverThread::run()
         }
 
         if (readyToRecieve) {
-            qint64 bytesWritten = file.write(socket.readAll());
+            file.write(socket.readAll());
             bytesCopied = file.pos();
 
             emit progress(ID, peerIP, filename, size, bytesCopied);

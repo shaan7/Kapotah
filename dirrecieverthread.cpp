@@ -22,7 +22,7 @@
 #include <QDir>
 
 DirRecieverThread::DirRecieverThread(Pointers *ptr, QString ID, QString dir, QDomNodeList files, QDomNodeList dirs, QHostAddress peerip, QObject *parent)
-    : QThread(parent), manager(ptr->manager), fileList(files), dirList(dirs), peerIP(peerip), dirName(dir), m_ptr(ptr), m_ID(ID)
+    : QThread(parent), manager(ptr->manager), fileList(files), dirList(dirs), peerIP(peerip), m_ptr(ptr), dirName(dir), m_ID(ID)
 {
     cancel = false;
 }
