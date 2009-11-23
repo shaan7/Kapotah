@@ -1,1 +1,1 @@
-This program assumes no two users have same usernames.
+TODO is in main.cpp
