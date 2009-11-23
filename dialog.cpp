@@ -229,6 +229,7 @@ bool Dialog::event(QEvent *event)
         timer.stop();
     }
     QDialog::event(event);
+    return true;
 }
 
 void Dialog::messageRecieved(QString message,QHostAddress ipAddress)

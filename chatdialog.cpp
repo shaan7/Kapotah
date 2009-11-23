@@ -158,7 +158,7 @@ void ChatDialog::sendStatus()
     doc.appendChild(action);
     action.appendChild(status);
 
-    server->sendDatagram(document.toByteArray(), QHostAddress(peerIP));
+    server->sendDatagram(document.toByteArray(), peerIP);
 }
 
 void ChatDialog::parseUdpDatagram(QHostAddress senderIP, QByteArray datagram)
@@ -203,4 +203,5 @@ bool ChatDialog::event(QEvent *event)
         ui.messageEdit->setFocus();
     }
     QDialog::event(event);
+    return true;
 }
