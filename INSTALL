@@ -1,0 +1,10 @@
+To make Kapotah, minimum Qt 4.5 is needed. You have two options-
+
+1. Open Kapotah.pro using Qt Creator and run the project.
+
+or,
+
+2. Run the following commands -
+	qmake
+	make
+	./Kapotah
