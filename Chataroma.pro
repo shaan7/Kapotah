@@ -4,7 +4,7 @@
 QT += network \
     webkit \
     xml
-TARGET = Chataroma
+TARGET = Kapotah
 TEMPLATE = app
 SOURCES += main.cpp \
     dialog.cpp \
