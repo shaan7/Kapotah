@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright 2009 Shantanu Tushar <jhahoneyk@gmail.com>                  *
- *   Copyright 2009 Sudhendu Roy <sudhendu_roy@yahoo.co.ins>                *
+ *   Copyright 2009 Sudhendu Kumar <sudhendu_roy@yahoo.co.ins>                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
