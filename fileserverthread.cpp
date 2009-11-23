@@ -22,7 +22,7 @@
 #include "fileserverthread.h"
 #include "fileserver.h"
 
-const quint64 bytesPerBlock = Q_UINT64_C(500000);   //number of bytes to transfer in one block
+const quint64 bytesPerBlock = Q_UINT64_C(50000);   //number of bytes to transfer in one block
 
 FileServerThread::FileServerThread(int descriptor, QObject *parent) : QThread(parent)
 {
@@ -57,6 +57,8 @@ void FileServerThread::run()
                     break;
                 socket.write(file.read(bytesPerBlock));
                 socket.waitForBytesWritten();
+                while (socket.bytesToWrite())
+                    socket.flush();
             }
             file.close();
             socket.waitForDisconnected(-1);

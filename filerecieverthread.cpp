@@ -23,7 +23,7 @@
 #include "filerecieverthread.h"
 #include "peerinfo.h"
 
-const quint64 bytesPerBlock = Q_UINT64_C(100000);   //number of bytes to transfer in one block
+const quint64 bytesPerBlock = Q_UINT64_C(50000);   //number of bytes to transfer in one block
 
 FileRecieverThread::FileRecieverThread(Pointers *ptr, QString fileID, quint64 fileSize, QHostAddress senderIP, QString outputFilename, QObject *parent)
     : QThread(parent), ID(fileID), peerIP(senderIP), manager(ptr->manager), filename(outputFilename), size(fileSize)

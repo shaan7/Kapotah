@@ -331,6 +331,7 @@ void FileStatusDialog::filePauseClicked(QString ID)
             this, SLOT(fileProgress(QString,QHostAddress,QString,quint64,quint64)));
     connect(transfer->reciever, SIGNAL(done(QString)), this, SLOT(fileDone(QString)));
     //startTime = QDateTime::currentDateTime();
+    transfer->progress->setMaximum(100);
     transfer->inProgress = true;
     transfer->cancel->setEnabled(true);
     transfer->reciever->start();
@@ -342,8 +343,7 @@ void FileStatusDialog::fileProgress(QString ID, QHostAddress peer, QString fileN
     if (!transfer->inProgress)
         return;
 
-    transfer->progress->setMaximum(size);
-    transfer->progress->setValue(bytesDone);
+    transfer->progress->setValue(bytesDone*100/size);
 }
 
 void FileStatusDialog::fileDone(QString ID)
