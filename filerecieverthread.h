@@ -41,18 +41,18 @@ private:
     bool startedRecieving;
     QString filename;
     QFile file;
-    qint64 size;
-    qint64 bytesCopied;
+    quint64 size;
+    quint64 bytesCopied;
 
 public:
-    FileRecieverThread(Pointers *ptr, QString fileID, qint64 fileSize, QHostAddress senderIP, QString outputFilename, QObject *parent);
+    FileRecieverThread(Pointers *ptr, QString fileID, quint64 fileSize, QHostAddress senderIP, QString outputFilename, QObject *parent);
     ~FileRecieverThread();
 
     void run();
     void stopTransfer();
 
 signals:
-    void progress(QString ID, QHostAddress peerIP, QString fileName, qint64 size, qint64 bytesDone);
+    void progress(QString ID, QHostAddress peerIP, QString fileName, quint64 size, quint64 bytesDone);
     void done(QString ID);
 };
 

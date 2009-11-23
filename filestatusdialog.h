@@ -35,8 +35,8 @@ private:
         QString fileName;
         FileRecieverThread *reciever;
         bool inProgress;
-        qint64 bytesDone;
-        qint64 fileSize;
+        quint64 bytesDone;
+        quint64 fileSize;
         bool isUpload;
     };
 
@@ -54,10 +54,10 @@ private:
         FileRecieverThread *fReciever;
         bool inProgress;
         bool isUpload;
-        qint64 bytesDone;
-        qint64 totalSize;
-        qint64 fileCount;
-        qint64 bytesDoneTillNow;
+        quint64 bytesDone;
+        quint64 totalSize;
+        quint64 fileCount;
+        quint64 bytesDoneTillNow;
         int filesDone;
     };
 
@@ -82,8 +82,8 @@ protected:
 private slots:
     void fileCancelClicked(QString ID);
     void filePauseClicked(QString ID);
-    void fileRecieved(QString filename,qint64 size,QString ID,QHostAddress senderIP);
-    void fileProgress(QString ID, QHostAddress peer, QString fileName, qint64 size, qint64 bytesDone);
+    void fileRecieved(QString filename,quint64 size,QString ID,QHostAddress senderIP);
+    void fileProgress(QString ID, QHostAddress peer, QString fileName, quint64 size, quint64 bytesDone);
     void fileDone(QString ID);
 
     void dirCancelClicked(QString ID);
@@ -96,7 +96,7 @@ private slots:
     void fileSendFinished(QString ID, QString filename);
 
 public slots:
-    void addFileTransfer(QString filename, qint64 size, QString ID, QHostAddress senderIP, bool isUpload);
+    void addFileTransfer(QString filename, quint64 size, QString ID, QHostAddress senderIP, bool isUpload);
     void addDirTransfer(QDomNodeList fileList, QDomNodeList dirList, QHostAddress senderIP, bool isUpload);
 };
 

@@ -23,9 +23,9 @@
 #include "filerecieverthread.h"
 #include "peerinfo.h"
 
-const qint64 bytesPerBlock = Q_INT64_C(100000);   //number of bytes to transfer in one block
+const quint64 bytesPerBlock = Q_UINT64_C(100000);   //number of bytes to transfer in one block
 
-FileRecieverThread::FileRecieverThread(Pointers *ptr, QString fileID, qint64 fileSize, QHostAddress senderIP, QString outputFilename, QObject *parent)
+FileRecieverThread::FileRecieverThread(Pointers *ptr, QString fileID, quint64 fileSize, QHostAddress senderIP, QString outputFilename, QObject *parent)
     : QThread(parent), ID(fileID), peerIP(senderIP), manager(ptr->manager), filename(outputFilename), size(fileSize)
 {
     readyToRecieve = false;
@@ -57,7 +57,7 @@ void FileRecieverThread::run()
         }
 
         if (readyToRecieve) {
-            qint64 bytesWritten = file.write(socket.readAll());
+            quint64 bytesWritten = file.write(socket.readAll());
             bytesCopied = file.pos();
 
             emit progress(ID, peerIP, filename, size, bytesCopied);

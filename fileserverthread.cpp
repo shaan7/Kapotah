@@ -22,7 +22,7 @@
 #include "fileserverthread.h"
 #include "fileserver.h"
 
-const qint64 bytesPerBlock = Q_INT64_C(500000);   //number of bytes to transfer in one block
+const quint64 bytesPerBlock = Q_UINT64_C(500000);   //number of bytes to transfer in one block
 
 FileServerThread::FileServerThread(int descriptor, QObject *parent) : QThread(parent)
 {

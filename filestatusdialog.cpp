@@ -43,7 +43,7 @@ FileStatusDialog::FileStatusDialog(Pointers *ptr, QWidget *parent) :
     connect(dirCancelMapper, SIGNAL(mapped(QString)), this, SLOT(dirCancelClicked(QString)));
     connect(dirPauseMapper, SIGNAL(mapped(QString)), this, SLOT(dirPauseClicked(QString)));
 
-    connect(ptr->server, SIGNAL(fileRecieved(QString,qint64,QString,QHostAddress)), this, SLOT(fileRecieved(QString,qint64,QString,QHostAddress)));
+    connect(ptr->server, SIGNAL(fileRecieved(QString,quint64,QString,QHostAddress)), this, SLOT(fileRecieved(QString,quint64,QString,QHostAddress)));
     connect(ptr->server, SIGNAL(dirRecieved(QDomNodeList,QDomNodeList,QHostAddress)), this, SLOT(dirRecieved(QDomNodeList,QDomNodeList,QHostAddress)));
     connect(ptr->fserver, SIGNAL(startedTransfer(QString,QString)), this, SLOT(fileSendStarted(QString,QString)));
     connect(ptr->fserver, SIGNAL(finishedTransfer(QString,QString)), this, SLOT(fileSendFinished(QString,QString)));
@@ -84,7 +84,7 @@ void FileStatusDialog::dirRecieved(QDomNodeList fileList, QDomNodeList dirList, 
     addDirTransfer(fileList, dirList, ipAddress, false);
 }
 
-void FileStatusDialog::fileRecieved(QString filename,qint64 size,QString ID, QHostAddress senderIP)
+void FileStatusDialog::fileRecieved(QString filename,quint64 size,QString ID, QHostAddress senderIP)
 {
     show();
     addFileTransfer(filename, size, ID, senderIP, false);
@@ -184,7 +184,7 @@ void FileStatusDialog::addTransferEntry(QString ID, QString title, QHostAddress 
     }
 }
 
-void FileStatusDialog::addFileTransfer(QString filename, qint64 size, QString ID, QHostAddress senderIP, bool isUpload)
+void FileStatusDialog::addFileTransfer(QString filename, quint64 size, QString ID, QHostAddress senderIP, bool isUpload)
 {
     if (fileTransfers.contains(ID))
         return;
@@ -211,7 +211,7 @@ void FileStatusDialog::addFileTransfer(QString filename, qint64 size, QString ID
 
 void FileStatusDialog::addDirTransfer(QDomNodeList fileList, QDomNodeList dirList, QHostAddress senderIP, bool isUpload)
 {
-    qint64 totalSize=0;
+    quint64 totalSize=0;
 
     //Calculate ID and total size of dir
     QString items;
@@ -327,8 +327,8 @@ void FileStatusDialog::filePauseClicked(QString ID)
     transfer->savePath = filename;
     transfer->reciever = new FileRecieverThread(m_ptr, ID, transfer->fileSize,
                                                      transfer->senderIP, transfer->savePath, this);
-    connect(transfer->reciever, SIGNAL(progress(QString,QHostAddress,QString,qint64,qint64)),
-            this, SLOT(fileProgress(QString,QHostAddress,QString,qint64,qint64)));
+    connect(transfer->reciever, SIGNAL(progress(QString,QHostAddress,QString,quint64,quint64)),
+            this, SLOT(fileProgress(QString,QHostAddress,QString,quint64,quint64)));
     connect(transfer->reciever, SIGNAL(done(QString)), this, SLOT(fileDone(QString)));
     //startTime = QDateTime::currentDateTime();
     transfer->inProgress = true;
@@ -336,7 +336,7 @@ void FileStatusDialog::filePauseClicked(QString ID)
     transfer->reciever->start();
 }
 
-void FileStatusDialog::fileProgress(QString ID, QHostAddress peer, QString fileName, qint64 size, qint64 bytesDone)
+void FileStatusDialog::fileProgress(QString ID, QHostAddress peer, QString fileName, quint64 size, quint64 bytesDone)
 {
     FileTransfer *transfer = fileTransfers[ID];
     if (!transfer->inProgress)

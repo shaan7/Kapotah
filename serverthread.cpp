@@ -39,7 +39,7 @@ void ServerThread::run()
             QDataStream stream(&socket);
             stream.setVersion(QDataStream::Qt_4_5);
 
-            if (socket.bytesAvailable() < sizeof(quint32))
+            if (socket.bytesAvailable() < sizeof(quint64))
                 continue;
 
             stream >> dataSize;

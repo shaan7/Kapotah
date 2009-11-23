@@ -58,7 +58,7 @@ public slots:
 
 signals:
      void messageRecieved(QString message, QHostAddress senderIP);
-     void fileRecieved(QString name, qint64 size, QString ID, QHostAddress senderIP);
+     void fileRecieved(QString name, quint64 size, QString ID, QHostAddress senderIP);
      void dirRecieved(QDomNodeList fileList, QDomNodeList dirList, QHostAddress senderIP);
      void udpDataRecieved(QHostAddress senderIP, QByteArray data);
 

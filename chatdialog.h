@@ -49,7 +49,7 @@ private:
     FileRecieverThread *reciever;
     QDateTime startTime;
     QDateTime endTime;
-    qint64 fileSize;
+    quint64 fileSize;
     QTimer keyStatusTimer;
 
 protected:

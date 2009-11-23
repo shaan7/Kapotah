@@ -84,7 +84,7 @@ void Dialog::createIcon()
 {
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setIcon(QIcon(":/images/chataroma.png"));
-    trayIcon->setToolTip("Chataroma"+ QString::number(ui->peerList->count())+" user(s) online");
+    trayIcon->setToolTip("Chataroma::"+ QString::number(ui->peerList->count())+" user(s) online");
     trayIcon->show();
 }
 

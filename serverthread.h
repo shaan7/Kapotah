@@ -36,7 +36,7 @@ public:
 private:
     bool doQuit;
     int desc;
-    int dataSize;
+    quint64 dataSize;
 
 signals:
     void dataReady(QByteArray data, QHostAddress address);

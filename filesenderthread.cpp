@@ -62,7 +62,7 @@ void FileSenderThread::run()
     QByteArray data;
     QDataStream stream(&data, QIODevice::WriteOnly);
     stream.setVersion(QDataStream::Qt_4_5);
-    stream << (quint32)document.toByteArray().size();
+    stream << (quint64)document.toByteArray().size();
     data.append(document.toByteArray());
 
     socket.write(data);

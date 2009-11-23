@@ -66,7 +66,7 @@ void Server::readIncomingData(QByteArray data, QHostAddress ipAddress)     //TCP
     if (action.attribute("type") == "file") {
         QDomElement file = action.firstChild().toElement();
 
-        emit fileRecieved(file.attribute("fileName", "UNKNOWN"), file.attribute("size","0").toInt()
+        emit fileRecieved(file.attribute("fileName", "UNKNOWN"), file.attribute("size","0").toULongLong()
                              , file.attribute("ID","0"), ipAddress);
     }
     if (action.attribute("type") == "dir") {

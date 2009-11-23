@@ -38,7 +38,7 @@ void DirRecieverThread::run()
         if (cancel)
             break;
         fileReciever = new FileRecieverThread(m_ptr, fileList.at(i).toElement().attribute("ID"),
-                                          fileList.at(i).toElement().attribute("size").toInt(), peerIP,
+                                          fileList.at(i).toElement().attribute("size").toULongLong(), peerIP,
                                           dir.absoluteFilePath(fileList.at(i).toElement().attribute("path")), 0);
         //qDebug() << "START " << dir.absoluteFilePath(fileList.at(i).toElement().attribute("path"));
         //fileReciever->setPId(m_ID);

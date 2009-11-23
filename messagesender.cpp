@@ -45,7 +45,7 @@ void MessageSender::sendMessage(QString message, PeerInfo destinationPeer)
     QByteArray data;
     QDataStream stream(&data, QIODevice::WriteOnly);
     stream.setVersion(QDataStream::Qt_4_5);
-    stream << (quint32)document.toByteArray().size();
+    stream << (quint64)document.toByteArray().size();
     data.append(document.toByteArray());
 
     QTcpSocket socket;
