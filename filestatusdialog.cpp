@@ -27,21 +27,20 @@
 #include <QCryptographicHash>
 #include <QFileInfo>
 
-//THIS FILE IS TOOOOOOOOOOOO LARGE, IT WILL BE MADE SMALLER
 //ASSIGN PARENTS TO WIDGETS
 
 FileStatusDialog::FileStatusDialog(Pointers *ptr, QWidget *parent) :
     QDialog(parent), m_ptr(ptr) {
     m_ui.setupUi(this);
-    filePauseMapper = new QSignalMapper(this);
+    fileStartMapper = new QSignalMapper(this);
     fileCancelMapper = new QSignalMapper(this);
-    dirPauseMapper = new QSignalMapper(this);
+    dirStartMapper = new QSignalMapper(this);
     dirCancelMapper = new QSignalMapper(this);
 
     connect(fileCancelMapper, SIGNAL(mapped(QString)), this, SLOT(fileCancelClicked(QString)));
-    connect(filePauseMapper, SIGNAL(mapped(QString)), this, SLOT(filePauseClicked(QString)));
+    connect(fileStartMapper, SIGNAL(mapped(QString)), this, SLOT(fileStartClicked(QString)));
     connect(dirCancelMapper, SIGNAL(mapped(QString)), this, SLOT(dirCancelClicked(QString)));
-    connect(dirPauseMapper, SIGNAL(mapped(QString)), this, SLOT(dirPauseClicked(QString)));
+    connect(dirStartMapper, SIGNAL(mapped(QString)), this, SLOT(dirStartClicked(QString)));
 
     connect(ptr->server, SIGNAL(fileRecieved(QString,quint64,QString,QHostAddress)), this, SLOT(fileRecieved(QString,quint64,QString,QHostAddress)));
     connect(ptr->server, SIGNAL(dirRecieved(QDomNodeList,QDomNodeList,QHostAddress)), this, SLOT(dirRecieved(QDomNodeList,QDomNodeList,QHostAddress)));
@@ -96,11 +95,11 @@ void FileStatusDialog::addTransferEntry(QString ID, QString title, QHostAddress 
     QGroupBox *box = new QGroupBox(m_ui.scrollArea);
     QGridLayout *layout = new QGridLayout();
     QProgressBar *progress = new QProgressBar();
-    QToolButton *pause;
+    QToolButton *start;
     QToolButton *cancel;
 
     if (!isUpload) {    //We don't yet support manual control of uploads
-        pause = new QToolButton();
+        start = new QToolButton();
         cancel = new QToolButton();
     }
     QToolButton *type = new QToolButton();
@@ -108,7 +107,7 @@ void FileStatusDialog::addTransferEntry(QString ID, QString title, QHostAddress 
     //Set the widgets
 
     if (!isUpload) {
-        pause->setAutoRaise(true);
+        start->setAutoRaise(true);
         cancel->setAutoRaise(true);
         cancel->setEnabled(false);
     }
@@ -121,8 +120,8 @@ void FileStatusDialog::addTransferEntry(QString ID, QString title, QHostAddress 
         progress->setValue(0);
     }
     else {
-        pause->setIcon(QIcon(":/images/kget.png"));
-        pause->setToolTip(returnToolTipHTML("Download", "Click here to select a location and download"));
+        start->setIcon(QIcon(":/images/kget.png"));
+        start->setToolTip(returnToolTipHTML("Download", "Click here to select a location and download"));
         cancel->setIcon(QIcon(":/images/dialog-cancel.png"));
         cancel->setToolTip(returnToolTipHTML("Cancel", "Cancels the transfer without confirmation"));
         type->setIcon(QIcon(":/images/arrow-down-double.png"));
@@ -133,7 +132,7 @@ void FileStatusDialog::addTransferEntry(QString ID, QString title, QHostAddress 
     layout->addWidget(progress, 0, 0);
 
     if (!isUpload) {
-        layout->addWidget(pause, 0, 1);
+        layout->addWidget(start, 0, 1);
         layout->addWidget(cancel, 0, 2);
         layout->addWidget(type, 0, 3);
         box->setTitle(title.left(25) + " from " + m_ptr->manager->peerInfo(senderIP.toString()).name());
@@ -162,7 +161,7 @@ void FileStatusDialog::addTransferEntry(QString ID, QString title, QHostAddress 
         transfer->progress = progress;
         if (!isUpload) {
             transfer->cancel = cancel;
-            transfer->pause = pause;
+            transfer->start = start;
             dirTransfers[ID] = transfer;
         }
         else
@@ -176,7 +175,7 @@ void FileStatusDialog::addTransferEntry(QString ID, QString title, QHostAddress 
         transfer->progress = progress;
         if (!isUpload) {
             transfer->cancel = cancel;
-            transfer->pause = pause;
+            transfer->start = start;
             fileTransfers[ID] = transfer;
         }
         else
@@ -202,11 +201,11 @@ void FileStatusDialog::addFileTransfer(QString filename, quint64 size, QString I
 
     //Connect signals
     connect(transfer->cancel, SIGNAL(clicked()), fileCancelMapper, SLOT(map()));
-    connect(transfer->pause, SIGNAL(clicked()), filePauseMapper, SLOT(map()));
+    connect(transfer->start, SIGNAL(clicked()), fileStartMapper, SLOT(map()));
 
     //Set mapping
     fileCancelMapper->setMapping(transfer->cancel, ID);
-    filePauseMapper->setMapping(transfer->pause, ID);
+    fileStartMapper->setMapping(transfer->start, ID);
 }
 
 void FileStatusDialog::addDirTransfer(QDomNodeList fileList, QDomNodeList dirList, QHostAddress senderIP, bool isUpload)
@@ -251,11 +250,11 @@ void FileStatusDialog::addDirTransfer(QDomNodeList fileList, QDomNodeList dirLis
 
     //Connect signals
     connect(transfer->cancel, SIGNAL(clicked()), dirCancelMapper, SLOT(map()));
-    connect(transfer->pause, SIGNAL(clicked()), dirPauseMapper, SLOT(map()));
+    connect(transfer->start, SIGNAL(clicked()), dirStartMapper, SLOT(map()));
 
     //Set mapping
     dirCancelMapper->setMapping(transfer->cancel, ID);
-    dirPauseMapper->setMapping(transfer->pause, ID);
+    dirStartMapper->setMapping(transfer->start, ID);
 }
 
 void FileStatusDialog::dirCancelClicked(QString ID)
@@ -265,10 +264,10 @@ void FileStatusDialog::dirCancelClicked(QString ID)
     transfer->progress->setMaximum(0);
     transfer->progress->setValue(0);
     transfer->inProgress = false;
-    transfer->pause->setEnabled(true);
+    transfer->start->setEnabled(true);
 }
 
-void FileStatusDialog::dirPauseClicked(QString ID)
+void FileStatusDialog::dirStartClicked(QString ID)
 {
     DirTransfer *transfer = dirTransfers[ID];
 
@@ -276,7 +275,7 @@ void FileStatusDialog::dirPauseClicked(QString ID)
     if (dirname=="")
         return;
 
-    transfer->pause->setEnabled(false);
+    transfer->start->setEnabled(false);
     transfer->reciever = new DirRecieverThread(m_ptr, ID, dirname, transfer->fileList, transfer->dirList, transfer->senderIP, this);
     transfer->savePath = dirname;
     connect(transfer->reciever, SIGNAL(progress(QString,int)), this, SLOT(dirProgress(QString,int)));
@@ -300,7 +299,7 @@ void FileStatusDialog::dirProgress(QString ID, int filesDone)
 void FileStatusDialog::dirDone(QString ID)
 {
     DirTransfer *transfer = dirTransfers[ID];
-    transfer->pause->hide();
+    transfer->start->hide();
     transfer->cancel->hide();
 }
 
@@ -308,13 +307,13 @@ void FileStatusDialog::fileCancelClicked(QString ID)
 {
     FileTransfer *transfer = fileTransfers[ID];
     transfer->reciever->stopTransfer();
-    transfer->progress->setMaximum(0);
-    transfer->progress->setValue(0);
+    transfer->progress->setValue(transfer->progress->maximum());
+    transfer->progress->setFormat("Canceled at %p%");
     transfer->inProgress = false;
-    transfer->pause->setEnabled(true);
+    transfer->start->setEnabled(true);
 }
 
-void FileStatusDialog::filePauseClicked(QString ID)
+void FileStatusDialog::fileStartClicked(QString ID)
 {
     FileTransfer *transfer = fileTransfers[ID];
 
@@ -323,7 +322,7 @@ void FileStatusDialog::filePauseClicked(QString ID)
     if (filename=="")
         return;
 
-    transfer->pause->setEnabled(false);
+    transfer->start->setEnabled(false);
     transfer->savePath = filename;
     transfer->reciever = new FileRecieverThread(m_ptr, ID, transfer->fileSize,
                                                      transfer->senderIP, transfer->savePath, this);
@@ -331,6 +330,7 @@ void FileStatusDialog::filePauseClicked(QString ID)
             this, SLOT(fileProgress(QString,QHostAddress,QString,quint64,quint64)));
     connect(transfer->reciever, SIGNAL(done(QString)), this, SLOT(fileDone(QString)));
     //startTime = QDateTime::currentDateTime();
+    transfer->progress->setFormat("%p%");
     transfer->progress->setMaximum(100);
     transfer->inProgress = true;
     transfer->cancel->setEnabled(true);
@@ -349,7 +349,7 @@ void FileStatusDialog::fileProgress(QString ID, QHostAddress peer, QString fileN
 void FileStatusDialog::fileDone(QString ID)
 {
     FileTransfer *transfer = fileTransfers[ID];
-    transfer->pause->hide();
+    transfer->start->hide();
     transfer->cancel->hide();
 }
 

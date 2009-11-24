@@ -28,7 +28,7 @@ private:
     {
         QGroupBox *box;
         QProgressBar *progress;
-        QToolButton *pause;
+        QToolButton *start;
         QToolButton *cancel;
         QString savePath;
         QHostAddress senderIP;
@@ -44,7 +44,7 @@ private:
     {
         QGroupBox *box;
         QProgressBar *progress;
-        QToolButton *pause;
+        QToolButton *start;
         QToolButton *cancel;
         QString savePath;
         QHostAddress senderIP;
@@ -69,9 +69,9 @@ private:
     QHash<QString,FileTransfer*> upFileTransfers;
     QHash<QString,DirTransfer*> upDirTransfers;
 
-    QSignalMapper *filePauseMapper;
+    QSignalMapper *fileStartMapper;
     QSignalMapper *fileCancelMapper;
-    QSignalMapper *dirPauseMapper;
+    QSignalMapper *dirStartMapper;
     QSignalMapper *dirCancelMapper;
 
     void addTransferEntry(QString ID, QString title, QHostAddress senderIP, bool isUpload, bool isDir);
@@ -81,13 +81,13 @@ protected:
 
 private slots:
     void fileCancelClicked(QString ID);
-    void filePauseClicked(QString ID);
+    void fileStartClicked(QString ID);
     void fileRecieved(QString filename,quint64 size,QString ID,QHostAddress senderIP);
     void fileProgress(QString ID, QHostAddress peer, QString fileName, quint64 size, quint64 bytesDone);
     void fileDone(QString ID);
 
     void dirCancelClicked(QString ID);
-    void dirPauseClicked(QString ID);
+    void dirStartClicked(QString ID);
     void dirRecieved(QDomNodeList fileList, QDomNodeList dirList, QHostAddress senderIP);
     void dirProgress(QString ID, int filesDone);
     void dirDone(QString ID);

@@ -53,8 +53,10 @@ void FileServerThread::run()
 
             emit startedTransfer(ID, filename);
             while (!file.atEnd()) {
-                if (socket.state() != QTcpSocket::ConnectedState)
+                if (socket.state() != QTcpSocket::ConnectedState) {
+                    emit finishedTransfer(ID, filename);
                     break;
+                }
                 socket.write(file.read(bytesPerBlock));
                 socket.waitForBytesWritten();
                 while (socket.bytesToWrite())
