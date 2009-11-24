@@ -103,7 +103,7 @@ void ChatDialog::checkGonePeer(QHostAddress IP)
 {
     if (IP == peerIP)
     {
-        ui.chatEdit->append("<font color=red>" + peerIP.toString() + " is offline</font>");
+        ui.chatEdit->append("<font color=red>" + manager->peerInfo(peerIP.toString()).name() + " is offline</font>");
         ui.sendToolButton->setEnabled(false);
     }
 }
@@ -112,7 +112,7 @@ void ChatDialog::checkPeerReturned(QHostAddress IP)
 {
     if (IP == peerIP)
     {
-        ui.chatEdit->append("<font color=green>" + peerIP.toString() + " is back online</font>");
+        ui.chatEdit->append("<font color=green>" + manager->peerInfo(peerIP.toString()).name() + " is back online</font>");
         ui.sendToolButton->setEnabled(true);
     }
 }
