@@ -41,8 +41,15 @@ void FileRecieverThread::stopTransfer()
 
 void FileRecieverThread::run()
 {
-    if (size==0)
-        return;         //TODO: better to create an empty file
+    qDebug() << filename;
+    if (size==0) {
+        file.setFileName(filename);
+        file.open(QIODevice::WriteOnly);
+        emit done(ID);
+        file.close();
+        return;         //Create an empty file
+    }
+
     QTcpSocket socket;
     socket.connectToHost(peerIP, 9877);
     socket.waitForConnected();

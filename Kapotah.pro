@@ -22,7 +22,8 @@ SOURCES += main.cpp \
     messagesenderthread.cpp \
     dirrecieverthread.cpp \
     filestatusdialog.cpp \
-    aboutdialog.cpp
+    aboutdialog.cpp \
+    transfermanager.cpp
 HEADERS += dialog.h \
     peermanager.h \
     peerinfo.h \
@@ -39,7 +40,8 @@ HEADERS += dialog.h \
     dirrecieverthread.h \
     filestatusdialog.h \
     pointers.h \
-    aboutdialog.h
+    aboutdialog.h \
+    transfermanager.h
 FORMS += dialog.ui \
     chatdialog.ui \
     filestatusdialog.ui \
