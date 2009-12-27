@@ -16,11 +16,11 @@ SOURCES += main.cpp \
     filesenderthread.cpp \
     fileserver.cpp \
     fileserverthread.cpp \
-    filerecieverthread.cpp \
+    filereceiverthread.cpp \
     dirsenderthread.cpp \
     serverthread.cpp \
     messagesenderthread.cpp \
-    dirrecieverthread.cpp \
+    dirreceiverthread.cpp \
     filestatusdialog.cpp \
     aboutdialog.cpp \
     transfermanager.cpp
@@ -33,11 +33,11 @@ HEADERS += dialog.h \
     filesenderthread.h \
     fileserver.h \
     fileserverthread.h \
-    filerecieverthread.h \
+    filereceiverthread.h \
     dirsenderthread.h \
     serverthread.h \
     messagesenderthread.h \
-    dirrecieverthread.h \
+    dirreceiverthread.h \
     filestatusdialog.h \
     pointers.h \
     aboutdialog.h \
