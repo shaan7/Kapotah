@@ -29,8 +29,8 @@
 #include "messagesender.h"
 #include "filesenderthread.h"
 #include "dirsenderthread.h"
-#include "filereceiverthread.h"
 #include "dirreceiverthread.h"
+#include "messagesenderthread.h"
 
 ChatDialog::ChatDialog(QHostAddress peerIP, Pointers *ptr, QWidget *parent)
         : QDialog(parent), peerIP(peerIP), m_ptr(ptr), manager(ptr->manager), server(ptr->server), fserver(ptr->fserver)
@@ -119,8 +119,8 @@ void ChatDialog::checkPeerReturned(QHostAddress IP)
 
 void ChatDialog::sendMessage()
 {
-    MessageSender *sender = new MessageSender(m_ptr, this);
-    sender->sendMessage(ui.messageEdit->text(),manager->peerInfo(peerIP.toString()));
+    MessageSenderThread *sender = new MessageSenderThread(m_ptr, ui.messageEdit->text(), manager->peerInfo(peerIP.toString()),this);
+    sender->start();
     ui.chatEdit->append("<b>" + manager->username() + "</b> :: " + ui.messageEdit->text()); //<b> is HTML for bold
     ui.messageEdit->clear();
 }

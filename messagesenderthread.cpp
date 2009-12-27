@@ -20,6 +20,18 @@
 
 #include "messagesenderthread.h"
 
-MessageSenderThread::MessageSenderThread() : QThread()
+MessageSenderThread::MessageSenderThread(Pointers *ptr, QString text, PeerInfo destinationPeer, QObject *parent)
+        : QThread(parent), destination(destinationPeer), m_ptr(ptr), message(text)
 {
+}
+
+void MessageSenderThread::run()
+{
+    sender = new MessageSender(m_ptr);
+    sender->sendMessage(message,destination);
+}
+
+MessageSenderThread::~MessageSenderThread()
+{
+    wait();
 }

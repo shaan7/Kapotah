@@ -26,7 +26,6 @@
 FileSenderThread::FileSenderThread(Pointers *ptr, QString fileToSend, PeerInfo destinationPeer, QObject *parent)
     : QThread(parent), manager(ptr->manager), fserver(ptr->fserver), filename(fileToSend), destination(destinationPeer)
 {
-    qsrand(1000);
 }
 
 void FileSenderThread::run()

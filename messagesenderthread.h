@@ -22,14 +22,25 @@
 #define MESSAGESENDERTHREAD_H
 
 #include <QThread>
+#include "peermanager.h"
+#include "fileserver.h"
+#include "pointers.h"
+#include "messagesender.h"
 
 class MessageSenderThread : public QThread
 {
     Q_OBJECT
 public:
-    MessageSenderThread();
+    MessageSenderThread( Pointers *ptr, QString text, PeerInfo destinationPeer, QObject *parent);
+    ~MessageSenderThread();
 
-    //void run();
+    void run();
+private:
+    MessageSender *sender;
+    QString text;
+    PeerInfo destination;
+    Pointers *m_ptr;
+    QString message;
 };
 
 #endif // MESSAGESENDERTHREAD_H
