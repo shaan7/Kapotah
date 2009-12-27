@@ -29,8 +29,8 @@
 #include "messagesender.h"
 #include "filesenderthread.h"
 #include "dirsenderthread.h"
-#include "filerecieverthread.h"
-#include "dirrecieverthread.h"
+#include "filereceiverthread.h"
+#include "dirreceiverthread.h"
 
 ChatDialog::ChatDialog(QHostAddress peerIP, Pointers *ptr, QWidget *parent)
         : QDialog(parent), peerIP(peerIP), m_ptr(ptr), manager(ptr->manager), server(ptr->server), fserver(ptr->fserver)

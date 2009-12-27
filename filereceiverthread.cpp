@@ -20,12 +20,12 @@
 
 #include <QFile>
 #include <QByteArray>
-#include "filerecieverthread.h"
+#include "filereceiverthread.h"
 #include "peerinfo.h"
 
 const quint64 bytesPerBlock = Q_UINT64_C(50000);   //number of bytes to transfer in one block
 
-FileRecieverThread::FileRecieverThread(Pointers *ptr, QString fileID, quint64 fileSize, QHostAddress senderIP, QString outputFilename, QObject *parent)
+FileReceiverThread::FileReceiverThread(Pointers *ptr, QString fileID, quint64 fileSize, QHostAddress senderIP, QString outputFilename, QObject *parent)
     : QThread(parent), ID(fileID), peerIP(senderIP), manager(ptr->manager), filename(outputFilename), size(fileSize)
 {
     readyToRecieve = false;
@@ -34,12 +34,12 @@ FileRecieverThread::FileRecieverThread(Pointers *ptr, QString fileID, quint64 fi
     doQuit = false;
 }
 
-void FileRecieverThread::stopTransfer()
+void FileReceiverThread::stopTransfer()
 {
     doQuit = true;
 }
 
-void FileRecieverThread::run()
+void FileReceiverThread::run()
 {
     qDebug() << filename;
     if (size==0) {
@@ -99,10 +99,10 @@ void FileRecieverThread::run()
     deleteLater();
 }
 
-FileRecieverThread::~FileRecieverThread()
+FileReceiverThread::~FileReceiverThread()
 {
     doQuit = true;
     file.close();
     wait();
-    qDebug() << "FileRecieverThread END";
+    qDebug() << "FileReceiverThread END";
 }

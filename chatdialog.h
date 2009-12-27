@@ -28,7 +28,7 @@
 #include "peermanager.h"
 #include "server.h"
 #include "fileserver.h"
-#include "filerecieverthread.h"
+#include "filereceiverthread.h"
 #include "pointers.h"
 
 class ChatDialog : public QDialog
@@ -46,7 +46,7 @@ private:
     PeerManager *manager;
     Server *server;
     FileServer *fserver;
-    FileRecieverThread *reciever;
+    FileReceiverThread *receiver;
     QDateTime startTime;
     QDateTime endTime;
     quint64 fileSize;

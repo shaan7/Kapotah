@@ -12,8 +12,8 @@
 #include <QDomNodeList>
 #include "ui_filestatusdialog.h"
 #include "pointers.h"
-#include "filerecieverthread.h"
-#include "dirrecieverthread.h"
+#include "filereceiverthread.h"
+#include "dirreceiverthread.h"
 
 class FileStatusDialog : public QDialog {
     Q_OBJECT
@@ -33,7 +33,7 @@ private:
         QString savePath;
         QHostAddress senderIP;
         QString fileName;
-        FileRecieverThread *reciever;
+        FileReceiverThread *receiver;
         bool inProgress;
         quint64 bytesDone;
         quint64 fileSize;
@@ -50,8 +50,8 @@ private:
         QHostAddress senderIP;
         QDomNodeList fileList;
         QDomNodeList dirList;
-        DirRecieverThread *reciever;
-        FileRecieverThread *fReciever;
+        DirReceiverThread *receiver;
+        FileReceiverThread *fReceiver;
         bool inProgress;
         bool isUpload;
         quint64 bytesDone;

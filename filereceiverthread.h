@@ -18,38 +18,42 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef DIRRECIEVERTHREAD_H
-#define DIRRECIEVERTHREAD_H
+#ifndef FILERECIEVERTHREAD_H
+#define FILERECIEVERTHREAD_H
 
 #include <QThread>
-#include <QDomNodeList>
+#include <QTcpSocket>
+#include <QFile>
 #include "peermanager.h"
-#include "filerecieverthread.h"
 #include "pointers.h"
 
-class DirRecieverThread : public QThread
+class FileReceiverThread : public QThread
 {
     Q_OBJECT
 
 private:
-    Pointers *m_ptr;
-    PeerManager *manager;
-    QDomNodeList fileList;
-    QDomNodeList dirList;
+    bool doQuit;
+    QString ID;
+    QString m_pID;    //Parent ID in case of dir transfers
     QHostAddress peerIP;
-    QString dirName;
-    FileRecieverThread *fileReciever;
-    bool cancel;
-    QString m_ID;
+    PeerManager *manager;
+    bool readyToRecieve;
+    bool startedRecieving;
+    QString filename;
+    QFile file;
+    quint64 size;
+    quint64 bytesCopied;
+
 public:
-    DirRecieverThread(Pointers *ptr, QString ID, QString dir, QDomNodeList files, QDomNodeList dirs,
-                      QHostAddress peerIP, QObject *parent);
-    ~DirRecieverThread();
+    FileReceiverThread(Pointers *ptr, QString fileID, quint64 fileSize, QHostAddress senderIP, QString outputFilename, QObject *parent);
+    ~FileReceiverThread();
+
     void run();
     void stopTransfer();
+
 signals:
+    void progress(QString ID, QHostAddress peerIP, QString fileName, quint64 size, quint64 bytesDone);
     void done(QString ID);
-    void progress(QString ID, int filesDone);
 };
 
-#endif // DIRRECIEVERTHREAD_H
+#endif // FILERECIEVERTHREAD_H

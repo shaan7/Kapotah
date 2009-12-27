@@ -18,16 +18,16 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include "dirrecieverthread.h"
+#include "dirreceiverthread.h"
 #include <QDir>
 
-DirRecieverThread::DirRecieverThread(Pointers *ptr, QString ID, QString dir, QDomNodeList files, QDomNodeList dirs, QHostAddress peerip, QObject *parent)
+DirReceiverThread::DirReceiverThread(Pointers *ptr, QString ID, QString dir, QDomNodeList files, QDomNodeList dirs, QHostAddress peerip, QObject *parent)
     : QThread(parent), manager(ptr->manager), fileList(files), dirList(dirs), peerIP(peerip), m_ptr(ptr), dirName(dir), m_ID(ID)
 {
     cancel = false;
 }
 
-void DirRecieverThread::run()
+void DirReceiverThread::run()
 {
     QDir dir(dirName);
     for (int i=0;i<dirList.count();i++) {
@@ -37,14 +37,14 @@ void DirRecieverThread::run()
     for (int i=0;i<fileList.count();i++) {
         if (cancel)
             break;
-        fileReciever = new FileRecieverThread(m_ptr, fileList.at(i).toElement().attribute("ID"),
+        fileReceiver = new FileReceiverThread(m_ptr, fileList.at(i).toElement().attribute("ID"),
                                           fileList.at(i).toElement().attribute("size").toULongLong(), peerIP,
                                           dir.absoluteFilePath(fileList.at(i).toElement().attribute("path")), 0);
         //qDebug() << "START " << dir.absoluteFilePath(fileList.at(i).toElement().attribute("path"));
-        //fileReciever->setPId(m_ID);
-        //emit recieverChanged(m_ID, fileReciever, i+1);
-        fileReciever->run();
-        delete fileReciever;
+        //fileReceiver->setPId(m_ID);
+        //emit receiverChanged(m_ID, fileReceiver, i+1);
+        fileReceiver->run();
+        delete fileReceiver;
 
         emit progress(m_ID, i+1);
     }
@@ -52,14 +52,14 @@ void DirRecieverThread::run()
     deleteLater();
 }
 
-void DirRecieverThread::stopTransfer()
+void DirReceiverThread::stopTransfer()
 {
     cancel = true;
 }
 
-DirRecieverThread::~DirRecieverThread()
+DirReceiverThread::~DirReceiverThread()
 {
     cancel = true;
     wait();
-    qDebug() << "DirRecieverThread END";
+    qDebug() << "DirReceiverThread END";
 }

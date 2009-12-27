@@ -260,7 +260,7 @@ void FileStatusDialog::addDirTransfer(QDomNodeList fileList, QDomNodeList dirLis
 void FileStatusDialog::dirCancelClicked(QString ID)
 {
     DirTransfer *transfer = dirTransfers[ID];
-    transfer->reciever->stopTransfer();
+    transfer->receiver->stopTransfer();
     transfer->progress->setMaximum(0);
     transfer->progress->setValue(0);
     transfer->inProgress = false;
@@ -276,14 +276,14 @@ void FileStatusDialog::dirStartClicked(QString ID)
         return;
 
     transfer->start->setEnabled(false);
-    transfer->reciever = new DirRecieverThread(m_ptr, ID, dirname, transfer->fileList, transfer->dirList, transfer->senderIP, this);
+    transfer->receiver = new DirReceiverThread(m_ptr, ID, dirname, transfer->fileList, transfer->dirList, transfer->senderIP, this);
     transfer->savePath = dirname;
-    connect(transfer->reciever, SIGNAL(progress(QString,int)), this, SLOT(dirProgress(QString,int)));
-    connect(transfer->reciever, SIGNAL(done(QString)), this, SLOT(dirDone(QString)));
+    connect(transfer->receiver, SIGNAL(progress(QString,int)), this, SLOT(dirProgress(QString,int)));
+    connect(transfer->receiver, SIGNAL(done(QString)), this, SLOT(dirDone(QString)));
     //startTime = QDateTime::currentDateTime();
     transfer->inProgress = true;
     transfer->cancel->setEnabled(true);
-    transfer->reciever->start();
+    transfer->receiver->start();
 }
 
 void FileStatusDialog::dirProgress(QString ID, int filesDone)
@@ -306,7 +306,7 @@ void FileStatusDialog::dirDone(QString ID)
 void FileStatusDialog::fileCancelClicked(QString ID)
 {
     FileTransfer *transfer = fileTransfers[ID];
-    transfer->reciever->stopTransfer();
+    transfer->receiver->stopTransfer();
     transfer->progress->setValue(transfer->progress->maximum());
     transfer->progress->setFormat("Canceled at %p%");
     transfer->inProgress = false;
@@ -324,17 +324,17 @@ void FileStatusDialog::fileStartClicked(QString ID)
 
     transfer->start->setEnabled(false);
     transfer->savePath = filename;
-    transfer->reciever = new FileRecieverThread(m_ptr, ID, transfer->fileSize,
+    transfer->receiver = new FileReceiverThread(m_ptr, ID, transfer->fileSize,
                                                      transfer->senderIP, transfer->savePath, this);
-    connect(transfer->reciever, SIGNAL(progress(QString,QHostAddress,QString,quint64,quint64)),
+    connect(transfer->receiver, SIGNAL(progress(QString,QHostAddress,QString,quint64,quint64)),
             this, SLOT(fileProgress(QString,QHostAddress,QString,quint64,quint64)));
-    connect(transfer->reciever, SIGNAL(done(QString)), this, SLOT(fileDone(QString)));
+    connect(transfer->receiver, SIGNAL(done(QString)), this, SLOT(fileDone(QString)));
     //startTime = QDateTime::currentDateTime();
     transfer->progress->setFormat("%p%");
     transfer->progress->setMaximum(100);
     transfer->inProgress = true;
     transfer->cancel->setEnabled(true);
-    transfer->reciever->start();
+    transfer->receiver->start();
 }
 
 void FileStatusDialog::fileProgress(QString ID, QHostAddress peer, QString fileName, quint64 size, quint64 bytesDone)
