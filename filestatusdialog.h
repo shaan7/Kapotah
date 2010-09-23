@@ -94,6 +94,7 @@ private slots:
 
     void fileSendStarted(QString ID, QString filename);
     void fileSendFinished(QString ID, QString filename);
+    void fileProgress(QString ID, quint64 bytes);
 
 public slots:
     void addFileTransfer(QString filename, quint64 size, QString ID, QHostAddress senderIP, bool isUpload);

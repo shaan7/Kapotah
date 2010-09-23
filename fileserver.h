@@ -41,6 +41,7 @@ private:
 signals:
     void startedTransfer(QString ID, QString filename);
     void finishedTransfer(QString ID, QString filename);
+    void transferProgress(QString ID, quint64 bytes);
 };
 
 #endif // FILESERVER_H

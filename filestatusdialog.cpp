@@ -46,6 +46,7 @@ FileStatusDialog::FileStatusDialog(Pointers *ptr, QWidget *parent) :
     connect(ptr->server, SIGNAL(dirRecieved(QDomNodeList,QDomNodeList,QHostAddress)), this, SLOT(dirRecieved(QDomNodeList,QDomNodeList,QHostAddress)));
     connect(ptr->fserver, SIGNAL(startedTransfer(QString,QString)), this, SLOT(fileSendStarted(QString,QString)));
     connect(ptr->fserver, SIGNAL(finishedTransfer(QString,QString)), this, SLOT(fileSendFinished(QString,QString)));
+    connect(ptr->fserver, SIGNAL(transferProgress(QString,quint64)), this, SLOT(fileProgress(QString,quint64)));
 }
 
 QString FileStatusDialog::returnToolTipHTML(QString title, QString description)
@@ -65,6 +66,7 @@ void FileStatusDialog::fileSendStarted(QString ID, QString filename)
         return;
     if (ID.left(3) == "DIR")
         return;
+
     addTransferEntry(ID, QFileInfo(filename).fileName(), QHostAddress("0.0.0.0"), true, false);
 }
 
@@ -73,8 +75,16 @@ void FileStatusDialog::fileSendFinished(QString ID, QString filename)
     if (ID.left(3) == "DIR")
         return;
 
-    upFileTransfers[ID]->progress->setMaximum(1);
-    upFileTransfers[ID]->progress->setValue(1);
+    /*upFileTransfers[ID]->progress->setMaximum(1);
+    upFileTransfers[ID]->progress->setValue(1);*/
+}
+
+void FileStatusDialog::fileProgress(QString ID, quint64 bytes)
+{
+    if (ID.left(3) == "DIR")
+        return;
+
+    upFileTransfers[ID]->progress->setValue(bytes);
 }
 
 void FileStatusDialog::dirRecieved(QDomNodeList fileList, QDomNodeList dirList, QHostAddress ipAddress)
@@ -116,7 +126,7 @@ void FileStatusDialog::addTransferEntry(QString ID, QString title, QHostAddress 
     if (isUpload) {
         type->setIcon(QIcon(":/images/arrow-up-double.png"));
         type->setToolTip(returnToolTipHTML("Transfer Type", "This transfer is an upload"));
-        progress->setMaximum(0);
+        progress->setMaximum(fileTransfers[ID]->fileSize);
         progress->setValue(0);
     }
     else {
