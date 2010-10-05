@@ -22,6 +22,9 @@
 #define CHATDIALOG_H
 
 #include <QDialog>
+#include <QtCore/qstate.h>
+#include <QtGui>
+#include <QStateMachine>
 #include <QDateTime>
 #include <QCloseEvent>
 #include "ui_chatdialog.h"
@@ -30,6 +33,18 @@
 #include "fileserver.h"
 #include "filereceiverthread.h"
 #include "pointers.h"
+
+/*class Pixmap : public QObject, public QGraphicsPixmapItem
+ {
+     Q_OBJECT
+     Q_PROPERTY(QPointF pos READ pos WRITE setPos)
+ public:
+     Pixmap(const QPixmap &pix)
+         : QObject(), QGraphicsPixmapItem(pix)
+     {
+         setCacheMode(DeviceCoordinateCache);
+     }
+ };*/
 
 class ChatDialog : public QDialog
 {
@@ -51,6 +66,7 @@ private:
     QDateTime endTime;
     quint64 fileSize;
     QTimer keyStatusTimer;
+    //QList<Pixmap *> items;
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -67,6 +83,7 @@ private slots:
     void checkGonePeer(QHostAddress ipAddress);
     void checkPeerReturned(QHostAddress ipAddress);
     void checkForKeyStatus();
+    //void showEmoteIcons();
 
 public slots:
     void messageRecieved(QString message, QHostAddress ipAddress);

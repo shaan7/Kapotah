@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/" >
+    <qresource prefix="/">
         <file>images/chataroma.png</file>
         <file>images/kget.png</file>
         <file>images/user-online.png</file>
@@ -12,5 +12,6 @@
         <file>images/mail_get.png</file>
         <file>images/help-about.png</file>
         <file>images/mail-receive1.png</file>
+        <file>images/face-smile-grin.png</file>
     </qresource>
 </RCC>

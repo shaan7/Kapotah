@@ -40,7 +40,7 @@ ChatDialog::ChatDialog(QHostAddress peerIP, Pointers *ptr, QWidget *parent)
     setWindowTitle(manager->peerInfo(peerIP.toString()).name() + "@" + peerIP.toString());    //Set the window title to peer@ipaddress
 
     connect(ui.sendToolButton, SIGNAL(clicked()), this, SLOT(sendMessage()));
-
+    //connect(ui.emoteToolButton, SIGNAL(clicked()), this, SLOT(showEmoteIcons()));
     connect(server, SIGNAL(messageRecieved(QString,QHostAddress)), this, SLOT(messageRecieved(QString,QHostAddress)));
     connect(manager, SIGNAL(peerGone(QHostAddress)), this, SLOT(checkGonePeer(QHostAddress)));
     connect(manager, SIGNAL(newPeer(QHostAddress)), this, SLOT(checkPeerReturned(QHostAddress)));
@@ -53,6 +53,30 @@ ChatDialog::ChatDialog(QHostAddress peerIP, Pointers *ptr, QWidget *parent)
     keyStatusTimer.setInterval(2000);
     setAcceptDrops(true);
 }
+
+/*void ChatDialog::showEmoteIcons()
+{
+    QState *rootState = new QState;
+    QState *expandedState = new QState(rootState);
+    for (int i = 0; i < 16; ++i)
+    {
+        items[i] = new Pixmap(":/images/face-smile-grin.png");
+        expandedState->assignProperty(new QToolButton, "pos", QPointF(((i % 8) - 4) * items[i]->width() + items[i]->width() / 2, ((i / 8) - 4) * items[i]->height() + items[i]->height() / 2));
+    }
+    QStateMachine states;
+    states.addState(rootState);
+    states.setInitialState(rootState);
+    QParallelAnimationGroup *group = new QParallelAnimationGroup;
+    for (int i = 0; i < 16; ++i)
+    {
+        QPropertyAnimation *anim = new QPropertyAnimation(items[i], "pos");
+        anim->setDuration(750 + i * 25);
+        anim->setEasingCurve(QEasingCurve::InOutBack);
+        group->addAnimation(anim);
+    }
+    QAbstractTransition *trans = rootState->addTransition(ui.emoteToolButton, SIGNAL(pressed()), expandedState);
+    trans->addAnimation(group);
+}*/
 
 void ChatDialog::dragEnterEvent(QDragEnterEvent *event)
 {
