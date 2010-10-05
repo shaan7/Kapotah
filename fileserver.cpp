@@ -46,5 +46,6 @@ void FileServer::incomingConnection(int descriptor)
     FileServerThread *thread = new FileServerThread(descriptor, this);
     connect(thread, SIGNAL(startedTransfer(QString,QString)), this, SIGNAL(startedTransfer(QString,QString)));
     connect(thread, SIGNAL(finishedTransfer(QString,QString)), this, SIGNAL(finishedTransfer(QString,QString)));
+    connect(thread, SIGNAL(transferProgress(QString,quint64)), this, SIGNAL(transferProgress(QString,quint64)));
     thread->start();
 }

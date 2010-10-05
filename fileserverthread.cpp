@@ -61,6 +61,8 @@ void FileServerThread::run()
                 socket.waitForBytesWritten();
                 while (socket.bytesToWrite())
                     socket.flush();
+                qDebug() << "EMITTING " << file.pos();
+                emit transferProgress(ID, file.pos());
             }
             file.close();
             socket.waitForDisconnected(-1);
