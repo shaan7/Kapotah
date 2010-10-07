@@ -1,7 +1,6 @@
 /*
     This file is part of the Kapotah project.
     Copyright (C) 2009 Shantanu Tushar <jhahoneyk@gmail.com>
-    Copyright (C) 2009 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,17 +18,14 @@
 
 
 #include "peermanager.h"
-#include "broadcastmanager.h"
-
-#include <QDebug>
 
 using namespace Kapotah;
 
 template<> PeerManager *Kapotah::Singleton<PeerManager>::m_instance = 0;
 
-PeerManager::PeerManager()
+PeerManager::PeerManager() : m_peersModel(new PeersModel(this))
 {
-    connect(BroadcastManager::instance(), SIGNAL(gotAnnounce(Peer)), SLOT(addPeer(Peer)));
+
 }
 
 PeerManager::~PeerManager()
@@ -37,12 +33,7 @@ PeerManager::~PeerManager()
 
 }
 
-void PeerManager::addPeer (Peer peer)
+PeersModel* PeerManager::peersModel()
 {
-    if (!m_peers.contains(peer.ipAddress())) {
-        qDebug() << "Adding peer " << peer.name() << " on " << peer.ipAddress();
-        m_peers[peer.ipAddress()] = peer;
-    }
+    return m_peersModel;
 }
-
-#include "peermanager.moc"

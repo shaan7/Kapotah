@@ -38,7 +38,7 @@ Peer::~Peer()
 
 }
 
-QHostAddress Peer::ipAddress()
+QHostAddress Peer::ipAddress() const
 {
     return m_ipAddress;
 }
@@ -48,7 +48,7 @@ void Peer::setIpAddress (const QHostAddress& ipAddress)
     m_ipAddress = ipAddress;
 }
 
-QString Peer::name()
+QString Peer::name() const
 {
     return m_name;
 }

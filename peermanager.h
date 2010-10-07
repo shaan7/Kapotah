@@ -1,7 +1,6 @@
 /*
     This file is part of the Kapotah project.
     Copyright (C) 2009 Shantanu Tushar <jhahoneyk@gmail.com>
-    Copyright (C) 2009 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,26 +21,21 @@
 #define KAPOTAH_PEERMANAGER_H
 
 #include "singleton.h"
-#include "peer.h"
-
-#include <QHash>
+#include "peersmodel.h"
 
 namespace Kapotah
 {
 
     class PeerManager : public Singleton<PeerManager>
     {
-            Q_OBJECT
 
         public:
             PeerManager();
             virtual ~PeerManager();
-
-        public slots:
-            void addPeer(Peer peer);
+            PeersModel *peersModel();
 
         private:
-            QHash<QHostAddress, Peer> m_peers;
+            PeersModel *m_peersModel;
     };
 
 }

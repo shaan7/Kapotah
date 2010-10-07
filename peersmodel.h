@@ -1,7 +1,6 @@
 /*
     This file is part of the Kapotah project.
     Copyright (C) 2009 Shantanu Tushar <jhahoneyk@gmail.com>
-    Copyright (C) 2009 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,27 +16,36 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QApplication>
-#include <QDebug>
 
-#include "xmlparser.h"
-#include "broadcastmanager.h"
-#include "announcer.h"
-#include "messagedispatcher.h"
-#include "peermanager.h"
+#ifndef KAPOTAH_PEERSMODEL_H
+#define KAPOTAH_PEERSMODEL_H
 
-static const int s_messageServerPort = 45001;
-static const int s_fileServerPort = 45002;
+#include "peer.h"
 
-int main (int argc, char** argv)
+#include <QAbstractListModel>
+
+namespace Kapotah
 {
-    QApplication app (argc, argv);
 
-    Kapotah::BroadcastManager::instance();   //Start the broadcast engine
-    Kapotah::Announcer::instance()->setUserName(argv[1]); //Start the announcer
-    Kapotah::PeerManager::instance();
-    Kapotah::MessageDispatcher::instance()->messageDispatcherServer()->listen(QHostAddress::Any,
-        s_messageServerPort);
+    class PeersModel : public QAbstractListModel
+    {
+            Q_OBJECT
 
-    return app.exec();
+        public:
+            enum Roles { ipAddressRole = Qt::UserRole };
+            virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
+            virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
+            PeersModel (QObject* parent = 0);
+            virtual ~PeersModel();
+
+        private:
+            QHash<QHostAddress, Peer> m_peers;
+            QList<QHostAddress> m_peerList;
+
+        public slots:
+            void addNewPeer (Peer peer);
+    };
+
 }
+
+#endif // KAPOTAH_PEERSMODEL_H

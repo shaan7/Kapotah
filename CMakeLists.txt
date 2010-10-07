@@ -5,13 +5,14 @@ find_package(Qt4 REQUIRED)
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR})
 
 set(Kapotah_SRCS
+    peermanager.cpp
+    peersmodel.cpp
     messagesenderthread.cpp
     messagedispatcher.cpp
     messagedispatcherserver.cpp
     messagedispatcherthread.cpp
     announcer.cpp
     peer.cpp
-    peermanager.cpp
     xmlparser.cpp
     broadcastmanager.cpp
     tcpserver.cpp

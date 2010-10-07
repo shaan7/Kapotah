@@ -35,10 +35,10 @@ namespace Kapotah
             Peer(const QString &name, const QHostAddress &ipAddress);
             ~Peer();
 
-            QString name();
+            QString name() const;
             void setName (const QString &name);
 
-            QHostAddress ipAddress();
+            QHostAddress ipAddress() const;
             void setIpAddress (const QHostAddress &ipAddress);
 
         private:
