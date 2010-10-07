@@ -18,32 +18,32 @@
 */
 
 
-#ifndef KAPOTAH_PEERMANAGER_H
-#define KAPOTAH_PEERMANAGER_H
+#ifndef KAPOTAH_ANNOUNCER_H
+#define KAPOTAH_ANNOUNCER_H
 
 #include "singleton.h"
-#include "peer.h"
-
-#include <QHash>
 
 namespace Kapotah
 {
 
-    class PeerManager : public Singleton<PeerManager>
+    class Announcer : public Singleton<Announcer>
     {
             Q_OBJECT
 
         public:
-            PeerManager();
-            virtual ~PeerManager();
+            Announcer();
+            virtual ~Announcer();
+            QString username();
+            void setUserName(const QString &username);
 
-        public slots:
-            void addPeer(Peer peer);
+        protected:
+            virtual void timerEvent (QTimerEvent* t);
 
         private:
-            QHash<QHostAddress, Peer> m_peers;
+            int m_timerId;
+            QString m_username;
     };
 
 }
 
-#endif // KAPOTAH_PEERMANAGER_H
+#endif // KAPOTAH_ANNOUNCER_H

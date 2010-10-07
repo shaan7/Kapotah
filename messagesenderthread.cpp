@@ -1,37 +1,58 @@
-/***************************************************************************
- *   Copyright 2009 Shantanu Tushar <jhahoneyk@gmail.com>                  *
- *   Copyright 2009 Sudhendu Roy <sudhendu_roy@yahoo.co.in>                *
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
- *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
- *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
- ***************************************************************************/
+/*
+    This file is part of the Kapotah project.
+    Copyright (C) 2009 Shantanu Tushar <jhahoneyk@gmail.com>
+    Copyright (C) 2009 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #include "messagesenderthread.h"
 
-MessageSenderThread::MessageSenderThread(Pointers *ptr, QString text, PeerInfo destinationPeer, QObject *parent)
-        : QThread(parent), destination(destinationPeer), m_ptr(ptr), message(text)
-{
-}
+#include <QTcpSocket>
 
-void MessageSenderThread::run()
+static const int s_messageServerPort = 45001;
+
+MessageSenderThread::MessageSenderThread (QString message, QHostAddress peerAddress, QObject* parent)
+    : m_message(message), m_peerAddress(peerAddress), QThread (parent)
 {
-    sender = new MessageSender(m_ptr);
-    sender->sendMessage(message,destination);
+
 }
 
 MessageSenderThread::~MessageSenderThread()
 {
     wait();
 }
+
+void MessageSenderThread::run()
+{
+    QByteArray data;
+    QDataStream stream(&data, QIODevice::WriteOnly);
+    stream.setVersion(QDataStream::Qt_4_6);
+    stream << (quint64) m_message.toUtf8().size();
+    data.append(m_message.toUtf8());
+
+    QTcpSocket socket;
+    socket.abort();
+    socket.connectToHost(m_peerAddress, s_messageServerPort);
+    socket.waitForConnected();
+    socket.write(data);
+    socket.waitForBytesWritten();
+    socket.disconnectFromHost();
+    if (socket.state()!=QTcpSocket::UnconnectedState)
+        socket.waitForDisconnected();
+
+    deleteLater();
+}
+
+#include "messagesenderthread.moc"

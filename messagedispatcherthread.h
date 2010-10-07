@@ -18,32 +18,27 @@
 */
 
 
-#ifndef KAPOTAH_PEERMANAGER_H
-#define KAPOTAH_PEERMANAGER_H
+#ifndef MESSAGEDISPATCHERTHREAD_H
+#define MESSAGEDISPATCHERTHREAD_H
 
-#include "singleton.h"
-#include "peer.h"
+#include <QThread>
+#include <QHostAddress>
 
-#include <QHash>
-
-namespace Kapotah
+class MessageDispatcherThread : public QThread
 {
+    Q_OBJECT
 
-    class PeerManager : public Singleton<PeerManager>
-    {
-            Q_OBJECT
+    public:
+        explicit MessageDispatcherThread (int socketDescriptor, QObject* parent = 0);
+        virtual ~MessageDispatcherThread();
+        virtual void run();
 
-        public:
-            PeerManager();
-            virtual ~PeerManager();
+    private:
+        int m_descriptor;
+        bool m_doQuit;
 
-        public slots:
-            void addPeer(Peer peer);
+    signals:
+        void gotMessage (QString message, QHostAddress peerAddress);
+};
 
-        private:
-            QHash<QHostAddress, Peer> m_peers;
-    };
-
-}
-
-#endif // KAPOTAH_PEERMANAGER_H
+#endif // MESSAGEDISPATCHERTHREAD_H

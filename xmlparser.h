@@ -18,32 +18,41 @@
 */
 
 
-#ifndef KAPOTAH_PEERMANAGER_H
-#define KAPOTAH_PEERMANAGER_H
+#ifndef BROADCASTPARSER_H
+#define BROADCASTPARSER_H
 
-#include "singleton.h"
-#include "peer.h"
+#include <QXmlStreamReader>
 
-#include <QHash>
-
-namespace Kapotah
+class XmlParser
 {
 
-    class PeerManager : public Singleton<PeerManager>
-    {
-            Q_OBJECT
+    public:
+        enum Type { Error, Announce, Message };
+        XmlParser();
+        virtual ~XmlParser();
+        bool parseXml(QString &string);
+        QString composeXml();
 
-        public:
-            PeerManager();
-            virtual ~PeerManager();
+        Type type();
+        void setType(Type type);
 
-        public slots:
-            void addPeer(Peer peer);
+        QString senderName();
+        void setSenderName(QString name);
 
-        private:
-            QHash<QHostAddress, Peer> m_peers;
-    };
+        QString message();
+        void setMessage(QString message);
 
-}
+    private:
+        void parseAnnounceXml();
+        QString composeAnnounceXml();
 
-#endif // KAPOTAH_PEERMANAGER_H
+        void parseMessageXml();
+        QString composeMessageXml();
+
+        QXmlStreamReader *m_reader;
+        Type m_type;
+        QString m_senderName;
+        QString m_message;
+};
+
+#endif // BROADCASTPARSER_H

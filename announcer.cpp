@@ -1,7 +1,7 @@
 /*
     This file is part of the Kapotah project.
     Copyright (C) 2009 Shantanu Tushar <jhahoneyk@gmail.com>
-    Copyright (C) 2009 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
+    Copyright (C) 2009 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com> 
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,31 +18,46 @@
 */
 
 
-#include "peermanager.h"
+#include "announcer.h"
 #include "broadcastmanager.h"
 
-#include <QDebug>
+#include <QTimerEvent>
 
 using namespace Kapotah;
 
-template<> PeerManager *Kapotah::Singleton<PeerManager>::m_instance = 0;
+static const int s_broadcastInterval = 1000;
 
-PeerManager::PeerManager()
+template<> Announcer *Kapotah::Singleton<Announcer>::m_instance = 0;
+
+Announcer::Announcer()
 {
-    connect(BroadcastManager::instance(), SIGNAL(gotAnnounce(Peer)), SLOT(addPeer(Peer)));
+    m_timerId = startTimer (s_broadcastInterval);
 }
 
-PeerManager::~PeerManager()
+Announcer::~Announcer()
 {
 
 }
 
-void PeerManager::addPeer (Peer peer)
+QString Announcer::username()
 {
-    if (!m_peers.contains(peer.ipAddress())) {
-        qDebug() << "Adding peer " << peer.name() << " on " << peer.ipAddress();
-        m_peers[peer.ipAddress()] = peer;
+    return m_username;
+}
+
+void Announcer::setUserName (const QString& username)
+{
+    m_username = username;
+}
+
+void Announcer::timerEvent (QTimerEvent* t)
+{
+    if (t->timerId() == m_timerId) {
+        if (!m_username.isEmpty()) {
+            BroadcastManager::instance()->sendAnnounce(m_username);
+        }
     }
+
+    QObject::timerEvent(t);
 }
 
-#include "peermanager.moc"
+#include "announcer.moc"

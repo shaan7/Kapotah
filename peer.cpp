@@ -18,32 +18,42 @@
 */
 
 
-#ifndef KAPOTAH_PEERMANAGER_H
-#define KAPOTAH_PEERMANAGER_H
-
-#include "singleton.h"
 #include "peer.h"
 
-#include <QHash>
+using namespace Kapotah;
 
-namespace Kapotah
+Peer::Peer()
 {
-
-    class PeerManager : public Singleton<PeerManager>
-    {
-            Q_OBJECT
-
-        public:
-            PeerManager();
-            virtual ~PeerManager();
-
-        public slots:
-            void addPeer(Peer peer);
-
-        private:
-            QHash<QHostAddress, Peer> m_peers;
-    };
 
 }
 
-#endif // KAPOTAH_PEERMANAGER_H
+Peer::Peer (const QString& name, const QHostAddress& ipAddress)
+    : m_name(name), m_ipAddress(ipAddress)
+{
+
+}
+
+Peer::~Peer()
+{
+
+}
+
+QHostAddress Peer::ipAddress()
+{
+    return m_ipAddress;
+}
+
+void Peer::setIpAddress (const QHostAddress& ipAddress)
+{
+    m_ipAddress = ipAddress;
+}
+
+QString Peer::name()
+{
+    return m_name;
+}
+
+void Peer::setName (const QString& name)
+{
+    m_name = name;
+}

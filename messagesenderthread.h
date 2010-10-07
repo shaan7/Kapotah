@@ -1,46 +1,43 @@
-/***************************************************************************
- *   Copyright 2009 Shantanu Tushar <jhahoneyk@gmail.com>                  *
- *   Copyright 2009 Sudhendu Roy <sudhendu_roy@yahoo.co.in>                *
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
- *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
- *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
- ***************************************************************************/
+/*
+    This file is part of the Kapotah project.
+    Copyright (C) 2009 Shantanu Tushar <jhahoneyk@gmail.com>
+    Copyright (C) 2009 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 
 #ifndef MESSAGESENDERTHREAD_H
 #define MESSAGESENDERTHREAD_H
 
 #include <QThread>
-#include "peermanager.h"
-#include "fileserver.h"
-#include "pointers.h"
-#include "messagesender.h"
+#include <QHostAddress>
 
 class MessageSenderThread : public QThread
 {
     Q_OBJECT
-public:
-    MessageSenderThread( Pointers *ptr, QString text, PeerInfo destinationPeer, QObject *parent);
-    ~MessageSenderThread();
 
-    void run();
-private:
-    MessageSender *sender;
-    QString text;
-    PeerInfo destination;
-    Pointers *m_ptr;
-    QString message;
+    public:
+        explicit MessageSenderThread (QString message, QHostAddress peerAddress,
+                                      QObject* parent = 0);
+        virtual ~MessageSenderThread();
+        virtual void run();
+
+    private:
+        bool m_doQuit;
+        QString m_message;
+        QHostAddress m_peerAddress;
 };
 
 #endif // MESSAGESENDERTHREAD_H

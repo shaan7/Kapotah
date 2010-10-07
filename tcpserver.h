@@ -18,32 +18,18 @@
 */
 
 
-#ifndef KAPOTAH_PEERMANAGER_H
-#define KAPOTAH_PEERMANAGER_H
+#ifndef TCPSERVER_H
+#define TCPSERVER_H
 
-#include "singleton.h"
-#include "peer.h"
+#include <QtNetwork/QTcpServer>
 
-#include <QHash>
-
-namespace Kapotah
+class TcpServer : public QTcpServer
 {
+    Q_OBJECT
 
-    class PeerManager : public Singleton<PeerManager>
-    {
-            Q_OBJECT
+    public:
+        explicit TcpServer (QObject* parent = 0);
+        virtual ~TcpServer();
+};
 
-        public:
-            PeerManager();
-            virtual ~PeerManager();
-
-        public slots:
-            void addPeer(Peer peer);
-
-        private:
-            QHash<QHostAddress, Peer> m_peers;
-    };
-
-}
-
-#endif // KAPOTAH_PEERMANAGER_H
+#endif // TCPSERVER_H

@@ -18,32 +18,47 @@
 */
 
 
-#ifndef KAPOTAH_PEERMANAGER_H
-#define KAPOTAH_PEERMANAGER_H
+#ifndef KAPOTAH_BROADCASTMANAGER_H
+#define KAPOTAH_BROADCASTMANAGER_H
 
 #include "singleton.h"
 #include "peer.h"
 
-#include <QHash>
+#include <QObject>
+#include <QUdpSocket>
 
 namespace Kapotah
 {
 
-    class PeerManager : public Singleton<PeerManager>
+    class BroadcastManager : public Singleton<BroadcastManager>
     {
             Q_OBJECT
 
         public:
-            PeerManager();
-            virtual ~PeerManager();
+            BroadcastManager();
+            virtual ~BroadcastManager();
 
-        public slots:
-            void addPeer(Peer peer);
+        protected:
+            virtual void timerEvent (QTimerEvent*);
 
         private:
-            QHash<QHostAddress, Peer> m_peers;
+            void updateAddresses();
+
+            QList<QHostAddress> m_broadcastAddresses;
+            QList<QHostAddress> m_ipAddresses;
+            QUdpSocket m_broadcastSocket;
+            int m_timerId;
+
+        private slots:
+            void readBroadcast();
+
+        public slots:
+            void sendAnnounce (QString username);
+
+        signals:
+            void gotAnnounce (Peer peer);
     };
 
 }
 
-#endif // KAPOTAH_PEERMANAGER_H
+#endif // KAPOTAH_BROADCASTMANAGER_H
