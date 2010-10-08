@@ -18,41 +18,47 @@
 */
 
 
-#ifndef KAPOTAH_ANNOUNCER_H
-#define KAPOTAH_ANNOUNCER_H
+#ifndef KAPOTAH_UDPMANAGER_H
+#define KAPOTAH_UDPMANAGER_H
 
 #include "singleton.h"
 #include "peer.h"
 
-#include <QHostAddress>
+#include <QObject>
+#include <QUdpSocket>
 
 namespace Kapotah
 {
 
-    class Announcer : public Singleton<Announcer>
+    class UdpManager : public Singleton<UdpManager>
     {
             Q_OBJECT
 
         public:
-            Announcer();
-            virtual ~Announcer();
-            QString username();
-            void setUserName (const QString &username);
+            UdpManager();
+            virtual ~UdpManager();
 
         protected:
-            virtual void timerEvent (QTimerEvent* t);
+            virtual void timerEvent (QTimerEvent*);
 
         private:
+            void updateAddresses();
+
+            QList<QHostAddress> m_broadcastAddresses;
+            QList<QHostAddress> m_ipAddresses;
+            QUdpSocket m_broadcastSocket;
             int m_timerId;
-            QString m_username;
+
+        private slots:
+            void readBroadcast();
 
         public slots:
-            void processDatagram (const QByteArray &datagram, const QHostAddress &host, quint16 port);
+            void sendBroadcast (const QByteArray &datagram);
 
         signals:
-            void gotAnnounce (const Peer &peer);
+            void gotDatagram (const QByteArray &datagram, const QHostAddress &host, quint16 port);
     };
 
 }
 
-#endif // KAPOTAH_ANNOUNCER_H
+#endif // KAPOTAH_UDPMANAGER_H

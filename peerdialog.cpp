@@ -17,29 +17,19 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QApplication>
-#include <QDebug>
 
-#include "xmlparser.h"
-#include "udpmanager.h"
-#include "announcer.h"
-#include "messagedispatcher.h"
-#include "peermanager.h"
 #include "peerdialog.h"
+#include "peermanager.h"
 
-static const int s_messageServerPort = 45001;
-static const int s_fileServerPort = 45002;
-
-int main (int argc, char** argv)
+PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent)
 {
-    QApplication app (argc, argv);
-
-    Kapotah::UdpManager::instance();   //Start the broadcast engine
-    Kapotah::Announcer::instance()->setUserName(argv[1]); //Start the announcer
-    Kapotah::PeerManager::instance();
-    Kapotah::MessageDispatcher::instance()->messageDispatcherServer()->listen(QHostAddress::Any,
-        s_messageServerPort);
-    PeerDialog peerDialog;
-    peerDialog.show();
-    return app.exec();
+    ui.setupUi(this);
+    ui.peersListView->setModel(Kapotah::PeerManager::instance()->peersModel());
 }
+
+PeerDialog::~PeerDialog()
+{
+
+}
+
+#include "peerdialog.moc"

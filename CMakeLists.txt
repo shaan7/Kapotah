@@ -4,7 +4,11 @@ find_package(Qt4 REQUIRED)
 
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR})
 
+set (QT_USE_QTNETWORK TRUE)
+set (QT_USE_QTXML TRUE)
+
 set(Kapotah_SRCS
+    peerdialog.cpp
     peermanager.cpp
     peersmodel.cpp
     messagesenderthread.cpp
@@ -14,11 +18,15 @@ set(Kapotah_SRCS
     announcer.cpp
     peer.cpp
     xmlparser.cpp
-    broadcastmanager.cpp
+    udpmanager.cpp
     tcpserver.cpp
     main.cpp)
 
+SET(Kapotah_FORMS peerdialog.ui)
+
 qt4_automoc(${Kapotah_SRCS})
-add_executable(Kapotah ${Kapotah_SRCS})
+QT4_WRAP_UI(Kapotah_FORMS_HEADERS ${Kapotah_FORMS})
+
+add_executable(Kapotah ${Kapotah_SRCS} ${Kapotah_FORMS_HEADERS})
 target_link_libraries(Kapotah ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY}
                                 ${QT_QTXML_LIBRARY})

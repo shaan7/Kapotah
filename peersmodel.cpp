@@ -18,7 +18,7 @@
 
 
 #include "peersmodel.h"
-#include "broadcastmanager.h"
+#include "announcer.h"
 
 using namespace Kapotah;
 
@@ -47,7 +47,7 @@ int PeersModel::rowCount (const QModelIndex& parent) const
 
 PeersModel::PeersModel (QObject* parent) : QAbstractListModel (parent)
 {
-    connect (BroadcastManager::instance(), SIGNAL (gotAnnounce (Peer)), SLOT (addNewPeer (Peer)));
+    connect (Announcer::instance(), SIGNAL (gotAnnounce (Peer)), SLOT (addNewPeer (Peer)));
 }
 
 
