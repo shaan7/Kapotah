@@ -39,9 +39,14 @@ namespace Kapotah
         private:
             MessageDispatcherServer *m_messageDispatcherServer;
 
-        public slots:
+        private slots:
             void newMessage (QString message, QHostAddress peerAddress);
+
+        public slots:
             void sendNewMessage (QString message, QHostAddress peerAddress);
+
+        signals:
+            void gotNewMessage (QString message, QHostAddress peerAddress);
     };
 
 }

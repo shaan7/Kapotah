@@ -28,9 +28,9 @@ template<> MessageDispatcher *Kapotah::Singleton<MessageDispatcher>::m_instance 
 
 MessageDispatcher::MessageDispatcher()
 {
-    m_messageDispatcherServer = new MessageDispatcherServer(this);
-    connect(m_messageDispatcherServer, SIGNAL(gotMessage(QString,QHostAddress)),
-            SLOT(newMessage(QString,QHostAddress)));
+    m_messageDispatcherServer = new MessageDispatcherServer (this);
+    connect (m_messageDispatcherServer, SIGNAL (gotMessage (QString, QHostAddress)),
+             SLOT (newMessage (QString, QHostAddress)));
 }
 
 MessageDispatcher::~MessageDispatcher()
@@ -45,16 +45,17 @@ MessageDispatcherServer* MessageDispatcher::messageDispatcherServer()
 void MessageDispatcher::newMessage (QString message, QHostAddress peerAddress)
 {
     XmlParser parser;
-    parser.parseXml(message);
+    parser.parseXml (message);
+    emit gotNewMessage (message, peerAddress);
     qDebug() << "New Message from " << peerAddress.toString() << " reading " << parser.message();
 }
 
 void MessageDispatcher::sendNewMessage (QString message, QHostAddress peerAddress)
 {
     XmlParser parser;
-    parser.setMessage(message);
-    parser.setType(XmlParser::Message);
-    MessageSenderThread *thread = new MessageSenderThread(parser.composeXml(), peerAddress, this);
+    parser.setMessage (message);
+    parser.setType (XmlParser::Message);
+    MessageSenderThread *thread = new MessageSenderThread (parser.composeXml(), peerAddress, this);
     thread->start();
 }
 
