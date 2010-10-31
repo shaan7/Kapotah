@@ -19,7 +19,7 @@
 
 
 #include "peerdialog.h"
-#include "peermanager.h"
+#include "../peermanager.h"
 
 PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent)
 {

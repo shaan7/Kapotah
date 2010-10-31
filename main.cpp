@@ -25,7 +25,7 @@
 #include "announcer.h"
 #include "messagedispatcher.h"
 #include "peermanager.h"
-#include "peerdialog.h"
+#include "ui/peerdialog.h"
 
 static const int s_messageServerPort = 45001;
 static const int s_fileServerPort = 45002;

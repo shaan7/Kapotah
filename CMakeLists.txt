@@ -27,7 +27,7 @@ set(Kapotah_SRCS
     tcpserver.cpp
     main.cpp)
 
-SET(Kapotah_FORMS peerdialog.ui)
+SET(Kapotah_FORMS ui/peerdialog.ui)
 
 qt4_automoc(${Kapotah_SRCS})
 QT4_WRAP_UI(Kapotah_FORMS_HEADERS ${Kapotah_FORMS})
