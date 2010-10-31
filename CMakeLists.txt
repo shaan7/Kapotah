@@ -13,7 +13,7 @@ set(Kapotah_SRCS
     incomingtransferthread.cpp
     transferthread.cpp
     transfer.cpp
-    peerdialog.cpp
+    ui/peerdialog.cpp
     peermanager.cpp
     peersmodel.cpp
     messagesenderthread.cpp
