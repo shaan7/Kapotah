@@ -19,10 +19,12 @@
 
 #include "transfer.h"
 #include "incomingtransferthread.h"
+#include "outgoingtransferthread.h"
 
 using namespace Kapotah;
 
-Transfer::Transfer (QObject* parent) : QObject (parent), m_thread (0)
+Transfer::Transfer (Transfer::TransferType type, QList< TransferFile > files, QHostAddress peer, QObject* parent)
+    : QObject (parent), m_type(type), m_files(files), m_peerAddress(peer), m_thread (0)
 {
 }
 
@@ -41,9 +43,12 @@ void Transfer::startNextFile()
 {
     if (m_type == Incoming) {
         m_thread = new IncomingTransferThread (m_peerAddress, m_filesIterator->id, m_filesIterator->path, m_filesIterator->size, this);
-        connect (m_thread, SIGNAL (done (QString)), SLOT (currentFileFinished()));
-        m_thread->start();
+    } else if (m_type = Outgoing) {
+        m_thread = new OutgoingTransferThread (m_peerAddress, m_files, this);
     }
+
+    connect (m_thread, SIGNAL (done (QString)), SLOT (currentFileFinished()));
+    m_thread->start();
 }
 
 void Transfer::currentFileFinished()

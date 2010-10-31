@@ -39,7 +39,8 @@ namespace Kapotah
 
         public:
             enum TransferType { Incoming, Outgoing };
-            explicit Transfer (QObject* parent = 0);
+            explicit Transfer (TransferType type, QList<TransferFile> files, QHostAddress peer,
+                               QObject* parent = 0);
             virtual ~Transfer();
             void start();
 

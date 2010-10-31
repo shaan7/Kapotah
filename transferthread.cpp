@@ -19,8 +19,8 @@
 
 #include "transferthread.h"
 
-TransferThread::TransferThread (QHostAddress ip, QString id, QString filename, quint64 size, QObject* parent)
-    : QThread (parent), m_ip(ip), m_id(id), m_filename(filename), m_size(size)
+TransferThread::TransferThread (QHostAddress ip, QObject* parent)
+    : QThread (parent), m_ip(ip)
 {
 
 }

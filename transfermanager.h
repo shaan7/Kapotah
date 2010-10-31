@@ -17,30 +17,37 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TRANSFERTHREAD_H
-#define TRANSFERTHREAD_H
+#ifndef KAPOTAH_TRANSFERMANAGER_H
+#define KAPOTAH_TRANSFERMANAGER_H
 
-#include <QThread>
+#include "singleton.h"
+#include "transfer.h"
+
+#include <QList>
+#include <QHash>
 #include <QHostAddress>
 
-class TransferThread : public QThread
+namespace Kapotah
 {
-        Q_OBJECT
 
-    public:
-        explicit TransferThread (QHostAddress ip, QObject* parent = 0);
-        virtual ~TransferThread();
+    class TransferManager : public Singleton<TransferManager>
+    {
 
-    protected:
-        virtual void run() = 0;
-        QHostAddress m_ip;
+        public:
+            TransferManager();
+            virtual ~TransferManager();
+            Transfer *addTransfer(Transfer::TransferType type, QList<TransferFile> fileList, QHostAddress peer);
+            QString newId(QString path);
 
-    public slots:
-        virtual void stopTransfer() = 0;
+        private:
+            QList<Transfer*> m_transfersList;
+            QHash<QString, QString> m_paths;
 
-    signals:
-        void progress (QString id, quint64 done, quint64 total);
-        void done (QString id);
-};
+        /*signals:
+            void newTransferAdded (Transfer *transfer);
+            void transferFinished (Transfer *transfer);*/
+    };
 
-#endif // TRANSFERTHREAD_H
+}
+
+#endif // KAPOTAH_TRANSFERMANAGER_H

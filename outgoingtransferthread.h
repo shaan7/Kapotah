@@ -17,30 +17,38 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TRANSFERTHREAD_H
-#define TRANSFERTHREAD_H
+#ifndef OUTGOINGTRANSFERTHREAD_H
+#define OUTGOINGTRANSFERTHREAD_H
 
-#include <QThread>
-#include <QHostAddress>
+#include "transferthread.h"
+#include "transfer.h"
 
-class TransferThread : public QThread
+class OutgoingTransferThread : public TransferThread
 {
         Q_OBJECT
 
     public:
-        explicit TransferThread (QHostAddress ip, QObject* parent = 0);
-        virtual ~TransferThread();
+        explicit OutgoingTransferThread (QHostAddress ip, QList<Kapotah::TransferFile> files, QObject* parent = 0);
+        virtual ~OutgoingTransferThread();
 
     protected:
-        virtual void run() = 0;
-        QHostAddress m_ip;
+        virtual void run();
 
     public slots:
-        virtual void stopTransfer() = 0;
+        virtual void stopTransfer();
+
+    private:
+        QList<Kapotah::TransferFile> m_initialList;
+        QList<Kapotah::TransferFile> m_files;
+        bool doQuit;
+        QString m_parentDir;    //Stores the current parent dir while recursing
+
+        void addFilesInDir (QString path);
+        void addFileToList (QString fullPath, QString relativePath);
 
     signals:
-        void progress (QString id, quint64 done, quint64 total);
-        void done (QString id);
+        void preparingList();
+        void donePreparingList();
 };
 
-#endif // TRANSFERTHREAD_H
+#endif // OUTGOINGTRANSFERTHREAD_H

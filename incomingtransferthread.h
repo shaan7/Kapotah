@@ -40,6 +40,9 @@ class IncomingTransferThread : public TransferThread
 
     private:
         bool doQuit;
+        QString m_id;
+        QString m_filename;
+        quint64 m_size;
 };
 
 #endif // INCOMINGTRANSFERTHREAD_H

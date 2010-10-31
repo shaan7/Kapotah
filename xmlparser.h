@@ -21,7 +21,10 @@
 #ifndef BROADCASTPARSER_H
 #define BROADCASTPARSER_H
 
+#include "transfer.h"
+
 #include <QXmlStreamReader>
+#include <QList>
 
 class XmlParser
 {
@@ -42,6 +45,9 @@ class XmlParser
         QString message();
         void setMessage(QString message);
 
+        QList<Kapotah::TransferFile> files();
+        void setFiles(QList<Kapotah::TransferFile> files);
+
     private:
         void parseAnnounceXml();
         QString composeAnnounceXml();
@@ -49,10 +55,14 @@ class XmlParser
         void parseMessageXml();
         QString composeMessageXml();
 
+        void parseTransferXml();
+        QString composeTransferXml();
+
         QXmlStreamReader *m_reader;
         Type m_type;
         QString m_senderName;
         QString m_message;
+        QList<Kapotah::TransferFile> m_files;
 };
 
 #endif // BROADCASTPARSER_H

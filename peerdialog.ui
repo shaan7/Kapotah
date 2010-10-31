@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>PeersDialog</class>
  <widget class="QDialog" name="PeersDialog">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -12,6 +15,9 @@
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
+  </property>
+  <property name="layoutDirection">
+   <enum>Qt::RightToLeft</enum>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>

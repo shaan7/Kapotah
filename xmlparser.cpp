@@ -43,6 +43,9 @@ bool XmlParser::parseXml (QString &string)
             } else if (m_reader->name() == "message") {
                 parseMessageXml();
                 break;
+            } else if (m_reader->name() == "transfer") {
+                parseTransferXml();
+                break;
             } else {
                 m_reader->raiseError ("Not recognized");
                 return false;
@@ -98,6 +101,16 @@ void XmlParser::setMessage (QString message)
     m_message = message;
 }
 
+QList< Kapotah::TransferFile > XmlParser::files()
+{
+    return m_files;
+}
+
+void XmlParser::setFiles (QList< Kapotah::TransferFile > files)
+{
+    m_files = files;
+}
+
 void XmlParser::parseAnnounceXml()
 {
     m_senderName = m_reader->attributes().value ("senderName").toString();
@@ -112,6 +125,7 @@ QString XmlParser::composeAnnounceXml()
     writer.writeStartDocument();
     writer.writeStartElement ("announce");
     writer.writeAttribute ("senderName", m_senderName);
+    writer.writeEndElement();
     writer.writeEndDocument();
     return xml;
 }
@@ -129,6 +143,44 @@ QString XmlParser::composeMessageXml()
     writer.setAutoFormatting (true);
     writer.writeStartDocument();
     writer.writeTextElement ("message", m_message);
+    writer.writeEndDocument();
+    return xml;
+}
+
+void XmlParser::parseTransferXml()
+{
+    m_files.clear();
+
+    do {
+        m_reader->readNext();
+
+        if (m_reader->name() == "file") {
+            Kapotah::TransferFile file = { m_reader->attributes().value ("id").toString(),
+                                           m_reader->attributes().value ("path").toString(),
+                                           m_reader->attributes().value ("size").toString().toInt()
+                                         };
+            m_files.append (file);
+        }
+    } while (!m_reader->isEndElement());        //</transfer>
+}
+
+QString XmlParser::composeTransferXml()
+{
+    QString xml;
+    QXmlStreamWriter writer (&xml);
+    writer.setAutoFormatting (true);
+    writer.writeStartDocument();
+    writer.writeStartElement ("transfer");
+
+    foreach (Kapotah::TransferFile file, m_files) {
+        writer.writeStartElement ("file");
+        writer.writeAttribute ("id", file.id);
+        writer.writeAttribute ("path", file.path);
+        writer.writeAttribute ("size", QString::number (file.size));
+        writer.writeEndElement();
+    }
+
+    writer.writeEndElement();
     writer.writeEndDocument();
     return xml;
 }
