@@ -46,8 +46,13 @@ void MessageDispatcher::newMessage (QString message, QHostAddress peerAddress)
 {
     XmlParser parser;
     parser.parseXml (message);
-    emit gotNewMessage (message, peerAddress);
-    qDebug() << "New Message from " << peerAddress.toString() << " reading " << parser.message();
+
+    if (parser.type() == XmlParser::Message) {
+        emit gotNewMessage (message, peerAddress);
+        qDebug() << "New Message from " << peerAddress.toString() << " reading " << parser.message();
+    } else if (parser.type() == XmlParser::Transfer) {
+        gotNewTransfer(message, peerAddress);
+    }
 }
 
 void MessageDispatcher::sendNewMessage (QString message, QHostAddress peerAddress)

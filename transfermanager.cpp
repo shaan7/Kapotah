@@ -18,6 +18,7 @@
 */
 
 #include "transfermanager.h"
+#include "xmlparser.h"
 
 #include <QDateTime>
 
@@ -40,8 +41,8 @@ Transfer* TransferManager::addTransfer (Transfer::TransferType type, QList< Tran
 {
     Transfer *transfer = new Transfer(type, fileList, peer, this);
     m_transfersList.append(transfer);
-    connect (transfer, SIGNAL(done()), SLOT(transferFinished()));
-    //emit newTransferAdded(transfer);
+    connect (transfer, SIGNAL(done()), SIGNAL(transferFinished()));
+    emit newTransferAdded(transfer);
 }
 
 QString TransferManager::newId (QString path)
@@ -54,3 +55,11 @@ QString TransferManager::newId (QString path)
     return id;
 }
 
+void TransferManager::handleIncomingTransfer (QString transfer, QHostAddress peer)
+{
+    XmlParser parser;
+    parser.parseXml(transfer);
+    addTransfer(Transfer::Incoming, parser.files(), peer);
+}
+
+#include "transfermanager.moc"

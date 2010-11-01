@@ -32,20 +32,24 @@ namespace Kapotah
 
     class TransferManager : public Singleton<TransferManager>
     {
+            Q_OBJECT
 
         public:
             TransferManager();
             virtual ~TransferManager();
-            Transfer *addTransfer(Transfer::TransferType type, QList<TransferFile> fileList, QHostAddress peer);
-            QString newId(QString path);
+            Transfer *addTransfer (Transfer::TransferType type, QList<TransferFile> fileList, QHostAddress peer);
+            QString newId (QString path);
 
         private:
             QList<Transfer*> m_transfersList;
             QHash<QString, QString> m_paths;
 
-        /*signals:
+        private slots:
+            void handleIncomingTransfer (QString transfer, QHostAddress peer);
+
+        signals:
             void newTransferAdded (Transfer *transfer);
-            void transferFinished (Transfer *transfer);*/
+            void transferFinished (Transfer *transfer);
     };
 
 }

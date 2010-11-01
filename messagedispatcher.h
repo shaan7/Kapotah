@@ -47,6 +47,7 @@ namespace Kapotah
 
         signals:
             void gotNewMessage (QString message, QHostAddress peerAddress);
+            void gotNewTransfer (QString transfer, QHostAddress peerAddress); 
     };
 
 }
