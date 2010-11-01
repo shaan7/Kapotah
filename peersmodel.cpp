@@ -50,7 +50,6 @@ PeersModel::PeersModel (QObject* parent) : QAbstractListModel (parent)
     connect (Announcer::instance(), SIGNAL (gotAnnounce (Peer)), SLOT (addNewPeer (Peer)));
 }
 
-
 PeersModel::~PeersModel()
 {
 
