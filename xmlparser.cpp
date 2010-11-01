@@ -68,6 +68,12 @@ QString XmlParser::composeXml()
 
     case Message:
         return composeMessageXml();
+
+    case Transfer:
+        return composeTransferXml();
+
+    default:
+        return QString();
     }
 }
 
@@ -150,18 +156,24 @@ QString XmlParser::composeMessageXml()
 void XmlParser::parseTransferXml()
 {
     m_files.clear();
+    m_reader->readNext();
 
-    do {
-        m_reader->readNext();
-
-        if (m_reader->name() == "file") {
-            Kapotah::TransferFile file = { m_reader->attributes().value ("id").toString(),
-                                           m_reader->attributes().value ("path").toString(),
-                                           m_reader->attributes().value ("size").toString().toInt()
-                                         };
-            m_files.append (file);
+    while (!m_reader->atEnd()) {
+        if (m_reader->isStartElement()) {
+            if (m_reader->name() == "file") {
+                Kapotah::TransferFile file = { m_reader->attributes().value ("id").toString(),
+                                               m_reader->attributes().value ("path").toString(),
+                                               m_reader->attributes().value ("size").toString().toInt()
+                                             };
+                m_files.append (file);
+            }
+        } else {
+            if (m_reader->name() == "transfer") {
+                return;
+            }
         }
-    } while (!m_reader->isEndElement());        //</transfer>
+        m_reader->readNext();
+    }
 }
 
 QString XmlParser::composeTransferXml()

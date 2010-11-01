@@ -30,7 +30,7 @@ class XmlParser
 {
 
     public:
-        enum Type { Error, Announce, Message };
+        enum Type { Error, Announce, Message, Transfer };
         XmlParser();
         virtual ~XmlParser();
         bool parseXml(QString &string);
