@@ -47,7 +47,7 @@ void Transfer::startNextFile()
 {
     if (m_type == Incoming) {
         m_thread = new IncomingTransferThread (m_peerAddress, m_filesIterator->id, m_filesIterator->path, m_filesIterator->size, this);
-    } else if (m_type = Outgoing) {
+    } else if (m_type == Outgoing) {
         m_thread = new OutgoingTransferThread (m_peerAddress, m_files, this);
     }
 
