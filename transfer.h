@@ -54,6 +54,7 @@ namespace Kapotah
             quint64 m_numFiles;
             QList<TransferFile> m_files;
             TransferFile m_currentFile;
+            QString m_destinationDir;
 
             TransferThread *m_thread;
 
@@ -61,8 +62,10 @@ namespace Kapotah
             void startNextFile();
             void currentFileFinished();
             void reportProgress(quint64 done, quint64 size);
+            void setDestinationDir(QString path);
 
         signals:
+            void needDestinationDir();
             void progress(quint64 done, quint64 total);
             void done();
     };

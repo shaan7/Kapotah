@@ -35,8 +35,12 @@ Transfer::~Transfer()
 
 void Transfer::start()
 {
-    m_filesIterator = m_files.begin();
-    startNextFile();
+    if (m_destinationDir.isEmpty()) {
+        emit needDestinationDir();
+    } else {
+        m_filesIterator = m_files.begin();
+        startNextFile();
+    }
 }
 
 void Transfer::startNextFile()
@@ -68,5 +72,9 @@ void Transfer::reportProgress (quint64 done, quint64 size)
     emit (done, size);
 }
 
+void Transfer::setDestinationDir (QString path)
+{
+    m_destinationDir = path;
+}
 
 #include "transfer.moc"
