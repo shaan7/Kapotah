@@ -19,12 +19,20 @@
 
 
 #include "peerdialog.h"
-#include "../peermanager.h"
 
 PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent)
 {
     ui.setupUi(this);
+    setWindowTitle("Kapotah");
     ui.peersListView->setModel(Kapotah::PeerManager::instance()->peersModel());
+    connect (ui.peersListView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(createChatWindow(QModelIndex)));
+}
+
+ChatDialog* PeerDialog::createChatWindow(QModelIndex index)
+{
+    Kapotah::PeersModel *model = Kapotah::PeerManager::instance()->peersModel();
+    ChatDialog *chatDlg = new ChatDialog(model->data(index, Kapotah::PeersModel::ipAddressRole).toString());
+    chatDlg->show();
 }
 
 PeerDialog::~PeerDialog()

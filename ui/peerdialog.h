@@ -22,6 +22,8 @@
 #define PEERDIALOG_H
 
 #include "ui_peerdialog.h"
+#include "chatdialog.h"
+#include "../peermanager.h"
 #include <QDialog>
 
 class PeerDialog : public QDialog
@@ -34,6 +36,11 @@ class PeerDialog : public QDialog
 
     private:
         Ui::PeersDialog ui;
+        QHash<QString,ChatDialog*> openChatDialogs;
+    
+    private slots:
+        ChatDialog* createChatWindow(QModelIndex index);
+     
 };
 
 #endif // PEERDIALOG_H

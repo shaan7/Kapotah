@@ -8,6 +8,7 @@ set (QT_USE_QTNETWORK TRUE)
 set (QT_USE_QTXML TRUE)
 
 set(Kapotah_SRCS
+    ui/chatdialog.cpp
     transfermanager.cpp
     outgoingtransferthread.cpp
     incomingtransferthread.cpp
@@ -27,7 +28,7 @@ set(Kapotah_SRCS
     tcpserver.cpp
     main.cpp)
 
-SET(Kapotah_FORMS ui/peerdialog.ui)
+SET(Kapotah_FORMS ui/peerdialog.ui ui/chatdialog.ui)
 
 qt4_automoc(${Kapotah_SRCS})
 QT4_WRAP_UI(Kapotah_FORMS_HEADERS ${Kapotah_FORMS})
