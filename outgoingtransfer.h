@@ -17,30 +17,35 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TRANSFERTHREAD_H
-#define TRANSFERTHREAD_H
+#ifndef KAPOTAH_OUTGOINGTRANSFER_H
+#define KAPOTAH_OUTGOINGTRANSFER_H
 
-#include <QThread>
-#include <QHostAddress>
+#include "transfer.h"
 
-class TransferThread : public QThread
+namespace Kapotah
 {
-        Q_OBJECT
 
-    public:
-        explicit TransferThread (QHostAddress ip, QObject* parent = 0);
-        virtual ~TransferThread();
+    class OutgoingTransfer : public Transfer
+    {
+            Q_OBJECT
 
-    protected:
-        virtual void run() = 0;
-        QHostAddress m_ip;
+        public:
+            enum State { Stopped, GeneratingFileList, SendingFileList, FileListSent, Sending, Done };
+            explicit OutgoingTransfer (QList< TransferFile > files, QHostAddress peer,
+                                       QObject* parent = 0);
+            virtual ~OutgoingTransfer();
+            virtual void start();
+            virtual TransferType type();
 
-    public slots:
-        virtual void stopTransfer() = 0;
+        private:
+            State m_state;
 
-    signals:
-        void progress (quint64 done, quint64 total);
-        void done ();
-};
+        private slots:
+            void onThreadStartPreparingList();
+            void onThreadStartSendingList();
+            void onThreadDoneSendingList();
+    };
 
-#endif // TRANSFERTHREAD_H
+}
+
+#endif // KAPOTAH_OUTGOINGTRANSFER_H

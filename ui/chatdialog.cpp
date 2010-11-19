@@ -25,9 +25,9 @@ ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent,
 {
     ui.setupUi(this);
     m_ipAddress=ipAddress;
-    connect (MessageDispatcher, SIGNAL(gotNewMessage()), this, SLOT(displayRecievingMessage());
-    connect (ui.sendMessage, SIGNAL(pressed()), this, SLOT(sendNewMessage()));
-    connect (ui.sendMessage, SIGNAL(pressed()), this, SLOT(displaySendingMessage()));
+    connect (Kapotah::MessageDispatcher::instance(), SIGNAL(gotNewMessage()), this, SLOT(displayRecievingMessage()));
+    connect (ui.sendMessage, SIGNAL(pressed()), SLOT(sendNewMessage()));
+    connect (ui.sendMessage, SIGNAL(pressed()), SLOT(displaySendingMessage()));
 }
 
 //void ChatDialog::displaySenderMessage()

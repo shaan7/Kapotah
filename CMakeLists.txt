@@ -9,6 +9,8 @@ set (QT_USE_QTXML TRUE)
 
 set(Kapotah_SRCS
     ui/chatdialog.cpp
+    outgoingtransfer.cpp
+    incomingtransfer.cpp
     transfermanager.cpp
     outgoingtransferthread.cpp
     incomingtransferthread.cpp

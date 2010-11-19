@@ -17,22 +17,40 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef KAPOTAH_INCOMINGTRANSFER_H
+#define KAPOTAH_INCOMINGTRANSFER_H
+
 #include "transfer.h"
-#include "incomingtransferthread.h"
-#include "outgoingtransferthread.h"
 
-using namespace Kapotah;
+#include <QString>
 
-Transfer::Transfer (QList< TransferFile > files, QHostAddress peer, QObject* parent)
-        : QObject (parent), m_sizeDone (0), m_filesDone (0), m_files (files), m_peerAddress (peer),
-        m_thread (0), m_state (Waiting)
+namespace Kapotah
 {
+
+    class IncomingTransfer : public Transfer
+    {
+            Q_OBJECT
+
+        public:
+            explicit IncomingTransfer (QList< TransferFile > files, QHostAddress peer,
+                                       QObject* parent = 0);
+            virtual ~IncomingTransfer();
+            virtual void start();
+            virtual TransferType type();
+
+        private:
+            QString m_destinationDir;
+
+        protected slots:
+            void startNextFile();
+            void currentFileFinished();
+            void reportProgress (quint64 done, quint64 size);
+            void setDestinationDir (QString path);
+
+        signals:
+            void needDestinationDir();
+    };
 
 }
 
-Transfer::~Transfer()
-{
-
-}
-
-#include "transfer.moc"
+#endif // KAPOTAH_INCOMINGTRANSFER_H
