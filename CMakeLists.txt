@@ -27,7 +27,7 @@ set(Kapotah_SRCS
     peer.cpp
     xmlparser.cpp
     udpmanager.cpp
-    tcpserver.cpp
+    fileserver.cpp
     main.cpp)
 
 SET(Kapotah_FORMS ui/peerdialog.ui ui/chatdialog.ui)
