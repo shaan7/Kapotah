@@ -25,11 +25,17 @@
 
 class FileServer : public QTcpServer
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         explicit FileServer (QObject* parent = 0);
         virtual ~FileServer();
+
+    protected:
+        virtual void incomingConnection (int handle);
+
+    signals:
+        void fileRequested (QString id);
 };
 
 #endif // FILESERVER_H

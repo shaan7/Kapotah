@@ -1,7 +1,7 @@
 /*
     This file is part of the Kapotah project.
-    Copyright (C) 2009 Shantanu Tushar <jhahoneyk@gmail.com>
-    Copyright (C) 2009 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
+    Copyright (C) 2010 Shantanu Tushar <jhahoneyk@gmail.com>
+    Copyright (C) 2010 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,17 +17,22 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef FILESERVERTHREAD_H
+#define FILESERVERTHREAD_H
 
-#include "tcpserver.h"
+#include <qthread.h>
 
-TcpServer::TcpServer (QObject* parent) : QTcpServer (parent)
+
+class FileServerThread : public QThread
 {
+        Q_OBJECT
 
-}
+    protected:
+        virtual void run();
 
-TcpServer::~TcpServer()
-{
+    public:
+        FileServerThread();
+        virtual ~FileServerThread();
+};
 
-}
-
-#include "tcpserver.moc"
+#endif // FILESERVERTHREAD_H

@@ -25,6 +25,11 @@ FileServer::FileServer (QObject* parent) : QTcpServer (parent)
 
 }
 
+void FileServer::incomingConnection (int handle)
+{
+
+}
+
 FileServer::~FileServer()
 {
 
