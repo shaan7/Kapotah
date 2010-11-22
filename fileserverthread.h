@@ -31,8 +31,17 @@ class FileServerThread : public QThread
         virtual void run();
 
     public:
-        FileServerThread();
+        explicit FileServerThread (int socketDescriptor, QObject* parent = 0);
         virtual ~FileServerThread();
+
+    private:
+        int m_descriptor;
+        bool m_doQuit;
+
+    signals:
+        void startedTransfer (QString ID);
+        void finishedTransfer (QString ID);
+        void transferProgress (QString ID, quint64 percentDone);
 };
 
 #endif // FILESERVERTHREAD_H

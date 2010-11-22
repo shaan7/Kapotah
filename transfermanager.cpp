@@ -68,6 +68,11 @@ QString TransferManager::newId (QString path)
     return id;
 }
 
+QString TransferManager::pathForId (QString id)
+{
+    return m_paths[id];
+}
+
 void TransferManager::handleIncomingTransfer (QString transfer, QHostAddress peer)
 {
     XmlParser parser;
