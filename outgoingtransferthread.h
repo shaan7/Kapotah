@@ -47,8 +47,10 @@ class OutgoingTransferThread : public TransferThread
         void addFileToList (QString fullPath, QString relativePath);
 
     signals:
-        void preparingList();
+        void startPreparingList();
         void donePreparingList();
+        void startSendingList();
+        void doneSendingList();
 };
 
 #endif // OUTGOINGTRANSFERTHREAD_H

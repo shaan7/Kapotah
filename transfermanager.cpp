@@ -19,7 +19,9 @@
 
 #include "transfermanager.h"
 #include "xmlparser.h"
-
+#include "transfer.h"
+#include "incomingtransfer.h"
+#include "outgoingtransfer.h"
 #include <QDateTime>
 
 using namespace Kapotah;
@@ -39,27 +41,43 @@ TransferManager::~TransferManager()
 Transfer* TransferManager::addTransfer (Transfer::TransferType type, QList< TransferFile > fileList,
                                         QHostAddress peer)
 {
-    Transfer *transfer = new Transfer(type, fileList, peer, this);
-    m_transfersList.append(transfer);
-    connect (transfer, SIGNAL(done()), SIGNAL(transferFinished()));
-    emit newTransferAdded(transfer);
+    Transfer *transfer = 0;
+
+    if (type == Transfer::Incoming) {
+        transfer = new IncomingTransfer (fileList, peer, this);
+    } else if (type == Transfer::Outgoing) {
+        transfer = new OutgoingTransfer (fileList, peer, this);
+    }
+
+    m_transfersList.append (transfer);
+
+    connect (transfer, SIGNAL (done()), SIGNAL (transferFinished()));
+    emit newTransferAdded (transfer);
 }
 
 QString TransferManager::newId (QString path)
 {
-    QString id = QString::number(QDateTime::currentMSecsSinceEpoch());
-    if (m_paths.contains(id)) {
-        qFatal("THIS IS NASTY, I MEAN IT, STOP _NOW_");
+    QString id = QString::number (QDateTime::currentMSecsSinceEpoch());
+
+    if (m_paths.contains (id)) {
+        qFatal ("THIS IS NASTY, I MEAN IT, STOP _NOW_");
     }
+
     m_paths[id] = path;
+
     return id;
+}
+
+QString TransferManager::pathForId (QString id)
+{
+    return m_paths[id];
 }
 
 void TransferManager::handleIncomingTransfer (QString transfer, QHostAddress peer)
 {
     XmlParser parser;
-    parser.parseXml(transfer);
-    addTransfer(Transfer::Incoming, parser.files(), peer);
+    parser.parseXml (transfer);
+    addTransfer (Transfer::Incoming, parser.files(), peer);
 }
 
 #include "transfermanager.moc"

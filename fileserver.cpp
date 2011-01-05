@@ -18,18 +18,21 @@
 */
 
 
-#ifndef TCPSERVER_H
-#define TCPSERVER_H
+#include "fileserver.h"
 
-#include <QtNetwork/QTcpServer>
-
-class TcpServer : public QTcpServer
+FileServer::FileServer (QObject* parent) : QTcpServer (parent)
 {
-    Q_OBJECT
 
-    public:
-        explicit TcpServer (QObject* parent = 0);
-        virtual ~TcpServer();
-};
+}
 
-#endif // TCPSERVER_H
+void FileServer::incomingConnection (int handle)
+{
+
+}
+
+FileServer::~FileServer()
+{
+
+}
+
+#include "fileserver.moc"

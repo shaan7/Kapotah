@@ -48,7 +48,7 @@ void IncomingTransferThread::run()
     if (m_size == 0) {  //Create an empty file
         file.setFileName (m_filename);
         file.open (QIODevice::WriteOnly);
-        emit done (m_id);
+        emit done ();
         file.close();
         return;
     }
@@ -70,10 +70,10 @@ void IncomingTransferThread::run()
             file.write (socket.readAll());
             bytesCopied = file.pos();
 
-            emit progress (m_id, bytesCopied, m_size);
+            emit progress (bytesCopied, m_size);
 
             if (bytesCopied >= m_size) {
-                emit done (m_id);
+                emit done ();
                 file.close();
                 socket.disconnectFromHost();
 

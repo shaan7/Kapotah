@@ -8,7 +8,10 @@ set (QT_USE_QTNETWORK TRUE)
 set (QT_USE_QTXML TRUE)
 
 set(Kapotah_SRCS
+    fileserverthread.cpp
     ui/chatdialog.cpp
+    outgoingtransfer.cpp
+    incomingtransfer.cpp
     transfermanager.cpp
     outgoingtransferthread.cpp
     incomingtransferthread.cpp
@@ -25,7 +28,7 @@ set(Kapotah_SRCS
     peer.cpp
     xmlparser.cpp
     udpmanager.cpp
-    tcpserver.cpp
+    fileserver.cpp
     main.cpp)
 
 SET(Kapotah_FORMS ui/peerdialog.ui ui/chatdialog.ui)

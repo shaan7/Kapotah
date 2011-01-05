@@ -17,42 +17,40 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KAPOTAH_TRANSFERMANAGER_H
-#define KAPOTAH_TRANSFERMANAGER_H
+#ifndef KAPOTAH_INCOMINGTRANSFER_H
+#define KAPOTAH_INCOMINGTRANSFER_H
 
-#include "singleton.h"
 #include "transfer.h"
 
-#include <QList>
-#include <QHash>
-#include <QHostAddress>
+#include <QString>
 
 namespace Kapotah
 {
 
-    class TransferManager : public Singleton<TransferManager>
+    class IncomingTransfer : public Transfer
     {
             Q_OBJECT
 
         public:
-            TransferManager();
-            virtual ~TransferManager();
-            Transfer *addTransfer (Transfer::TransferType type, QList<TransferFile> fileList, QHostAddress peer);
-            QString newId (QString path);
-            QString pathForId (QString id);
+            explicit IncomingTransfer (QList< TransferFile > files, QHostAddress peer,
+                                       QObject* parent = 0);
+            virtual ~IncomingTransfer();
+            virtual void start();
+            virtual TransferType type();
 
         private:
-            QList<Transfer*> m_transfersList;
-            QHash<QString, QString> m_paths;
+            QString m_destinationDir;
 
-        private slots:
-            void handleIncomingTransfer (QString transfer, QHostAddress peer);
+        protected slots:
+            void startNextFile();
+            void currentFileFinished();
+            void reportProgress (quint64 done, quint64 size);
+            void setDestinationDir (QString path);
 
         signals:
-            void newTransferAdded (Transfer *transfer);
-            void transferFinished (Transfer *transfer);
+            void needDestinationDir();
     };
 
 }
 
-#endif // KAPOTAH_TRANSFERMANAGER_H
+#endif // KAPOTAH_INCOMINGTRANSFER_H

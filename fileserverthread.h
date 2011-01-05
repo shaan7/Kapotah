@@ -17,30 +17,31 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TRANSFERTHREAD_H
-#define TRANSFERTHREAD_H
+#ifndef FILESERVERTHREAD_H
+#define FILESERVERTHREAD_H
 
-#include <QThread>
-#include <QHostAddress>
+#include <qthread.h>
 
-class TransferThread : public QThread
+
+class FileServerThread : public QThread
 {
         Q_OBJECT
 
-    public:
-        explicit TransferThread (QHostAddress ip, QObject* parent = 0);
-        virtual ~TransferThread();
-
     protected:
-        virtual void run() = 0;
-        QHostAddress m_ip;
+        virtual void run();
 
-    public slots:
-        virtual void stopTransfer() = 0;
+    public:
+        explicit FileServerThread (int socketDescriptor, QObject* parent = 0);
+        virtual ~FileServerThread();
+
+    private:
+        int m_descriptor;
+        bool m_doQuit;
 
     signals:
-        void progress (quint64 done, quint64 total);
-        void done ();
+        void startedTransfer (QString ID);
+        void finishedTransfer (QString ID);
+        void transferProgress (QString ID, quint64 percentDone);
 };
 
-#endif // TRANSFERTHREAD_H
+#endif // FILESERVERTHREAD_H

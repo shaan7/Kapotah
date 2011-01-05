@@ -39,34 +39,28 @@ namespace Kapotah
 
         public:
             enum TransferType { Incoming, Outgoing };
-            explicit Transfer (TransferType type, QList<TransferFile> files, QHostAddress peer,
-                               QObject* parent = 0);
+            enum TransferState { Waiting, PreparingList, Connecting, Transferring, Done };
+            explicit Transfer (QList<TransferFile> files, QHostAddress peer, QObject* parent = 0);
             virtual ~Transfer();
-            void start();
+            virtual void start() = 0;
+            virtual TransferType type() = 0;
 
-        private:
-            QList<TransferFile>::iterator m_filesIterator;
-
+        protected:
             //Details about the transfer
             QHostAddress m_peerAddress;
             TransferType m_type;
+            TransferState m_state;
             quint64 m_totalSize;
             quint64 m_numFiles;
+            quint64 m_sizeDone;
+            quint64 m_filesDone;
             QList<TransferFile> m_files;
             TransferFile m_currentFile;
-            QString m_destinationDir;
-
             TransferThread *m_thread;
-
-        private  slots:
-            void startNextFile();
-            void currentFileFinished();
-            void reportProgress(quint64 done, quint64 size);
-            void setDestinationDir(QString path);
+            QList<TransferFile>::iterator m_filesIterator;
 
         signals:
-            void needDestinationDir();
-            void progress(quint64 done, quint64 total);
+            void progress (quint64 done, quint64 total);
             void done();
     };
 

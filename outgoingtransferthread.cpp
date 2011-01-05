@@ -20,6 +20,8 @@
 #include "outgoingtransferthread.h"
 
 #include "transfermanager.h"
+#include "messagedispatcher.h"
+#include "xmlparser.h"
 
 #include <QFileInfo>
 #include <QDir>
@@ -38,7 +40,7 @@ OutgoingTransferThread::~OutgoingTransferThread()
 
 void OutgoingTransferThread::run()
 {
-    emit preparingList();
+    emit startPreparingList();
     foreach (Kapotah::TransferFile file, m_initialList) {
         if (doQuit) {
             break;
@@ -53,6 +55,13 @@ void OutgoingTransferThread::run()
         }
     }
     emit donePreparingList();
+
+    emit startSendingList();
+    XmlParser parser;
+    parser.setType(XmlParser::Transfer);
+    parser.setFiles(m_files);
+    Kapotah::MessageDispatcher::instance()->sendNewMessage(parser.composeXml(), m_ip);
+    emit doneSendingList();
 }
 
 void OutgoingTransferThread::stopTransfer()

@@ -23,58 +23,16 @@
 
 using namespace Kapotah;
 
-Transfer::Transfer (Transfer::TransferType type, QList< TransferFile > files, QHostAddress peer, QObject* parent)
-    : QObject (parent), m_type(type), m_files(files), m_peerAddress(peer), m_thread (0)
+Transfer::Transfer (QList< TransferFile > files, QHostAddress peer, QObject* parent)
+        : QObject (parent), m_sizeDone (0), m_filesDone (0), m_files (files), m_peerAddress (peer),
+        m_thread (0), m_state (Waiting)
 {
+
 }
 
 Transfer::~Transfer()
 {
 
-}
-
-void Transfer::start()
-{
-    if (m_destinationDir.isEmpty()) {
-        emit needDestinationDir();
-    } else {
-        m_filesIterator = m_files.begin();
-        startNextFile();
-    }
-}
-
-void Transfer::startNextFile()
-{
-    if (m_type == Incoming) {
-        m_thread = new IncomingTransferThread (m_peerAddress, m_filesIterator->id, m_filesIterator->path, m_filesIterator->size, this);
-    } else if (m_type == Outgoing) {
-        m_thread = new OutgoingTransferThread (m_peerAddress, m_files, this);
-    }
-
-    connect (m_thread, SIGNAL (done (QString)), SLOT (currentFileFinished()));
-    m_thread->start();
-}
-
-void Transfer::currentFileFinished()
-{
-    m_thread->wait();
-    ++m_filesIterator;
-
-    if (m_filesIterator == m_files.end()) {
-        emit done();
-    } else {
-        startNextFile();
-    }
-}
-
-void Transfer::reportProgress (quint64 done, quint64 size)
-{
-    emit (done, size);
-}
-
-void Transfer::setDestinationDir (QString path)
-{
-    m_destinationDir = path;
 }
 
 #include "transfer.moc"
