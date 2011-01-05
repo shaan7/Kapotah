@@ -26,7 +26,7 @@ set(Kapotah_SRCS
     messagedispatcherthread.cpp
     announcer.cpp
     peer.cpp
-    xmlparser.cpp
+    xml/xmlparser.cpp
     udpmanager.cpp
     fileserver.cpp
     main.cpp)

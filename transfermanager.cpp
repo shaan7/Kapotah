@@ -18,7 +18,7 @@
 */
 
 #include "transfermanager.h"
-#include "xmlparser.h"
+#include "xml/xmlparser.h"
 #include "transfer.h"
 #include "incomingtransfer.h"
 #include "outgoingtransfer.h"

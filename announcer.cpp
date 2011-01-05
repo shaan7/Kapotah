@@ -19,10 +19,10 @@
 
 
 #include "announcer.h"
-#include "udpmanager.h"
+#include <udpmanager.h>
+#include <xml/xmlparser.h>
 
 #include <QTimerEvent>
-#include "xmlparser.h"
 
 using namespace Kapotah;
 

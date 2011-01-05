@@ -19,7 +19,7 @@
 
 
 #include "messagedispatcher.h"
-#include "xmlparser.h"
+#include "xml/xmlparser.h"
 #include "messagesenderthread.h"
 
 using namespace Kapotah;

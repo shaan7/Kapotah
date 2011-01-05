@@ -19,7 +19,7 @@
 
 #include <QApplication>
 #include <QDebug>
-#include "xmlparser.h"
+#include "xml/xmlparser.h"
 #include "udpmanager.h"
 #include "announcer.h"
 #include "messagedispatcher.h"

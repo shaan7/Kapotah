@@ -21,7 +21,7 @@
 
 #include "transfermanager.h"
 #include "messagedispatcher.h"
-#include "xmlparser.h"
+#include "xml/xmlparser.h"
 
 #include <QFileInfo>
 #include <QDir>
