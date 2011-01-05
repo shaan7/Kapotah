@@ -22,12 +22,15 @@
 #define CHATDIALOG_H
 
 #include "ui_chatdialog.h"
+#include "../messagedispatcher.h"
+
 #include <QDialog>
 #include <QPersistentModelIndex>
 
 
 class ChatDialog : public QDialog
 {
+    Q_OBJECT
 
     public:
         explicit ChatDialog (const QPersistentModelIndex &ipAddress, QWidget *parent = 0, Qt::WindowFlags f = 0);
@@ -36,6 +39,11 @@ class ChatDialog : public QDialog
     private:
         Ui::ChatDialog ui;
     QPersistentModelIndex m_ipAddress;
+    
+    private slots:
+        void displayRecievingMessage(QString message, QHostAddress peerAddress);
+        void displaySendingMessage();
+        void sendNewMessage();
 };
 
 #endif // CHATDIALOG_H

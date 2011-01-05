@@ -2,7 +2,7 @@ project(Kapotah)
 cmake_minimum_required(VERSION 2.6)
 find_package(Qt4 REQUIRED)
 
-include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
 
 set (QT_USE_QTNETWORK TRUE)
 set (QT_USE_QTXML TRUE)

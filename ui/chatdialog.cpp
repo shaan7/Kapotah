@@ -19,21 +19,40 @@
 
 
 #include "chatdialog.h"
-#include "../messagedispatcher.h"
+#include <peermanager.h>
+
+using namespace Kapotah;
 
 ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent, Qt::WindowFlags f) : QDialog (parent,f)
 {
     ui.setupUi(this);
     m_ipAddress=ipAddress;
-    connect (MessageDispatcher, SIGNAL(gotNewMessage()), this, SLOT(displayRecievingMessage());
+    connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)), this,
+             SLOT(displayRecievingMessage(QString, QHostAddress)));
     connect (ui.sendMessage, SIGNAL(pressed()), this, SLOT(sendNewMessage()));
     connect (ui.sendMessage, SIGNAL(pressed()), this, SLOT(displaySendingMessage()));
+    connect (ui.sendMessage, SIGNAL(pressed()), ui.messageEdit, SLOT(clear()));
 }
 
-//void ChatDialog::displaySenderMessage()
+void ChatDialog::displayRecievingMessage(QString message, QHostAddress peerAddress)
+{
+    ui.messageDisplay->appendPlainText(peerAddress.toString()+"::"+message);
+}
+
+void ChatDialog::displaySendingMessage()
+{
+    ui.messageDisplay->appendPlainText("ME :: "+ ui.messageEdit->toPlainText());
+}
+
+void ChatDialog::sendNewMessage()
+{
+    QHostAddress address(PeerManager::instance()->peersModel()->data(m_ipAddress, PeersModel::ipAddressRole).toString());
+    Kapotah::MessageDispatcher::instance()->sendNewMessage(ui.messageEdit->toPlainText(),address);
+}
 
 ChatDialog::~ChatDialog()
 {
 
 }
 
+#include "chatdialog.moc"
