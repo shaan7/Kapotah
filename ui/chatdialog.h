@@ -38,7 +38,7 @@ class ChatDialog : public QDialog
     
     private:
         Ui::ChatDialog ui;
-    QPersistentModelIndex m_ipAddress;
+        QPersistentModelIndex m_ipAddress;
     
     private slots:
         void displayRecievingMessage(QString message, QHostAddress peerAddress);
