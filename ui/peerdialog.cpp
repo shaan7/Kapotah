@@ -31,8 +31,12 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent)
 ChatDialog* PeerDialog::createChatWindow(QModelIndex index)
 {
     Kapotah::PeersModel *model = Kapotah::PeerManager::instance()->peersModel();
-    ChatDialog *chatDlg = new ChatDialog(index);
-    chatDlg->show();
+    if(!openChatDialogs.contains(model->data(index, Kapotah::PeersModel::ipAddressRole).toString()))
+    {
+        ChatDialog *chatDlg = new ChatDialog(index);
+        chatDlg->show();
+        openChatDialogs.insert(model->data(index, Kapotah::PeersModel::ipAddressRole).toString(), chatDlg);
+    }
 }
 
 PeerDialog::~PeerDialog()
