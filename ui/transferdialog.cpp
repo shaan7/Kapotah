@@ -26,6 +26,7 @@ using namespace Kapotah;
 
 TransferDialog::TransferDialog (QWidget* parent, Qt::WindowFlags f) : QDialog (parent, f)
 {
+    setWindowTitle("Transfers");
     m_layout = new QHBoxLayout();
     setLayout (m_layout);
     connect (TransferManager::instance(), SIGNAL (newTransferAdded (Transfer*)),
