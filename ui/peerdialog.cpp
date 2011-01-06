@@ -43,6 +43,7 @@ ChatDialog* PeerDialog::createChatDialog(QModelIndex index)
         ChatDialog *chatDlg = new ChatDialog(index);
         chatDlg->show();
         m_openChatDialogs.insert(model->data(index, PeersModel::ipAddressRole).toString(), chatDlg);
+        return chatDlg;
     }
 }
 
@@ -52,7 +53,7 @@ ChatDialog* PeerDialog::createChatDialogOnMessage(QString message, QHostAddress 
         return m_openChatDialogs[peerAddress.toString()];
 
     PeersModel *model = PeerManager::instance()->peersModel();
-    
+
     QModelIndexList list = model->match(model->index(0), PeersModel::ipAddressRole, peerAddress.toString());
     qDebug() << "0" << list.at(0).row();
     if (list.count() == 0) {
