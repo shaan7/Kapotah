@@ -39,7 +39,6 @@ ChatDialog* PeerDialog::createChatDialog(QModelIndex index)
     PeersModel *model = PeerManager::instance()->peersModel();
     if(!m_openChatDialogs.contains(model->data(index, PeersModel::ipAddressRole).toString()))
     {
-        qDebug() << "2" << index.row();
         ChatDialog *chatDlg = new ChatDialog(index);
         chatDlg->show();
         m_openChatDialogs.insert(model->data(index, PeersModel::ipAddressRole).toString(), chatDlg);
@@ -53,13 +52,11 @@ ChatDialog* PeerDialog::createChatDialogOnMessage(QString message, QHostAddress 
         return m_openChatDialogs[peerAddress.toString()];
 
     PeersModel *model = PeerManager::instance()->peersModel();
-
     QModelIndexList list = model->match(model->index(0), PeersModel::ipAddressRole, peerAddress.toString());
-    qDebug() << "0" << list.at(0).row();
+
     if (list.count() == 0) {
         qDebug() << "NOOOO! someone sent message after being offline, huh?";
     } else {
-        qDebug() << "1" << list.at(0).row();
         createChatDialog(list.at(0))->displayRecievedMessage(message, peerAddress);
     }
 }
