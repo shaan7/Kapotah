@@ -8,9 +8,8 @@ set (QT_USE_QTNETWORK TRUE)
 set (QT_USE_QTXML TRUE)
 
 set(Kapotah_SRCS
+    xml/transferxmlparser.cpp
     xml/announcexmlparser.cpp
-
-
     fileserverthread.cpp
     ui/chatdialog.cpp
     outgoingtransfer.cpp
