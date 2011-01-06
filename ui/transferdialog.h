@@ -1,7 +1,7 @@
 /*
     This file is part of the Kapotah project.
-    Copyright (C) 2009 Shantanu Tushar <jhahoneyk@gmail.com>
-    Copyright (C) 2009 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
+    Copyright (C) 2011 Shantanu Tushar <jhahoneyk@gmail.com>
+    Copyright (C) 2011 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,33 +17,32 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef TRANSFERDIALOG_H
+#define TRANSFERDIALOG_H
 
-#ifndef PEERDIALOG_H
-#define PEERDIALOG_H
-
-#include "ui_peerdialog.h"
-#include "chatdialog.h"
-#include "transferdialog.h"
-#include <peermanager.h>
 #include <QDialog>
 
-class PeerDialog : public QDialog
+class QHBoxLayout;
+
+namespace Kapotah
+{
+
+    class Transfer;
+}
+
+class TransferDialog : public QDialog
 {
         Q_OBJECT
 
     public:
-        PeerDialog (QDialog* parent = 0);
-        virtual ~PeerDialog();
+        explicit TransferDialog (QWidget* parent = 0, Qt::WindowFlags f = 0);
+        virtual ~TransferDialog();
+
+    public slots:
+        void addTransfer (Kapotah::Transfer *transfer);
 
     private:
-        Ui::PeersDialog ui;
-        QHash<QString,ChatDialog*> m_openChatDialogs;
-        TransferDialog *m_transferDialog;    
-        
-    private slots:
-        ChatDialog* createChatDialog(QModelIndex index);
-        ChatDialog* createChatDialogOnMessage(QString message, QHostAddress peerAddress);
-        void showTransferDialog(bool checked);
+        QHBoxLayout *m_layout;
 };
 
-#endif // PEERDIALOG_H
+#endif // TRANSFERDIALOG_H

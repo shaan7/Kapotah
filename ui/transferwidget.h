@@ -1,7 +1,7 @@
 /*
     This file is part of the Kapotah project.
-    Copyright (C) 2010 Shantanu Tushar <jhahoneyk@gmail.com>
-    Copyright (C) 2010 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
+    Copyright (C) 2011 Shantanu Tushar <jhahoneyk@gmail.com>
+    Copyright (C) 2011 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,27 +17,37 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef TRANSFERWIDGET_H
+#define TRANSFERWIDGET_H
+
+#include <QWidget>
+
 #include "transfer.h"
-#include "incomingtransferthread.h"
-#include "outgoingtransferthread.h"
 
-using namespace Kapotah;
+class QVBoxLayout;
 
-Transfer::Transfer (QList< TransferFile > files, QHostAddress peer, QObject* parent)
-        : QObject (parent), m_sizeDone (0), m_filesDone (0), m_files (files), m_peerAddress (peer),
-        m_thread (0), m_state (Waiting)
+class QHBoxLayout;
+
+class QLabel;
+
+class QProgressBar;
+
+class QToolButton;
+
+class TransferWidget : public QWidget
 {
+        Q_OBJECT
 
-}
+    public:
+        explicit TransferWidget (Kapotah::Transfer* transfer, QWidget* parent = 0, Qt::WindowFlags f = 0);
+        virtual ~TransferWidget();
 
-Transfer::~Transfer()
-{
+    private:
+        QLabel *m_peerLabel;
+        QProgressBar *m_progress;
+        QToolButton *m_startStop;
+        QVBoxLayout *m_verticalLayout;
+        QHBoxLayout *m_horizontalLayout;
+};
 
-}
-
-QHostAddress Transfer::peerAddress()
-{
-    return m_peerAddress;
-}
-
-#include "transfer.moc"
+#endif // TRANSFERWIDGET_H

@@ -11,8 +11,12 @@ set(Kapotah_SRCS
     xml/transferxmlparser.cpp
     xml/announcexmlparser.cpp
     xml/messagexmlparser.cpp
-    fileserverthread.cpp
+    xml/xmlparser.cpp
+    ui/peerdialog.cpp
     ui/chatdialog.cpp
+    ui/transferdialog.cpp
+    ui/transferwidget.cpp
+    fileserverthread.cpp
     outgoingtransfer.cpp
     incomingtransfer.cpp
     transfermanager.cpp
@@ -20,7 +24,6 @@ set(Kapotah_SRCS
     incomingtransferthread.cpp
     transferthread.cpp
     transfer.cpp
-    ui/peerdialog.cpp
     peermanager.cpp
     peersmodel.cpp
     messagesenderthread.cpp
@@ -29,7 +32,6 @@ set(Kapotah_SRCS
     messagedispatcherthread.cpp
     announcer.cpp
     peer.cpp
-    xml/xmlparser.cpp
     udpmanager.cpp
     fileserver.cpp
     main.cpp)

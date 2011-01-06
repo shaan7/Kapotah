@@ -23,7 +23,7 @@
 
 using namespace Kapotah;
 
-PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent)
+PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(0)
 {
     ui.setupUi(this);
     setWindowTitle("Kapotah");
@@ -31,6 +31,7 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent)
     connect (ui.peersListView, SIGNAL(doubleClicked(QModelIndex)), SLOT(createChatDialog(QModelIndex)));
     connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)),
              SLOT(createChatDialogOnMessage(QString,QHostAddress)));
+    connect(ui.transferButton, SIGNAL(clicked(bool)), SLOT(showTransferDialog(bool)));
 }
 
 ChatDialog* PeerDialog::createChatDialog(QModelIndex index)
@@ -60,6 +61,14 @@ ChatDialog* PeerDialog::createChatDialogOnMessage(QString message, QHostAddress 
         qDebug() << "1" << list.at(0).row();
         createChatDialog(list.at(0))->displayRecievedMessage(message, peerAddress);
     }
+}
+
+void PeerDialog::showTransferDialog (bool checked)
+{
+    if (!m_transferDialog) {
+        m_transferDialog = new TransferDialog(this);
+    }
+    m_transferDialog->show();
 }
 
 PeerDialog::~PeerDialog()
