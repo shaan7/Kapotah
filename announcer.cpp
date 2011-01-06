@@ -20,7 +20,7 @@
 
 #include "announcer.h"
 #include <udpmanager.h>
-#include <xml/xmlparser.h>
+#include <xml/announcexmlparser.h>
 
 #include <QTimerEvent>
 
@@ -54,13 +54,13 @@ void Announcer::setUserName (const QString& username)
 
 void Announcer::timerEvent (QTimerEvent* t)
 {
-    XmlParser parser;
-    parser.setSenderName (m_username);
-    parser.setType (XmlParser::Announce);
-
     if (t->timerId() == m_timerId) {
         if (!m_username.isEmpty()) {
-            UdpManager::instance()->sendBroadcast (parser.composeXml().toUtf8());
+            AnnounceXMLParser parser;
+            AnnounceXMLData data;
+            data.senderName = m_username;
+            data.type = AnnounceXMLData::Announce;
+            UdpManager::instance()->sendBroadcast (parser.composeXML(&data).toUtf8());
         }
     }
 
@@ -69,14 +69,15 @@ void Announcer::timerEvent (QTimerEvent* t)
 
 void Announcer::processDatagram (const QByteArray& datagram, const QHostAddress& host, quint16 port)
 {
-    XmlParser parser;
+    AnnounceXMLParser parser;
     QString xml (datagram);
-    parser.parseXml (xml);
+    AnnounceXMLData *data = static_cast<AnnounceXMLData*>(parser.parseXML(xml));
 
-    if (parser.type() == XmlParser::Announce) {
-        Peer peer (parser.senderName(), host);
+    if (data->type == AnnounceXMLData::Announce) {
+        Peer peer (data->senderName, host);
         emit gotAnnounce (peer);
     }
+    delete data;
 }
 
 #include "announcer.moc"
