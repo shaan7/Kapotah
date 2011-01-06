@@ -1,1 +1,2 @@
 1. Let the incoming transfer thread verify file size from the server.
+2. Make default enter work for messageEdit.

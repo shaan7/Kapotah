@@ -49,7 +49,7 @@ void ChatDialog::displayRecievingMessage(QString message, QHostAddress peerAddre
 
 void ChatDialog::displaySendingMessage()
 {
-    ui.messageDisplay->appendPlainText("Me::"+ ui.messageEdit->toPlainText());
+    ui.messageDisplay->appendPlainText("Me:: "+ ui.messageEdit->toPlainText());
 }
 
 void ChatDialog::sendNewMessage()
