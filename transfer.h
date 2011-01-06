@@ -44,6 +44,7 @@ namespace Kapotah
             virtual ~Transfer();
             virtual void start() = 0;
             virtual TransferType type() = 0;
+            QHostAddress peerAddress();
 
         protected:
             //Details about the transfer

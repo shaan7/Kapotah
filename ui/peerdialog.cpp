@@ -20,12 +20,13 @@
 
 #include "peerdialog.h"
 
-PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent)
+PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(0)
 {
     ui.setupUi(this);
     setWindowTitle("Kapotah");
     ui.peersListView->setModel(Kapotah::PeerManager::instance()->peersModel());
-    connect (ui.peersListView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(createChatWindow(QModelIndex)));
+    connect (ui.peersListView, SIGNAL(doubleClicked(QModelIndex)), SLOT(createChatWindow(QModelIndex)));
+    connect(ui.transferButton, SIGNAL(clicked(bool)), SLOT(showTransferDialog(bool)));
 }
 
 ChatDialog* PeerDialog::createChatWindow(QModelIndex index)
@@ -33,6 +34,14 @@ ChatDialog* PeerDialog::createChatWindow(QModelIndex index)
     Kapotah::PeersModel *model = Kapotah::PeerManager::instance()->peersModel();
     ChatDialog *chatDlg = new ChatDialog(index);
     chatDlg->show();
+}
+
+void PeerDialog::showTransferDialog (bool checked)
+{
+    if (!m_transferDialog) {
+        m_transferDialog = new TransferDialog(this);
+    }
+    m_transferDialog->show();
 }
 
 PeerDialog::~PeerDialog()

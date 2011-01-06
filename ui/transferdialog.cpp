@@ -1,7 +1,7 @@
 /*
     This file is part of the Kapotah project.
-    Copyright (C) 2010 Shantanu Tushar <jhahoneyk@gmail.com>
-    Copyright (C) 2010 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
+    Copyright (C) 2011 Shantanu Tushar <jhahoneyk@gmail.com>
+    Copyright (C) 2011 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,27 +17,30 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "transfer.h"
-#include "incomingtransferthread.h"
-#include "outgoingtransferthread.h"
+#include "transferdialog.h"
+#include <transfermanager.h>
+#include "transferwidget.h"
+#include <QHBoxLayout>
 
 using namespace Kapotah;
 
-Transfer::Transfer (QList< TransferFile > files, QHostAddress peer, QObject* parent)
-        : QObject (parent), m_sizeDone (0), m_filesDone (0), m_files (files), m_peerAddress (peer),
-        m_thread (0), m_state (Waiting)
+TransferDialog::TransferDialog (QWidget* parent, Qt::WindowFlags f) : QDialog (parent, f)
+{
+    m_layout = new QHBoxLayout();
+    setLayout (m_layout);
+    connect (TransferManager::instance(), SIGNAL (newTransferAdded (Transfer*)),
+             SLOT (addTransfer (Kapotah::Transfer*)));
+}
+
+TransferDialog::~TransferDialog()
 {
 
 }
 
-Transfer::~Transfer()
+void TransferDialog::addTransfer (Transfer* transfer)
 {
-
+    TransferWidget *widget = new TransferWidget (transfer, this);
+    m_layout->addWidget (widget);
 }
 
-QHostAddress Transfer::peerAddress()
-{
-    return m_peerAddress;
-}
-
-#include "transfer.moc"
+#include "transferdialog.moc"

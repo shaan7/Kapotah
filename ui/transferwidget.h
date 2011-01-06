@@ -1,7 +1,7 @@
 /*
     This file is part of the Kapotah project.
-    Copyright (C) 2009 Shantanu Tushar <jhahoneyk@gmail.com>
-    Copyright (C) 2009 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
+    Copyright (C) 2011 Shantanu Tushar <jhahoneyk@gmail.com>
+    Copyright (C) 2011 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,32 +17,37 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef TRANSFERWIDGET_H
+#define TRANSFERWIDGET_H
 
-#ifndef PEERDIALOG_H
-#define PEERDIALOG_H
+#include <QWidget>
 
-#include "ui_peerdialog.h"
-#include "chatdialog.h"
-#include "transferdialog.h"
-#include <peermanager.h>
-#include <QDialog>
+#include "transfer.h"
 
-class PeerDialog : public QDialog
+class QVBoxLayout;
+
+class QHBoxLayout;
+
+class QLabel;
+
+class QProgressBar;
+
+class QToolButton;
+
+class TransferWidget : public QWidget
 {
         Q_OBJECT
 
     public:
-        PeerDialog (QDialog* parent = 0);
-        virtual ~PeerDialog();
+        explicit TransferWidget (Kapotah::Transfer* transfer, QWidget* parent = 0, Qt::WindowFlags f = 0);
+        virtual ~TransferWidget();
 
     private:
-        Ui::PeersDialog ui;
-        QHash<QString,ChatDialog*> openChatDialogs;
-        TransferDialog *m_transferDialog;
-
-    private slots:
-        ChatDialog* createChatWindow(QModelIndex index);
-        void showTransferDialog(bool checked);
+        QLabel *m_peerLabel;
+        QProgressBar *m_progress;
+        QToolButton *m_startStop;
+        QVBoxLayout *m_verticalLayout;
+        QHBoxLayout *m_horizontalLayout;
 };
 
-#endif // PEERDIALOG_H
+#endif // TRANSFERWIDGET_H
