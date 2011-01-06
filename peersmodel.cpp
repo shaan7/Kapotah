@@ -34,6 +34,7 @@ QVariant PeersModel::data (const QModelIndex& index, int role) const
 
     else if (role == ipAddressRole)
     {
+        qDebug() << "5" << index.row();
         return m_peers[m_peerList.at (index.row()) ].ipAddress().toString();
     }
 

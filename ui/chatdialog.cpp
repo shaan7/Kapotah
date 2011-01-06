@@ -25,22 +25,24 @@ using namespace Kapotah;
 
 ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent, Qt::WindowFlags f) : QDialog (parent,f)
 {
+    qDebug() << "3" << ipAddress.row();
     ui.setupUi(this);
     m_ipAddress=ipAddress;
     setWindowTitle(PeerManager::instance()->peersModel()->data(m_ipAddress, Qt::DisplayRole).toString()
                    +" ("+PeerManager::instance()->peersModel()->data(m_ipAddress, PeersModel::ipAddressRole).toString()
                    +")");
     connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)), this,
-             SLOT(displayRecievingMessage(QString, QHostAddress)));
+             SLOT(displayRecievedMessage(QString, QHostAddress)));
     connect (ui.sendMessage, SIGNAL(pressed()), this, SLOT(sendNewMessage()));
     connect (ui.sendMessage, SIGNAL(pressed()), this, SLOT(displaySendingMessage()));
     connect (ui.sendMessage, SIGNAL(pressed()), ui.messageEdit, SLOT(clear()));
     //connect (ui.messageEdit, SIGNAL(reuturnPressed()), this, SLOT(sendNewMessage()));//TODO::set default enter for messageEdit
 }
 
-void ChatDialog::displayRecievingMessage(QString message, QHostAddress peerAddress)
+void ChatDialog::displayRecievedMessage(QString message, QHostAddress peerAddress)
 {
-        if(peerAddress.toString() == PeerManager::instance()->peersModel()->data(m_ipAddress,PeersModel::ipAddressRole).toString())
+    qDebug() << "4" << m_ipAddress.row();
+        if(peerAddress.toString() == PeerManager::instance()->peersModel()->data(m_ipAddress, PeersModel::ipAddressRole).toString())
         {
             ui.messageDisplay->appendPlainText(PeerManager::instance()->peersModel()->data(m_ipAddress, Qt::DisplayRole).toString()
                                                +"::"+message);

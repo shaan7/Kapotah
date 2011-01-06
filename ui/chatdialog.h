@@ -22,7 +22,7 @@
 #define CHATDIALOG_H
 
 #include "ui_chatdialog.h"
-#include "../messagedispatcher.h"
+#include <messagedispatcher.h>
 
 #include <QDialog>
 #include <QPersistentModelIndex>
@@ -41,9 +41,12 @@ class ChatDialog : public QDialog
         QPersistentModelIndex m_ipAddress;
     
     private slots:
-        void displayRecievingMessage(QString message, QHostAddress peerAddress);
+        void displayRecievedMessage(QString message, QHostAddress peerAddress);
         void displaySendingMessage();
         void sendNewMessage();
+        
+    friend class PeerDialog;
 };
 
 #endif // CHATDIALOG_H
+

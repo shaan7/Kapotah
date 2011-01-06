@@ -19,23 +19,46 @@
 
 
 #include "peerdialog.h"
+#include "peermanager.h"
+
+using namespace Kapotah;
 
 PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent)
 {
     ui.setupUi(this);
     setWindowTitle("Kapotah");
-    ui.peersListView->setModel(Kapotah::PeerManager::instance()->peersModel());
-    connect (ui.peersListView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(createChatWindow(QModelIndex)));
+    ui.peersListView->setModel(PeerManager::instance()->peersModel());
+    connect (ui.peersListView, SIGNAL(doubleClicked(QModelIndex)), SLOT(createChatDialog(QModelIndex)));
+    connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)),
+             SLOT(createChatDialogOnMessage(QString,QHostAddress)));
 }
 
-ChatDialog* PeerDialog::createChatWindow(QModelIndex index)
+ChatDialog* PeerDialog::createChatDialog(QModelIndex index)
 {
-    Kapotah::PeersModel *model = Kapotah::PeerManager::instance()->peersModel();
-    if(!openChatDialogs.contains(model->data(index, Kapotah::PeersModel::ipAddressRole).toString()))
+    PeersModel *model = PeerManager::instance()->peersModel();
+    if(!m_openChatDialogs.contains(model->data(index, PeersModel::ipAddressRole).toString()))
     {
+        qDebug() << "2" << index.row();
         ChatDialog *chatDlg = new ChatDialog(index);
         chatDlg->show();
-        openChatDialogs.insert(model->data(index, Kapotah::PeersModel::ipAddressRole).toString(), chatDlg);
+        m_openChatDialogs.insert(model->data(index, PeersModel::ipAddressRole).toString(), chatDlg);
+    }
+}
+
+ChatDialog* PeerDialog::createChatDialogOnMessage(QString message, QHostAddress peerAddress)
+{
+    if (m_openChatDialogs.contains(peerAddress.toString())) //Already created
+        return m_openChatDialogs[peerAddress.toString()];
+
+    PeersModel *model = PeerManager::instance()->peersModel();
+    
+    QModelIndexList list = model->match(model->index(0), PeersModel::ipAddressRole, peerAddress.toString());
+    qDebug() << "0" << list.at(0).row();
+    if (list.count() == 0) {
+        qDebug() << "NOOOO! someone sent message after being offline, huh?";
+    } else {
+        qDebug() << "1" << list.at(0).row();
+        createChatDialog(list.at(0))->displayRecievedMessage(message, peerAddress);
     }
 }
 
