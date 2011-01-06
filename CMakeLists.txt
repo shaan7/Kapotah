@@ -9,8 +9,7 @@ set (QT_USE_QTXML TRUE)
 
 set(Kapotah_SRCS
     xml/announcexmlparser.cpp
-
-
+    xml/messagexmlparser.cpp
     fileserverthread.cpp
     ui/chatdialog.cpp
     outgoingtransfer.cpp
