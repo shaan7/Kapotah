@@ -49,8 +49,7 @@ void ChatDialog::displayRecievingMessage(QString message, QHostAddress peerAddre
 
 void ChatDialog::displaySendingMessage()
 {
-    ui.messageDisplay->appendPlainText(PeerManager::instance()->peersModel()->data(m_ipAddress, Qt::DisplayRole).toString()
-                                       +"::"+ ui.messageEdit->toPlainText());
+    ui.messageDisplay->appendPlainText("Me::"+ ui.messageEdit->toPlainText());
 }
 
 void ChatDialog::sendNewMessage()

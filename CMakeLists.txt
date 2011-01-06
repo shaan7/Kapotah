@@ -10,6 +10,10 @@ set (QT_USE_QTXML TRUE)
 set(Kapotah_SRCS
     xml/transferxmlparser.cpp
     xml/announcexmlparser.cpp
+<<<<<<< HEAD
+=======
+    xml/messagexmlparser.cpp
+>>>>>>> abd6ba02eb573619fe0c164d9b9b3787ac7bcb38
     fileserverthread.cpp
     ui/chatdialog.cpp
     outgoingtransfer.cpp
