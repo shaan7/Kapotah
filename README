@@ -1,0 +1,17 @@
+The Kapotah Cross Platform LAN Messaging and File Transfer Application
+
+Shantanu Tushar http://www.shantanutushar.com
+Sudhendu Kumar  http://www.sudhendu.in
+
+1. INSTALL
+You will need cmake and a C++ compiler with Qt libraries installed.
+Download a Qt SDK from http://qt.nokia.com or install from your package manager.
+
+cd kapotah
+mkdir build
+cd build
+cmake ..
+make
+./Kapotah UserName
+
+where UserName is the name you want to show on the network.
