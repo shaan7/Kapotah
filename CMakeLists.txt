@@ -11,7 +11,6 @@ set(Kapotah_SRCS
     xml/transferxmlparser.cpp
     xml/announcexmlparser.cpp
     xml/messagexmlparser.cpp
-    xml/xmlparser.cpp
     ui/peerdialog.cpp
     ui/chatdialog.cpp
     ui/transferdialog.cpp
