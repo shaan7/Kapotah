@@ -23,7 +23,7 @@
 QString MessageXMLParser::composeXML (AbstractXMLData* data)
 {
     QString xml;
-    QXmlStreamWriter writer (&xml);    
+    QXmlStreamWriter writer (&xml);
     writer.setAutoFormatting (true);
     writer.writeStartDocument();
     writer.writeTextElement ("message", static_cast<MessageXMLData*>(data)->message);
@@ -35,10 +35,10 @@ AbstractXMLData* MessageXMLParser::parseXML (const QString& xml)
 {
     QXmlStreamReader reader(xml);
     reader.readNext();
-    
+
     MessageXMLData *data = new MessageXMLData;
     data->type = AbstractXMLData::Error;
-    
+
     while (!reader.atEnd())
     {
         if (reader.isStartElement())
@@ -46,11 +46,11 @@ AbstractXMLData* MessageXMLParser::parseXML (const QString& xml)
             if (reader.name() == "message")
             {
                 data->type = AbstractXMLData::Message;
-                data->message = reader.attributes().value ("message").toString();
+                data->message = reader.readElementText();
                 break;
             }
-        } 
-        else 
+        }
+        else
         {
             reader.readNext();
         }

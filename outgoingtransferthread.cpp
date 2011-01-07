@@ -21,7 +21,7 @@
 
 #include "transfermanager.h"
 #include "messagedispatcher.h"
-#include "xml/xmlparser.h"
+#include <xml/transferxmlparser.h>
 
 #include <QFileInfo>
 #include <QDir>
@@ -57,10 +57,11 @@ void OutgoingTransferThread::run()
     emit donePreparingList();
 
     emit startSendingList();
-    XmlParser parser;
-    parser.setType(XmlParser::Transfer);
-    parser.setFiles(m_files);
-    Kapotah::MessageDispatcher::instance()->sendNewMessage(parser.composeXml(), m_ip);
+    TransferXMLData data;
+    TransferXMLParser parser;
+    data.type = AbstractXMLData::Transfer;
+    data.files = m_files;
+    Kapotah::MessageDispatcher::instance()->sendNewMessage(parser.composeXML(&data), m_ip);
     emit doneSendingList();
 }
 

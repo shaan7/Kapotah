@@ -1,7 +1,7 @@
 /*
     This file is part of the Kapotah project.
-    Copyright (C) 2009 Shantanu Tushar <jhahoneyk@gmail.com>
-    Copyright (C) 2009 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
+    Copyright (C) 2010 Shantanu Tushar <jhahoneyk@gmail.com>
+    Copyright (C) 2010 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 
 
 #include "messagedispatcher.h"
-#include "xml/xmlparser.h"
+#include <xml/messagexmlparser.h>
 #include "messagesenderthread.h"
 
 using namespace Kapotah;
@@ -44,23 +44,24 @@ MessageDispatcherServer* MessageDispatcher::messageDispatcherServer()
 
 void MessageDispatcher::newMessage (QString message, QHostAddress peerAddress)
 {
-    XmlParser parser;
-    parser.parseXml (message);
+    MessageXMLParser parser;
+    MessageXMLData *data = static_cast<MessageXMLData*>(parser.parseXML(message));
 
-    if (parser.type() == XmlParser::Message) {
-        qDebug() << "New Message from " << peerAddress.toString() << " reading " << parser.message();
-        emit gotNewMessage (parser.message(), peerAddress);
-    } else if (parser.type() == XmlParser::Transfer) {
+    if (data->type == AbstractXMLData::Message) {
+        qDebug() << "New Message from " << peerAddress.toString() << " reading " << data->message;
+        emit gotNewMessage (data->message, peerAddress);
+    } else if (data->type == AbstractXMLData::Transfer) {
         gotNewTransfer(message, peerAddress);
     }
 }
 
 void MessageDispatcher::sendNewMessage (QString message, QHostAddress peerAddress)
 {
-    XmlParser parser;
-    parser.setMessage (message);
-    parser.setType (XmlParser::Message);
-    MessageSenderThread *thread = new MessageSenderThread (parser.composeXml(), peerAddress, this);
+    MessageXMLData data;
+    MessageXMLParser parser;
+    data.type = AbstractXMLData::Message;
+    data.message = message;
+    MessageSenderThread *thread = new MessageSenderThread (parser.composeXML(&data), peerAddress, this);
     thread->start();
 }
 

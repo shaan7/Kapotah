@@ -25,7 +25,6 @@ using namespace Kapotah;
 
 ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent, Qt::WindowFlags f) : QDialog (parent,f)
 {
-    qDebug() << "3" << ipAddress.row();
     ui.setupUi(this);
     m_ipAddress=ipAddress;
     setWindowTitle(PeerManager::instance()->peersModel()->data(m_ipAddress, Qt::DisplayRole).toString()
@@ -41,7 +40,6 @@ ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent,
 
 void ChatDialog::displayRecievedMessage(QString message, QHostAddress peerAddress)
 {
-    qDebug() << "4" << m_ipAddress.row();
         if(peerAddress.toString() == PeerManager::instance()->peersModel()->data(m_ipAddress, PeersModel::ipAddressRole).toString())
         {
             ui.messageDisplay->appendPlainText(PeerManager::instance()->peersModel()->data(m_ipAddress, Qt::DisplayRole).toString()
