@@ -19,7 +19,6 @@
 
 
 #include "udpmanager.h"
-#include "xml/xmlparser.h"
 #include <qcoreevent.h>
 #include <QNetworkInterface>
 #include <QApplication>

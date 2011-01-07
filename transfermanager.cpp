@@ -18,10 +18,10 @@
 */
 
 #include "transfermanager.h"
-#include "xml/xmlparser.h"
 #include "transfer.h"
 #include "incomingtransfer.h"
 #include "outgoingtransfer.h"
+#include <xml/transferxmlparser.h>
 #include <QDateTime>
 
 using namespace Kapotah;
@@ -75,9 +75,10 @@ QString TransferManager::pathForId (QString id)
 
 void TransferManager::handleIncomingTransfer (QString transfer, QHostAddress peer)
 {
-    XmlParser parser;
-    parser.parseXml (transfer);
-    addTransfer (Transfer::Incoming, parser.files(), peer);
+    TransferXMLParser parser;
+    TransferXMLData *data = static_cast<TransferXMLData*>(parser.parseXML(transfer));
+    addTransfer (Transfer::Incoming, data->files, peer);
+    delete data;
 }
 
 #include "transfermanager.moc"
