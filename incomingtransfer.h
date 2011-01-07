@@ -45,6 +45,8 @@ namespace Kapotah
             void startNextFile();
             void currentFileFinished();
             void reportProgress (quint64 done, quint64 size);
+
+        public slots:
             void setDestinationDir (QString path);
 
         signals:

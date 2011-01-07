@@ -17,35 +17,27 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "transferdialog.h"
-#include <transfermanager.h>
-#include "transferwidget.h"
-#include <QHBoxLayout>
+#ifndef KAPOTAHFILESERVERSINGLETON_H
+#define KAPOTAHFILESERVERSINGLETON_H
 
-using namespace Kapotah;
+#include <singleton.h>
+#include <fileserver.h>
 
-TransferDialog::TransferDialog (QWidget* parent, Qt::WindowFlags f) : QDialog (parent, f)
-{
-    setWindowTitle("Transfers");
-    m_layout = new QVBoxLayout();
-    setLayout (m_layout);
-    connect (TransferManager::instance(), SIGNAL (newTransferAdded (Transfer*)),
-             SLOT (addTransfer (Transfer*)));
-}
-
-TransferDialog::~TransferDialog()
+namespace Kapotah
 {
 
+    class FileServerSingleton : public Singleton<FileServerSingleton>
+    {
+            Q_OBJECT
+
+        public:
+            FileServerSingleton();
+            virtual ~FileServerSingleton();
+            FileServer *fileServer();
+
+        private:
+            FileServer *m_fileServer;
+    };
 }
 
-void TransferDialog::addTransfer (Transfer* transfer)
-{
-    if (transfer->type() == Transfer::Outgoing) {   //FIXME: TEMP
-        qDebug() << "SHIT";
-        return;
-    }
-    TransferWidget *widget = new TransferWidget (transfer, this);
-    m_layout->addWidget (widget);
-}
-
-#include "transferdialog.moc"
+#endif // KAPOTAHFILESERVERSINGLETON_H

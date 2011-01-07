@@ -47,6 +47,7 @@ namespace Kapotah
 
         private slots:
             void handleIncomingTransfer (QString transfer, QHostAddress peer);
+            void onTransferFinished();
 
         signals:
             void newTransferAdded (Transfer *transfer);

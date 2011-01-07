@@ -32,6 +32,7 @@ MessageSenderThread::MessageSenderThread (QString message, QHostAddress peerAddr
 MessageSenderThread::~MessageSenderThread()
 {
     wait();
+    deleteLater();
 }
 
 void MessageSenderThread::run()
@@ -41,7 +42,6 @@ void MessageSenderThread::run()
     stream.setVersion(QDataStream::Qt_4_6);
     stream << (quint64) m_message.toUtf8().size();
     data.append(m_message.toUtf8());
-
     QTcpSocket socket;
     socket.abort();
     socket.connectToHost(m_peerAddress, s_messageServerPort);

@@ -22,6 +22,7 @@
 #include "transfermanager.h"
 #include "messagedispatcher.h"
 #include <xml/transferxmlparser.h>
+#include <messagesenderthread.h>
 
 #include <QFileInfo>
 #include <QDir>
@@ -61,7 +62,8 @@ void OutgoingTransferThread::run()
     TransferXMLParser parser;
     data.type = AbstractXMLData::Transfer;
     data.files = m_files;
-    Kapotah::MessageDispatcher::instance()->sendNewMessage(parser.composeXML(&data), m_ip);
+    MessageSenderThread *thread = new MessageSenderThread (parser.composeXML(&data), m_ip);
+    thread->start();
     emit doneSendingList();
 }
 
@@ -94,9 +96,11 @@ void OutgoingTransferThread::addFilesInDir (QString path)
 
 void OutgoingTransferThread::addFileToList (QString fullPath, QString relativePath)
 {
+    QFileInfo info(fullPath);
     Kapotah::TransferFile relativeFile;         //File without absolute paths
     relativeFile.id = Kapotah::TransferManager::instance()->newId (fullPath);
     relativeFile.path = relativePath;
+    relativeFile.size = info.size();
     m_files.append(relativeFile);
 }
 

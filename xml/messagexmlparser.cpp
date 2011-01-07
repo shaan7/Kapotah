@@ -19,6 +19,7 @@
 
 #include "messagexmlparser.h"
 #include <QXmlStreamReader>
+#include <QDebug>
 
 QString MessageXMLParser::composeXML (AbstractXMLData* data)
 {
@@ -39,19 +40,18 @@ AbstractXMLData* MessageXMLParser::parseXML (const QString& xml)
     MessageXMLData *data = new MessageXMLData;
     data->type = AbstractXMLData::Error;
 
-    while (!reader.atEnd())
-    {
-        if (reader.isStartElement())
-        {
-            if (reader.name() == "message")
-            {
+    while (!reader.atEnd()) {
+        if (reader.isStartElement()) {
+            if (reader.name() == "message") {
                 data->type = AbstractXMLData::Message;
                 data->message = reader.readElementText();
                 break;
+            } else {
+                data->type = AbstractXMLData::Error;
+                break;
             }
         }
-        else
-        {
+        else {
             reader.readNext();
         }
     }

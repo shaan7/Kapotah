@@ -38,6 +38,7 @@ FileServerThread::~FileServerThread()
 
 void FileServerThread::run()
 {
+    qDebug() << 6;
     QString filename;
     QString ID;
     QFile file;
@@ -45,7 +46,10 @@ void FileServerThread::run()
     socket.setSocketDescriptor (m_descriptor);
 
     while (!m_doQuit) {
-        socket.waitForReadyRead();
+        qDebug() << 7;
+        while (socket.bytesAvailable() == 0) {
+            socket.waitForReadyRead();
+        }
 
         QString data (socket.readAll());
 
@@ -63,21 +67,22 @@ void FileServerThread::run()
             socket.waitForBytesWritten();
 
             emit startedTransfer (ID);
-
+qDebug() << 8;
             while (!file.atEnd()) {
                 if (socket.state() != QTcpSocket::ConnectedState) {
                     emit finishedTransfer (ID);
                     break;
                 }
-
+qDebug() << 9;
                 socket.write (file.read (s_bytesPerBlock));
 
                 socket.waitForBytesWritten();
 
                 while (socket.bytesToWrite())
                     socket.flush();
-
+qDebug() << 10;
                 emit transferProgress (ID, file.pos() / file.size() *100);
+                qDebug() << "Sent " << file.pos() << " of " << file.size();
             }
 
             file.close();
@@ -87,6 +92,7 @@ void FileServerThread::run()
             break;
         } else
             break;      //TODO: too quiet, let the system know the error
+        qDebug() << 11;
     }
 
     //deleteLater();    //FIXME: what to do?

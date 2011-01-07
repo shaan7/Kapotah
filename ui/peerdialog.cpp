@@ -21,6 +21,10 @@
 #include "peerdialog.h"
 #include "peermanager.h"
 
+//TEMP
+#include <transfermanager.h>
+//TEMP
+
 using namespace Kapotah;
 
 PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(0)
@@ -32,6 +36,8 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(0)
     connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)),
              SLOT(createChatDialogOnMessage(QString,QHostAddress)));
     connect(ui.transferButton, SIGNAL(clicked(bool)), SLOT(showTransferDialog(bool)));
+
+    connect(ui.activateButton, SIGNAL(clicked(bool)), SLOT(temp()));    //TEMP
 }
 
 ChatDialog* PeerDialog::createChatDialog(QModelIndex index)
@@ -72,6 +78,16 @@ void PeerDialog::showTransferDialog (bool checked)
 PeerDialog::~PeerDialog()
 {
 
+}
+
+void PeerDialog::temp()
+{
+    QList<TransferFile> list;
+    TransferFile file;
+    file.path = "/media/Data/Other/CD Images/kubuntu-10.10-custom-desktop-i386.iso";
+    list.append(file);
+    Kapotah::TransferManager::instance()->addTransfer(Kapotah::Transfer::Outgoing, list,
+                                                      QHostAddress("10.55.88.66"))->start();
 }
 
 #include "peerdialog.moc"

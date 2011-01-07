@@ -61,9 +61,10 @@ AbstractXMLData* TransferXMLParser::parseXML (const QString& xml)
                         if (reader.name() == "file") {
                             Kapotah::TransferFile file = { reader.attributes().value ("id").toString(),
                                                            reader.attributes().value ("path").toString(),
-                                                           reader.attributes().value ("size").toString().toInt()
+                                                           reader.attributes().value ("size").toString().toLongLong()
                                                          };
                             data->files.append (file);
+                            qDebug() << "SIZE " << file.size;
                         }
                     } else {
                         if (reader.name() == "transfer") {

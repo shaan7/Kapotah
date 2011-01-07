@@ -22,7 +22,12 @@
 
 #include <QWidget>
 
-#include "transfer.h"
+namespace Kapotah
+{
+    class Transfer;
+    class IncomingTransfer;
+    class OutgoingTransfer;
+}
 
 class QVBoxLayout;
 
@@ -48,6 +53,14 @@ class TransferWidget : public QWidget
         QToolButton *m_startStop;
         QVBoxLayout *m_verticalLayout;
         QHBoxLayout *m_horizontalLayout;
+        Kapotah::Transfer *m_transfer;
+        Kapotah::IncomingTransfer *m_incomingTransfer;
+        Kapotah::OutgoingTransfer *m_outgoingTransfer;
+
+    private slots:
+        void startTransfer();
+        void transferFinished();
+        void transferNeedsDestinationDir();
 };
 
 #endif // TRANSFERWIDGET_H

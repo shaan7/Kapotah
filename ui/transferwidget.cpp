@@ -31,30 +31,55 @@
 using namespace Kapotah;
 
 TransferWidget::TransferWidget (Transfer* transfer, QWidget* parent, Qt::WindowFlags f)
-    : QWidget (parent, f)
+    : QWidget (parent, f), m_transfer(transfer)
 {
     if (transfer->type() == Transfer::Incoming) {
-        IncomingTransfer *t = qobject_cast<IncomingTransfer*>(transfer);
+        m_incomingTransfer = qobject_cast<IncomingTransfer*>(transfer);
+        connect(m_incomingTransfer, SIGNAL(needDestinationDir()), SLOT(transferNeedsDestinationDir()));
     } else if (transfer->type() == Transfer::Outgoing) {
-        OutgoingTransfer *t = qobject_cast<OutgoingTransfer*>(transfer);
+        m_outgoingTransfer = qobject_cast<OutgoingTransfer*>(transfer);
     }
 
     m_peerLabel = new QLabel(transfer->peerAddress().toString(), this);
     m_startStop = new QToolButton(this);
     m_progress = new QProgressBar(this);
 
+    m_horizontalLayout = new QHBoxLayout();
+    m_verticalLayout = new QVBoxLayout();
     m_horizontalLayout->addWidget(m_peerLabel);
     m_horizontalLayout->addWidget(m_startStop);
 
     m_verticalLayout->addItem(m_horizontalLayout);
     m_verticalLayout->addWidget(m_progress);
+    m_verticalLayout->addStretch();
 
     setLayout(m_verticalLayout);
+
+    connect(m_startStop, SIGNAL(clicked(bool)), SLOT(startTransfer()));
+    connect(m_transfer, SIGNAL(done()), SLOT(transferFinished()));
 }
 
 TransferWidget::~TransferWidget()
 {
 
+}
+
+void TransferWidget::startTransfer()
+{
+    m_transfer->start();
+    qDebug() << m_transfer->type();
+}
+
+void TransferWidget::transferFinished()
+{
+    m_peerLabel->setText("FINISHED");
+}
+
+void TransferWidget::transferNeedsDestinationDir()
+{
+    qDebug() << "SETDESTDIR";
+    m_incomingTransfer->setDestinationDir("/tmp/");
+    m_transfer->start();
 }
 
 #include "transferwidget.moc"

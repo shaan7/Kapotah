@@ -19,15 +19,16 @@
 
 
 #include "fileserver.h"
+#include "fileserverthread.h"
 
 FileServer::FileServer (QObject* parent) : QTcpServer (parent)
 {
-
 }
 
 void FileServer::incomingConnection (int handle)
 {
-
+    FileServerThread *thread = new FileServerThread(handle);
+    thread->start();    //TODO: connect to signals
 }
 
 FileServer::~FileServer()

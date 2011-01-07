@@ -22,13 +22,14 @@
 
 #include <QDialog>
 
-class QHBoxLayout;
+class QVBoxLayout;
 
 namespace Kapotah
 {
-
     class Transfer;
 }
+
+using namespace Kapotah;
 
 class TransferDialog : public QDialog
 {
@@ -38,11 +39,11 @@ class TransferDialog : public QDialog
         explicit TransferDialog (QWidget* parent = 0, Qt::WindowFlags f = 0);
         virtual ~TransferDialog();
 
-    public slots:
-        void addTransfer (Kapotah::Transfer *transfer);
+    private slots:
+        void addTransfer (Transfer *transfer);
 
     private:
-        QHBoxLayout *m_layout;
+        QVBoxLayout *m_layout;
 };
 
 #endif // TRANSFERDIALOG_H

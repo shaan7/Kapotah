@@ -20,6 +20,7 @@
 
 #include "messagedispatcher.h"
 #include <xml/messagexmlparser.h>
+#include <xml/transferxmlparser.h>
 #include "messagesenderthread.h"
 
 using namespace Kapotah;
@@ -44,13 +45,16 @@ MessageDispatcherServer* MessageDispatcher::messageDispatcherServer()
 
 void MessageDispatcher::newMessage (QString message, QHostAddress peerAddress)
 {
+    qDebug() << message;
+    //Try parsing as Message
     MessageXMLParser parser;
     MessageXMLData *data = static_cast<MessageXMLData*>(parser.parseXML(message));
 
     if (data->type == AbstractXMLData::Message) {
         qDebug() << "New Message from " << peerAddress.toString() << " reading " << data->message;
         emit gotNewMessage (data->message, peerAddress);
-    } else if (data->type == AbstractXMLData::Transfer) {
+    } else {    //FIXME: Don't straightaway assume its Transfer, do sanity checks
+        qDebug() << "TRAN " << message;
         gotNewTransfer(message, peerAddress);
     }
 }
@@ -61,7 +65,7 @@ void MessageDispatcher::sendNewMessage (QString message, QHostAddress peerAddres
     MessageXMLParser parser;
     data.type = AbstractXMLData::Message;
     data.message = message;
-    MessageSenderThread *thread = new MessageSenderThread (parser.composeXML(&data), peerAddress, this);
+    MessageSenderThread *thread = new MessageSenderThread (parser.composeXML(&data), peerAddress);
     thread->start();
 }
 

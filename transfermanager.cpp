@@ -22,6 +22,7 @@
 #include "incomingtransfer.h"
 #include "outgoingtransfer.h"
 #include <xml/transferxmlparser.h>
+#include <messagedispatcher.h>
 #include <QDateTime>
 
 using namespace Kapotah;
@@ -30,7 +31,8 @@ template<> TransferManager *Kapotah::Singleton<TransferManager>::m_instance = 0;
 
 TransferManager::TransferManager()
 {
-
+    connect(MessageDispatcher::instance(), SIGNAL(gotNewTransfer(QString,QHostAddress)),
+            SLOT(handleIncomingTransfer(QString,QHostAddress)));
 }
 
 TransferManager::~TransferManager()
@@ -51,8 +53,9 @@ Transfer* TransferManager::addTransfer (Transfer::TransferType type, QList< Tran
 
     m_transfersList.append (transfer);
 
-    connect (transfer, SIGNAL (done()), SIGNAL (transferFinished()));
+    connect (transfer, SIGNAL (done()), SLOT (onTransferFinished()));
     emit newTransferAdded (transfer);
+    return transfer;
 }
 
 QString TransferManager::newId (QString path)
@@ -75,10 +78,16 @@ QString TransferManager::pathForId (QString id)
 
 void TransferManager::handleIncomingTransfer (QString transfer, QHostAddress peer)
 {
+    qDebug() << "INCOMING " << transfer;
     TransferXMLParser parser;
     TransferXMLData *data = static_cast<TransferXMLData*>(parser.parseXML(transfer));
     addTransfer (Transfer::Incoming, data->files, peer);
     delete data;
+}
+
+void TransferManager::onTransferFinished()
+{
+    emit transferFinished(qobject_cast<Transfer*>(sender()));
 }
 
 #include "transfermanager.moc"

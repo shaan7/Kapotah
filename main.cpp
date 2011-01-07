@@ -24,6 +24,7 @@
 #include "messagedispatcher.h"
 #include "peermanager.h"
 #include "ui/peerdialog.h"
+#include <fileserversingleton.h>
 
 static const int s_messageServerPort = 45001;
 static const int s_fileServerPort = 45002;
@@ -37,6 +38,8 @@ int main (int argc, char** argv)
     Kapotah::PeerManager::instance();
     Kapotah::MessageDispatcher::instance()->messageDispatcherServer()->listen(QHostAddress::Any,
         s_messageServerPort);
+    Kapotah::FileServerSingleton::instance()->fileServer()->listen(QHostAddress::Any,
+        s_fileServerPort);
     PeerDialog peerDialog;
     peerDialog.show();
     return app.exec();
