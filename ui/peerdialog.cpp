@@ -43,6 +43,7 @@ ChatDialog* PeerDialog::createChatDialog(QModelIndex index)
         ChatDialog *chatDlg = new ChatDialog(index);
         chatDlg->show();
         m_openChatDialogs.insert(model->data(index, PeersModel::ipAddressRole).toString(), chatDlg);
+        connect (chatDlg, SIGNAL(rejected()), this, SLOT(removeKeyFromHash()));
         return chatDlg;
     }
 }
@@ -68,6 +69,12 @@ void PeerDialog::showTransferDialog (bool checked)
         m_transferDialog = new TransferDialog(this);
     }
     m_transferDialog->show();
+}
+
+void PeerDialog::removeKeyFromHash()
+{
+    ChatDialog* dlg = qobject_cast<ChatDialog*> (sender());
+    m_openChatDialogs.remove(m_openChatDialogs.key(dlg));
 }
 
 PeerDialog::~PeerDialog()

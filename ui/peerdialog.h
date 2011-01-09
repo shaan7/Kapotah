@@ -37,13 +37,14 @@ class PeerDialog : public QDialog
 
     private:
         Ui::PeersDialog ui;
-        QHash<QString,ChatDialog*> m_openChatDialogs;
+        QHash<QString, ChatDialog*> m_openChatDialogs;
         TransferDialog *m_transferDialog;
 
     private slots:
-        ChatDialog* createChatDialog(QModelIndex index);
-        ChatDialog* createChatDialogOnMessage(QString message, QHostAddress peerAddress);
-        void showTransferDialog(bool checked);
+        ChatDialog* createChatDialog (QModelIndex index);
+        ChatDialog* createChatDialogOnMessage (QString message, QHostAddress peerAddress);
+        void showTransferDialog (bool checked);
+        void removeKeyFromHash();
 };
 
 #endif // PEERDIALOG_H
