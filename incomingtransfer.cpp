@@ -31,7 +31,6 @@ IncomingTransfer::IncomingTransfer (QList< TransferFile > files,
     foreach (TransferFile file, files) {
         ++m_numFiles;
         m_totalSize += file.size;
-        qDebug() << "ADDED " << file.size;
     }
 }
 
@@ -44,12 +43,9 @@ void IncomingTransfer::start()
 {
     if (m_destinationDir.isEmpty()) {
         emit needDestinationDir();
-        qDebug() << "B";
     } else {
-        qDebug() << "C";
         m_filesIterator = m_files.begin();
         startNextFile();
-        qDebug() << "D";
     }
 }
 
@@ -60,7 +56,6 @@ Transfer::TransferType IncomingTransfer::type()
 
 void IncomingTransfer::startNextFile()
 {
-    qDebug() << "AAA";
     QDir destinationDir(m_destinationDir);
     m_thread = new IncomingTransferThread (m_peerAddress, m_filesIterator->id,
                                            destinationDir.absoluteFilePath(m_filesIterator->path),

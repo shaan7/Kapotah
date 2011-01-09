@@ -54,7 +54,6 @@ void MessageDispatcher::newMessage (QString message, QHostAddress peerAddress)
         qDebug() << "New Message from " << peerAddress.toString() << " reading " << data->message;
         emit gotNewMessage (data->message, peerAddress);
     } else {    //FIXME: Don't straightaway assume its Transfer, do sanity checks
-        qDebug() << "TRAN " << message;
         gotNewTransfer(message, peerAddress);
     }
 }

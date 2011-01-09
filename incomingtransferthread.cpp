@@ -53,7 +53,7 @@ void IncomingTransferThread::run()
         file.close();
         return;
     }
-qDebug() << 2;
+
     QTcpSocket socket;
 
     socket.connectToHost (m_ip, 45002);  //FIXME: hardcoded port
@@ -63,7 +63,7 @@ qDebug() << 2;
 
     socket.write (m_id.toUtf8()); //ID
     socket.waitForBytesWritten();
-qDebug() << 3;
+
     while (!doQuit) {
         qDebug() << 4;
         while (socket.bytesAvailable() == 0) {
@@ -103,7 +103,7 @@ qDebug() << 3;
             }
         }
     }
-qDebug() << 5;
+
     deleteLater();
 }
 

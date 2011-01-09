@@ -44,8 +44,6 @@ class PeerDialog : public QDialog
         ChatDialog* createChatDialog(QModelIndex index);
         ChatDialog* createChatDialogOnMessage(QString message, QHostAddress peerAddress);
         void showTransferDialog(bool checked);
-
-        void temp();
 };
 
 #endif // PEERDIALOG_H
