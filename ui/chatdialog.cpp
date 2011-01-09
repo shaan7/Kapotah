@@ -20,6 +20,9 @@
 
 #include "chatdialog.h"
 #include <peermanager.h>
+#include <transfermanager.h>
+#include <transfer.h>
+#include <QUrl>
 
 using namespace Kapotah;
 
@@ -38,7 +41,10 @@ ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent,
 
     ui.messageEdit->setFocus();
     ui.messageEdit->installEventFilter(this);
+
+    setAcceptDrops(true);
 }
+
 
 void ChatDialog::displayRecievedMessage(QString message, QHostAddress peerAddress)
 {
@@ -78,6 +84,40 @@ bool ChatDialog::eventFilter (QObject* obj, QEvent* event)
             }
     } else {
         return QDialog::eventFilter (obj, event);
+    }
+}
+
+void ChatDialog::dragEnterEvent (QDragEnterEvent *event)
+{
+    setBackgroundRole(QPalette::Highlight);
+    event->acceptProposedAction();
+}
+
+void ChatDialog::dragMoveEvent (QDragMoveEvent *event)
+{
+    event->acceptProposedAction();
+}
+
+void ChatDialog::dragLeaveEvent (QDragLeaveEvent*)
+{
+    setBackgroundRole(QPalette::NoRole);
+}
+
+void ChatDialog::dropEvent (QDropEvent* event)
+{
+    setBackgroundRole(QPalette::NoRole);
+    const QMimeData *mimeData = event->mimeData();
+
+    if (mimeData->hasUrls()) {
+        QList<TransferFile> files;
+        foreach (QUrl url, mimeData->urls()) {
+            TransferFile file;
+            file.path = url.toLocalFile();
+            files.append(file);
+        }
+        QHostAddress address(PeerManager::instance()->peersModel()->data(m_ipAddress, PeersModel::ipAddressRole).toString());
+        Transfer *transfer = TransferManager::instance()->addTransfer(Transfer::Outgoing, files,address);
+        transfer->start();
     }
 }
 

@@ -49,7 +49,9 @@ void OutgoingTransferThread::run()
         QFileInfo info (file.path);
 
         if (info.isDir()) {
-            m_parentDir = file.path;
+            QDir parentDir(file.path);
+            parentDir.cdUp();
+            m_parentDir = parentDir.path();
             addFilesInDir (file.path);
         } else {
             addFileToList(file.path, info.fileName());

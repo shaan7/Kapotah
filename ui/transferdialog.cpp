@@ -20,17 +20,19 @@
 #include "transferdialog.h"
 #include <transfermanager.h>
 #include "transferwidget.h"
+#include "transfer.h"
 #include <QHBoxLayout>
 
 using namespace Kapotah;
 
 TransferDialog::TransferDialog (QWidget* parent, Qt::WindowFlags f) : QDialog (parent, f)
 {
-    setWindowTitle("Transfers");
+    setWindowTitle ("Transfers");
     m_layout = new QVBoxLayout();
     setLayout (m_layout);
     connect (TransferManager::instance(), SIGNAL (newTransferAdded (Transfer*)),
              SLOT (addTransfer (Transfer*)));
+    resize(200, 100);
 }
 
 TransferDialog::~TransferDialog()
@@ -41,9 +43,11 @@ TransferDialog::~TransferDialog()
 void TransferDialog::addTransfer (Transfer* transfer)
 {
     if (transfer->type() == Transfer::Outgoing) {   //FIXME: TEMP
-        qDebug() << "SHIT";
         return;
     }
+
+    qDebug() << "INCOMING from " << transfer->peerAddress();
+
     TransferWidget *widget = new TransferWidget (transfer, this);
     m_layout->addWidget (widget);
 }

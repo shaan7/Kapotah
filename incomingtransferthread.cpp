@@ -21,6 +21,7 @@
 
 #include <QFile>
 #include <QTcpSocket>
+#include <QDir>
 
 IncomingTransferThread::IncomingTransferThread (QHostAddress ip, QString id, QString filename, quint64 size,
         QObject* parent) : TransferThread (ip, parent), m_id (id), m_filename (filename), m_size (size)
@@ -92,9 +93,16 @@ void IncomingTransferThread::run()
 
             if (data == "OK") {
                 readyToReceive = true;
+
+                QDir dir(m_filename);   //filename is a/b/c/d/blah.txt
+                if (!dir.exists()) {
+                    dir.mkpath("..");   //create a/b/c/d/ if it doesn't exist
+                }
+
                 file.setFileName (m_filename);
 
                 if (!file.open (QIODevice::WriteOnly)) {
+                    qDebug() << "Could not open file " << file.fileName();
                     break;
                 }
             } else {

@@ -61,6 +61,7 @@ class TransferWidget : public QWidget
         void startTransfer();
         void transferFinished();
         void transferNeedsDestinationDir();
+        void updateProgress(quint64 done, quint64 total);
 };
 
 #endif // TRANSFERWIDGET_H

@@ -60,7 +60,7 @@ Transfer* TransferManager::addTransfer (Transfer::TransferType type, QList< Tran
 
 QString TransferManager::newId (QString path)
 {
-    QString id = QString::number (QDateTime::currentMSecsSinceEpoch());
+    QString id = path + QString::number (QDateTime::currentMSecsSinceEpoch());
 
     if (m_paths.contains (id)) {
         qFatal ("THIS IS NASTY, I MEAN IT, STOP _NOW_");

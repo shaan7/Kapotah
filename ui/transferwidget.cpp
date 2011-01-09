@@ -27,6 +27,7 @@
 #include <QLabel>
 #include <QProgressBar>
 #include <QToolButton>
+#include <QFileDialog>
 
 using namespace Kapotah;
 
@@ -57,6 +58,7 @@ TransferWidget::TransferWidget (Transfer* transfer, QWidget* parent, Qt::WindowF
 
     connect(m_startStop, SIGNAL(clicked(bool)), SLOT(startTransfer()));
     connect(m_transfer, SIGNAL(done()), SLOT(transferFinished()));
+    connect(m_transfer, SIGNAL(progress(quint64,quint64)), SLOT(updateProgress(quint64,quint64)));
 }
 
 TransferWidget::~TransferWidget()
@@ -73,13 +75,22 @@ void TransferWidget::startTransfer()
 void TransferWidget::transferFinished()
 {
     m_peerLabel->setText("FINISHED");
+    m_progress->setValue(m_progress->maximum());
 }
 
 void TransferWidget::transferNeedsDestinationDir()
 {
-    qDebug() << "SETDESTDIR";
-    m_incomingTransfer->setDestinationDir("/tmp/");
+    QString dirname = QFileDialog::getExistingDirectory(this, "Select a dir");
+    if (dirname=="")
+        dirname = ".";
+    m_incomingTransfer->setDestinationDir(dirname);
     m_transfer->start();
+}
+
+void TransferWidget::updateProgress (quint64 done, quint64 total)
+{
+    m_progress->setMaximum(total);
+    m_progress->setValue(done);
 }
 
 #include "transferwidget.moc"
