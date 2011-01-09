@@ -35,7 +35,9 @@ ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent,
     connect (ui.sendMessage, SIGNAL(pressed()), this, SLOT(sendNewMessage()));
     connect (ui.sendMessage, SIGNAL(pressed()), this, SLOT(displaySendingMessage()));
     connect (ui.sendMessage, SIGNAL(pressed()), ui.messageEdit, SLOT(clear()));
-    //connect (ui.messageEdit, SIGNAL(reuturnPressed()), this, SLOT(sendNewMessage()));//TODO::set default enter for messageEdit
+
+    ui.messageEdit->setFocus();
+    ui.messageEdit->installEventFilter(this);
 }
 
 void ChatDialog::displayRecievedMessage(QString message, QHostAddress peerAddress)
@@ -61,6 +63,22 @@ void ChatDialog::sendNewMessage()
 ChatDialog::~ChatDialog()
 {
 
+}
+
+bool ChatDialog::eventFilter (QObject* obj, QEvent* event)
+{
+    if (event->type() == QEvent::KeyPress) {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+        if ((keyEvent->modifiers()==Qt::NoModifier)
+            && (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter) ) {
+                ui.sendMessage->animateClick(); //Click the button
+                return true;
+            } else {
+                return false;
+            }
+    } else {
+        return QDialog::eventFilter (obj, event);
+    }
 }
 
 #include "chatdialog.moc"
