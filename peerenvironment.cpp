@@ -26,20 +26,11 @@ using namespace Kapotah;
 QString PeerEnvironment::getPeerName()
 {
     QString username;
-    QStringList envVariables;   //Used to get one of the below infos about the client operating enivronment
-    envVariables << "USERNAME.*" << "USER.*" << "USERDOMAIN.*"
-                 << "HOSTNAME.*" << "DOMAINNAME.*";
-
-    QStringList environment = QProcess::systemEnvironment();
-    foreach (QString string, envVariables) {
-        int index = environment.indexOf(QRegExp(string));
-        if (index != -1) {
-            QStringList stringList = environment.at(index).split("=");
-            if (stringList.size() == 2) {
-                username = stringList.at(1).toUtf8();
-                break;
-            }
-        }
+    QStringList env = QProcess::systemEnvironment();
+    int i = env.indexOf(QRegExp("USER.*"));
+    QStringList list = env.at(i).split('=');
+    if (list.count() == 2) {
+        username = list.at(1).toUtf8();
     }
 
     return username;
