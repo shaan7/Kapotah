@@ -27,10 +27,18 @@ QString PeerEnvironment::getPeerName()
 {
     QString username;
     QStringList env = QProcess::systemEnvironment();
-    int i = env.indexOf(QRegExp("USER.*"));
-    QStringList list = env.at(i).split('=');
-    if (list.count() == 2) {
-        username = list.at(1).toUtf8();
+
+    QStringList varPatterns;
+    varPatterns << "USER.*" << "USERNAME.*";
+
+    foreach (QString pattern, varPatterns) {
+        int i = env.indexOf(QRegExp(pattern));
+        if (i > 0) {
+            QStringList list = env.at(i).split('=');
+            if (list.count() == 2) {
+                username = list.at(1).toUtf8();
+            }
+        }
     }
 
     return username;
