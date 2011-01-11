@@ -86,8 +86,10 @@ void OutgoingTransferThread::addFilesInDir (QString path)
         return;         //FIXME: This ain't great, empty dirs will be skipped
 
     foreach (QString file, dir.entryList (QDir::Files | QDir::Hidden)) {
-        QString fullPath(dir.absoluteFilePath (file));
-        addFileToList(fullPath, QDir(m_parentDir).relativeFilePath(fullPath));
+        if (!QFileInfo(dir.absoluteFilePath(file)).isDir()) {
+            QString fullPath(dir.absoluteFilePath (file));
+            addFileToList(fullPath, QDir(m_parentDir).relativeFilePath(fullPath));
+        }
     }
 
     foreach (QString tdir, dir.entryList (QDir::Hidden | QDir::Dirs | QDir::NoDotAndDotDot | QDir::NoSymLinks)) {

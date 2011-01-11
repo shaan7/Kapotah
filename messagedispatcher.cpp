@@ -45,6 +45,7 @@ MessageDispatcherServer* MessageDispatcher::messageDispatcherServer()
 
 void MessageDispatcher::newMessage (QString message, QHostAddress peerAddress)
 {
+    qDebug() << message;
     //Try parsing as Message
     MessageXMLParser parser;
     MessageXMLData *data = static_cast<MessageXMLData*>(parser.parseXML(message));

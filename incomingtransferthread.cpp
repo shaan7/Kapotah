@@ -41,7 +41,6 @@ void IncomingTransferThread::stopTransfer()
 
 void IncomingTransferThread::run()
 {
-    qDebug() << 100;
     bool readyToReceive = false;
     quint64 bytesCopied;
 
@@ -66,7 +65,6 @@ void IncomingTransferThread::run()
     socket.waitForBytesWritten();
 
     while (!doQuit) {
-        qDebug() << 4;
         while (socket.bytesAvailable() == 0) {
             socket.waitForReadyRead();
         }
