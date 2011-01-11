@@ -28,7 +28,8 @@
 #include <QDir>
 
 OutgoingTransferThread::OutgoingTransferThread (QHostAddress ip, QList< Kapotah::TransferFile > files,
-        QObject* parent) : TransferThread (ip, parent), m_initialList (files), doQuit (false)
+        QObject* parent) : TransferThread (ip, parent), m_initialList (files), doQuit (false), m_totalSize(0),
+        m_totalFileCount(0), m_totalDirCount(0)
 {
 
 }
@@ -84,15 +85,18 @@ void OutgoingTransferThread::addFilesInDir (QString path)
     if (dir.count() == 0)
         return;         //FIXME: This ain't great, empty dirs will be skipped
 
-    foreach (QString file, dir.entryList (QStringList ("*"), QDir::Files)) {
+    foreach (QString file, dir.entryList (QDir::Files | QDir::Hidden)) {
         QString fullPath(dir.absoluteFilePath (file));
         addFileToList(fullPath, QDir(m_parentDir).relativeFilePath(fullPath));
     }
 
-    foreach (QString tdir, dir.entryList (QStringList ("*"), QDir::Dirs | QDir::NoDotAndDotDot)) {
-        dir.cd (tdir);
-        addFilesInDir(dir.absolutePath());
-        dir.cdUp();
+    foreach (QString tdir, dir.entryList (QDir::Hidden | QDir::Dirs | QDir::NoDotAndDotDot | QDir::NoSymLinks)) {
+        if (QFileInfo(dir.absoluteFilePath(tdir)).isDir()) {  //QDir::Hidden includes even hidden non-dirs, so have to check
+            dir.cd (tdir);
+            m_totalDirCount++;
+            addFilesInDir(dir.absolutePath());
+            dir.cdUp();
+        }
     }
 }
 
@@ -103,8 +107,12 @@ void OutgoingTransferThread::addFileToList (QString fullPath, QString relativePa
     relativeFile.id = Kapotah::TransferManager::instance()->newId (fullPath);
     relativeFile.path = relativePath;
     relativeFile.size = info.size();
+    m_totalSize += info.size();
+    m_totalFileCount++;
     m_files.append(relativeFile);
     qDebug() << "Adding " << fullPath;
+    qDebug() << QString("Total %1 bytes %2 MiB from %3 files and %4 directories")
+                    .arg(m_totalSize).arg(m_totalSize/1024/1024).arg(m_totalFileCount).arg(m_totalDirCount);
 }
 
 #include "outgoingtransferthread.moc"

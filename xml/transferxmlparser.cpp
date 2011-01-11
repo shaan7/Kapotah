@@ -64,7 +64,7 @@ AbstractXMLData* TransferXMLParser::parseXML (const QString& xml)
                                                            reader.attributes().value ("size").toString().toLongLong()
                                                          };
                             data->files.append (file);
-                            qDebug() << "SIZE " << file.size;
+//                            qDebug() << "SIZE " << file.size;
                         }
                     } else {
                         if (reader.name() == "transfer") {
