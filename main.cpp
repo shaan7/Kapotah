@@ -19,12 +19,13 @@
 
 #include <QApplication>
 #include <QDebug>
-#include "udpmanager.h"
-#include "announcer.h"
-#include "messagedispatcher.h"
-#include "peermanager.h"
-#include "ui/peerdialog.h"
+#include <udpmanager.h>
+#include <announcer.h>
+#include <messagedispatcher.h>
+#include <peermanager.h>
+#include <ui/peerdialog.h>
 #include <fileserversingleton.h>
+#include <peerenvironment.h>
 
 static const int s_messageServerPort = 45001;
 static const int s_fileServerPort = 45002;
@@ -34,7 +35,7 @@ int main (int argc, char** argv)
     QApplication app (argc, argv);
 
     Kapotah::UdpManager::instance();   //Start the broadcast engine
-    Kapotah::Announcer::instance()->setUserName(argv[1]); //Start the announcer
+    Kapotah::Announcer::instance()->setUserName(Kapotah::PeerEnvironment::getPeerName()); //Start the announcer
     Kapotah::PeerManager::instance();
     Kapotah::MessageDispatcher::instance()->messageDispatcherServer()->listen(QHostAddress::Any,
         s_messageServerPort);
