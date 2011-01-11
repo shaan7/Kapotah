@@ -51,6 +51,7 @@ class TransferWidget : public QWidget
         QLabel *m_peerLabel;
         QProgressBar *m_progress;
         QToolButton *m_startStop;
+        QLabel *m_progressLabel;
         QVBoxLayout *m_verticalLayout;
         QHBoxLayout *m_horizontalLayout;
         Kapotah::Transfer *m_transfer;

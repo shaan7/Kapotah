@@ -104,6 +104,7 @@ void OutgoingTransferThread::addFileToList (QString fullPath, QString relativePa
     relativeFile.path = relativePath;
     relativeFile.size = info.size();
     m_files.append(relativeFile);
+    qDebug() << "Adding " << fullPath;
 }
 
 #include "outgoingtransferthread.moc"

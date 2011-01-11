@@ -44,6 +44,7 @@ TransferWidget::TransferWidget (Transfer* transfer, QWidget* parent, Qt::WindowF
     m_peerLabel = new QLabel(transfer->peerAddress().toString(), this);
     m_startStop = new QToolButton(this);
     m_progress = new QProgressBar(this);
+    m_progressLabel = new QLabel("Waiting for transfer to begin");
 
     m_horizontalLayout = new QHBoxLayout();
     m_verticalLayout = new QVBoxLayout();
@@ -52,7 +53,7 @@ TransferWidget::TransferWidget (Transfer* transfer, QWidget* parent, Qt::WindowF
 
     m_verticalLayout->addItem(m_horizontalLayout);
     m_verticalLayout->addWidget(m_progress);
-    m_verticalLayout->addStretch();
+    m_verticalLayout->addWidget(m_progressLabel);
 
     setLayout(m_verticalLayout);
 
@@ -91,6 +92,7 @@ void TransferWidget::updateProgress (quint64 done, quint64 total)
 {
     m_progress->setMaximum(total);
     m_progress->setValue(done);
+    m_progressLabel->setText(QString("%1 MiB of %2 MiB done").arg(done/1024/1024).arg(total/1024/1024));
 }
 
 #include "transferwidget.moc"
