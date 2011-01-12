@@ -63,7 +63,7 @@ namespace Kapotah
             QList<TransferFile>::iterator m_filesIterator;
 
         signals:
-            void progress (quint64 done, quint64 total);
+            void progress (quint64 done, quint64 total, quint32 speed);
             void done();
     };
 

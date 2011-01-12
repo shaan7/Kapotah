@@ -74,7 +74,7 @@ void IncomingTransferThread::run()
             bytesCopied = file.pos();
 
             emit progress (bytesCopied, m_size);
-            qDebug() << "Copied " << bytesCopied << " of " << m_size;
+            //qDebug() << "Copied " << bytesCopied << " of " << m_size;
 
             if (bytesCopied >= m_size) {
                 emit done ();

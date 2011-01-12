@@ -40,6 +40,10 @@ namespace Kapotah
 
         private:
             QString m_destinationDir;
+            quint64 m_doneSinceLastSpeedEstimate;
+            quint64 m_doneTillLastProgressReport;
+            quint64 m_prevTime;
+            quint32 m_speed;
 
         protected slots:
             void startNextFile();
@@ -51,6 +55,9 @@ namespace Kapotah
 
         signals:
             void needDestinationDir();
+
+        protected:
+            virtual void timerEvent (QTimerEvent* event);
     };
 
 }
