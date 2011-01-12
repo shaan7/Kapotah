@@ -40,7 +40,8 @@ namespace Kapotah
         public:
             enum TransferType { Incoming, Outgoing };
             enum TransferState { Waiting, PreparingList, Connecting, Transferring, Done };
-            explicit Transfer (QList<TransferFile> files, QHostAddress peer, QObject* parent = 0);
+            explicit Transfer (QList<TransferFile> files, quint64 totalSize, quint64 numFiles, quint64 numDirs,
+                               QHostAddress peer, QObject* parent = 0);
             virtual ~Transfer();
             virtual void start() = 0;
             virtual TransferType type() = 0;
@@ -53,6 +54,7 @@ namespace Kapotah
             TransferState m_state;
             quint64 m_totalSize;
             quint64 m_numFiles;
+            quint64 m_numDirs;
             quint64 m_sizeDone;
             quint64 m_filesDone;
             QList<TransferFile> m_files;

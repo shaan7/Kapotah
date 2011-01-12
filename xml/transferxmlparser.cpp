@@ -22,13 +22,17 @@
 
 QString TransferXMLParser::composeXML (AbstractXMLData* data)
 {
+    TransferXMLData *tdata = static_cast<TransferXMLData*> (data);
     QString xml;
     QXmlStreamWriter writer (&xml);
     writer.setAutoFormatting (true);
     writer.writeStartDocument();
     writer.writeStartElement ("transfer");
+    writer.writeAttribute("size", QString::number(tdata->totalSize));
+    writer.writeAttribute("files", QString::number(tdata->totalNumFiles));
+    writer.writeAttribute("dirs", QString::number(tdata->totalNumDirs));
 
-    foreach (Kapotah::TransferFile file, static_cast<TransferXMLData*> (data)->files) {
+    foreach (Kapotah::TransferFile file, tdata->files) {
         writer.writeStartElement ("file");
         writer.writeAttribute ("id", file.id);
         writer.writeAttribute ("path", file.path);
@@ -54,6 +58,9 @@ AbstractXMLData* TransferXMLParser::parseXML (const QString& xml)
             if (reader.name() == "transfer") {
                 data->type = AbstractXMLData::Transfer;
                 data->files.clear();
+                data->totalSize = reader.attributes().value ("size").toString().toULongLong();
+                data->totalNumFiles = reader.attributes().value ("files").toString().toULongLong();
+                data->totalNumDirs = reader.attributes().value ("dirs").toString().toULongLong();
                 reader.readNext();
 
                 while (!reader.atEnd()) {
@@ -61,10 +68,9 @@ AbstractXMLData* TransferXMLParser::parseXML (const QString& xml)
                         if (reader.name() == "file") {
                             Kapotah::TransferFile file = { reader.attributes().value ("id").toString(),
                                                            reader.attributes().value ("path").toString(),
-                                                           reader.attributes().value ("size").toString().toLongLong()
+                                                           reader.attributes().value ("size").toString().toULongLong()
                                                          };
                             data->files.append (file);
-//                            qDebug() << "SIZE " << file.size;
                         }
                     } else {
                         if (reader.name() == "transfer") {

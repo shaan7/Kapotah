@@ -65,6 +65,9 @@ void OutgoingTransferThread::run()
     TransferXMLParser parser;
     data.type = AbstractXMLData::Transfer;
     data.files = m_files;
+    data.totalNumDirs = m_totalDirCount;
+    data.totalNumFiles = m_totalFileCount;
+    data.totalSize = m_totalSize;
     MessageSenderThread *thread = new MessageSenderThread (parser.composeXML(&data), m_ip);
     thread->start();
     emit doneSendingList();

@@ -24,10 +24,11 @@
 using namespace Kapotah;
 
 OutgoingTransfer::OutgoingTransfer (QList< TransferFile > files, QHostAddress peer, QObject* parent)
-    : Transfer (files, peer, parent)
+                                        : Transfer (files, 0, 0, 0, peer, parent)
 {
     m_state = Stopped;
 }
+
 
 OutgoingTransfer::~OutgoingTransfer()
 {

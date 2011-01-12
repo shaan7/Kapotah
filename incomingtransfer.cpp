@@ -20,18 +20,15 @@
 #include "incomingtransfer.h"
 
 #include "incomingtransferthread.h"
-#include <qdir.h>
+#include <QDir>
 
 using namespace Kapotah;
 
-IncomingTransfer::IncomingTransfer (QList< TransferFile > files,
-                                    QHostAddress peer, QObject* parent) : Transfer (files, peer, parent)
+IncomingTransfer::IncomingTransfer (QList< TransferFile > files, quint64 totalSize, quint64 numFiles,
+                                    quint64 numDirs, QHostAddress peer, QObject* parent)
+                                        : Transfer (files, totalSize, numFiles, numDirs, peer, parent)
 {
-    //Calculate total number of files and total size
-    foreach (TransferFile file, files) {
-        ++m_numFiles;
-        m_totalSize += file.size;
-    }
+
 }
 
 IncomingTransfer::~IncomingTransfer()

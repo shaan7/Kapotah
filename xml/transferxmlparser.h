@@ -28,6 +28,9 @@ class TransferXMLData : public AbstractXMLData
 {
     public:
         QList<Kapotah::TransferFile> files;
+        quint64 totalSize;
+        quint64 totalNumFiles;
+        quint64 totalNumDirs;
 };
 
 class TransferXMLParser : public AbstractXMLParser
