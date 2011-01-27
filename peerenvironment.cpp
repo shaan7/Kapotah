@@ -17,39 +17,29 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "transferdialog.h"
-#include <transfermanager.h>
-#include "transferwidget.h"
-#include "transfer.h"
-#include <QHBoxLayout>
+#include "peerenvironment.h"
+#include <QStringList>
+#include <QProcess>
 
 using namespace Kapotah;
 
-TransferDialog::TransferDialog (QWidget* parent, Qt::WindowFlags f) : QDialog (parent, f)
+QString PeerEnvironment::getPeerName()
 {
-    setWindowTitle ("Transfers");
-    m_layout = new QVBoxLayout();
-    setLayout (m_layout);
-    connect (TransferManager::instance(), SIGNAL (newTransferAdded (Transfer*)),
-             SLOT (addTransfer (Transfer*)));
-    resize(200, 100);
-}
+    QString username;
+    QStringList env = QProcess::systemEnvironment();
 
-TransferDialog::~TransferDialog()
-{
+    QStringList varPatterns;
+    varPatterns << "USER.*" << "USERNAME.*";
 
-}
-
-void TransferDialog::addTransfer (Transfer* transfer)
-{
-    if (transfer->type() == Transfer::Outgoing) {   //FIXME: TEMP
-        return;
+    foreach (QString pattern, varPatterns) {
+        int i = env.indexOf(QRegExp(pattern));
+        if (i > 0) {
+            QStringList list = env.at(i).split('=');
+            if (list.count() == 2) {
+                username = list.at(1).toUtf8();
+            }
+        }
     }
 
-    qDebug() << "INCOMING from " << transfer->peerAddress();
-
-    TransferWidget *widget = new TransferWidget (transfer, this);
-    m_layout->addWidget (widget);
+    return username;
 }
-
-#include "transferdialog.moc"

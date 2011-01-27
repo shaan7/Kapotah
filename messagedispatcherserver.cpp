@@ -26,7 +26,6 @@
 
 void MessageDispatcherServer::incomingConnection (int handle)
 {
-    qDebug() << "Got connection";
     MessageDispatcherThread *thread = new MessageDispatcherThread(handle);
     connect(thread, SIGNAL(gotMessage(QString,QHostAddress)), SIGNAL(gotMessage(QString,QHostAddress)));
     thread->start();

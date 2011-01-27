@@ -45,7 +45,9 @@ void FileServerThread::run()
     socket.setSocketDescriptor (m_descriptor);
 
     while (!m_doQuit) {
-        socket.waitForReadyRead();
+        while (socket.bytesAvailable() == 0) {
+            socket.waitForReadyRead();
+        }
 
         QString data (socket.readAll());
 
@@ -59,9 +61,7 @@ void FileServerThread::run()
                 break;  //TODO: too quiet, let the system know the error
 
             socket.write ("OK");
-
             socket.waitForBytesWritten();
-
             emit startedTransfer (ID);
 
             while (!file.atEnd()) {
@@ -71,13 +71,13 @@ void FileServerThread::run()
                 }
 
                 socket.write (file.read (s_bytesPerBlock));
-
                 socket.waitForBytesWritten();
 
                 while (socket.bytesToWrite())
                     socket.flush();
 
                 emit transferProgress (ID, file.pos() / file.size() *100);
+                qDebug() << "Sent " << file.pos() << " of " << file.size();
             }
 
             file.close();

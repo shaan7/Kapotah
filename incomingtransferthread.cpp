@@ -21,6 +21,7 @@
 
 #include <QFile>
 #include <QTcpSocket>
+#include <QDir>
 
 IncomingTransferThread::IncomingTransferThread (QHostAddress ip, QString id, QString filename, quint64 size,
         QObject* parent) : TransferThread (ip, parent), m_id (id), m_filename (filename), m_size (size)
@@ -40,6 +41,7 @@ void IncomingTransferThread::stopTransfer()
 
 void IncomingTransferThread::run()
 {
+    qDebug() << 100;
     bool readyToReceive = false;
     quint64 bytesCopied;
 
@@ -55,13 +57,16 @@ void IncomingTransferThread::run()
 
     QTcpSocket socket;
 
-    socket.connectToHost (m_ip, 9877);
+    socket.connectToHost (m_ip, 45002);  //FIXME: hardcoded port
+    qDebug() << "Connecting to " << m_ip;
     socket.waitForConnected();
+    qDebug() << "Connected to " << m_ip;
 
     socket.write (m_id.toUtf8()); //ID
     socket.waitForBytesWritten();
 
     while (!doQuit) {
+        qDebug() << 4;
         while (socket.bytesAvailable() == 0) {
             socket.waitForReadyRead();
         }
@@ -71,6 +76,7 @@ void IncomingTransferThread::run()
             bytesCopied = file.pos();
 
             emit progress (bytesCopied, m_size);
+            qDebug() << "Copied " << bytesCopied << " of " << m_size;
 
             if (bytesCopied >= m_size) {
                 emit done ();
@@ -87,9 +93,16 @@ void IncomingTransferThread::run()
 
             if (data == "OK") {
                 readyToReceive = true;
+
+                QDir dir(m_filename);   //filename is a/b/c/d/blah.txt
+                if (!dir.exists()) {
+                    dir.mkpath("..");   //create a/b/c/d/ if it doesn't exist
+                }
+
                 file.setFileName (m_filename);
 
                 if (!file.open (QIODevice::WriteOnly)) {
+                    qDebug() << "Could not open file " << file.fileName();
                     break;
                 }
             } else {

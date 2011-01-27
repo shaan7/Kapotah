@@ -30,22 +30,29 @@
 
 class ChatDialog : public QDialog
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         explicit ChatDialog (const QPersistentModelIndex &ipAddress, QWidget *parent = 0, Qt::WindowFlags f = 0);
         virtual ~ChatDialog();
-    
+
     private:
         Ui::ChatDialog ui;
         QPersistentModelIndex m_ipAddress;
-    
+
     private slots:
-        void displayRecievedMessage(QString message, QHostAddress peerAddress);
+        void displayRecievedMessage (QString message, QHostAddress peerAddress);
         void displaySendingMessage();
         void sendNewMessage();
-        
-    friend class PeerDialog;
+
+    protected:
+        bool eventFilter (QObject *obj, QEvent *event);
+        virtual void dragEnterEvent (QDragEnterEvent *event);
+        virtual void dragMoveEvent (QDragMoveEvent *event);
+        virtual void dragLeaveEvent (QDragLeaveEvent*);
+        virtual void dropEvent (QDropEvent *event);
+
+        friend class PeerDialog;
 };
 
 #endif // CHATDIALOG_H

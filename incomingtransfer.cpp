@@ -60,7 +60,7 @@ void IncomingTransfer::startNextFile()
     m_thread = new IncomingTransferThread (m_peerAddress, m_filesIterator->id,
                                            destinationDir.absoluteFilePath(m_filesIterator->path),
                                            m_filesIterator->size, this);
-    connect (m_thread, SIGNAL (done (QString)), SLOT (currentFileFinished()));
+    connect (m_thread, SIGNAL (done ()), SLOT (currentFileFinished()));
     connect (m_thread, SIGNAL (progress (quint64, quint64)), SLOT (reportProgress (quint64, quint64)));
     m_thread->start();
 }

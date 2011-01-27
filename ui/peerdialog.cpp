@@ -31,7 +31,8 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(0)
     connect (ui.peersListView, SIGNAL(doubleClicked(QModelIndex)), SLOT(createChatDialog(QModelIndex)));
     connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)),
              SLOT(createChatDialogOnMessage(QString,QHostAddress)));
-    connect (ui.transferButton, SIGNAL(clicked(bool)), SLOT(showTransferDialog(bool)));
+    connect(ui.transferButton, SIGNAL(clicked(bool)), SLOT(showTransferDialog(bool)));
+    ui.transferButton->animateClick();
 }
 
 ChatDialog* PeerDialog::createChatDialog(QModelIndex index)

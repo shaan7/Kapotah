@@ -1,7 +1,7 @@
 /*
     This file is part of the Kapotah project.
-    Copyright (C) 2010 Shantanu Tushar <jhahoneyk@gmail.com>
-    Copyright (C) 2010 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
+    Copyright (C) 2011 Shantanu Tushar <jhahoneyk@gmail.com>
+    Copyright (C) 2011 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,23 +17,21 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef KAPOTAH_PEERENVIRONMENT_H
+#define KAPOTAH_PEERENVIRONMENT_H
 
-#include "fileserver.h"
-#include "fileserverthread.h"
+#include <QString>
 
-FileServer::FileServer (QObject* parent) : QTcpServer (parent)
-{
-}
-
-void FileServer::incomingConnection (int handle)
-{
-    FileServerThread *thread = new FileServerThread(handle);
-    thread->start();    //TODO: connect to signals
-}
-
-FileServer::~FileServer()
+namespace Kapotah
 {
 
+    class PeerEnvironment
+    {
+
+        public:
+            static QString getPeerName();
+    };
+
 }
 
-#include "fileserver.moc"
+#endif // KAPOTAH_PEERENVIRONMENT_H
