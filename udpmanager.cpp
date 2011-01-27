@@ -38,8 +38,7 @@ UdpManager::UdpManager()
         qDebug() << "ERROR: Can't bind socket";
         QApplication::exit(1);
     }
-    connect (&m_broadcastSocket, SIGNAL (readyRead()),
-             this, SLOT (readBroadcast()));
+    connect (&m_broadcastSocket, SIGNAL (readyRead()), this, SLOT (readBroadcast()));
 }
 
 UdpManager::~UdpManager()
@@ -82,8 +81,8 @@ void UdpManager::readBroadcast()
                                             &senderIp, &senderPort) == -1) {
             continue;
         }
-
         emit gotDatagram(datagram, senderIp, senderPort);
+        qDebug()<< datagram;
     }
 }
 
@@ -98,6 +97,13 @@ void UdpManager::sendBroadcast (const QByteArray& datagram)
 
     if (!validBroadcastAddresses)
         updateAddresses();
+}
+
+void UdpManager::sendDatagram (const QByteArray &datagram, const QHostAddress &host)
+{
+    QHostAddress address(host);
+    qDebug()<< address;
+    m_broadcastSocket.writeDatagram("hello", address, s_broadcastPort);
 }
 
 #include "udpmanager.moc"

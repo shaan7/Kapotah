@@ -39,6 +39,7 @@ ChatDialog* PeerDialog::createChatDialog(QModelIndex index)
     PeersModel *model = PeerManager::instance()->peersModel();
     if(!m_openChatDialogs.contains(model->data(index, PeersModel::ipAddressRole).toString()))
     {
+        setFocus();
         ChatDialog *chatDlg = new ChatDialog(index);
         chatDlg->show();
         m_openChatDialogs.insert(model->data(index, PeersModel::ipAddressRole).toString(), chatDlg);
