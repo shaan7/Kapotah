@@ -61,12 +61,16 @@ void Announcer::timerEvent (QTimerEvent* t)
             data.senderName = m_username;
             data.type = AnnounceXMLData::Announce;
             UdpManager::instance()->sendBroadcast(parser.composeXML(&data).toUtf8());
-            UdpManager::instance()->sendDatagram(QByteArray("hello"), QHostAddress ("10.99.88.33"));
-            qDebug()<<"roy4";
         }
     }
 
     QObject::timerEvent (t);
+}
+
+void Announcer::sendIsTyping(QHostAddress address)
+{
+    QString addr = address.toString();
+    UdpManager::instance()->sendDatagram(QByteArray("is typing"), QHostAddress(addr));
 }
 
 void Announcer::processDatagram (const QByteArray& datagram, const QHostAddress& host, quint16 port)

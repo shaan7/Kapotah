@@ -48,6 +48,7 @@ namespace Kapotah
 
         public slots:
             void processDatagram (const QByteArray &datagram, const QHostAddress &host, quint16 port);
+            void sendIsTyping(QHostAddress address);
             
 
         signals:

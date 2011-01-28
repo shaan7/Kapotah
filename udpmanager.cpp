@@ -103,7 +103,7 @@ void UdpManager::sendDatagram (const QByteArray &datagram, const QHostAddress &h
 {
     QHostAddress address(host);
     qDebug()<< address;
-    m_broadcastSocket.writeDatagram("hello", address, s_broadcastPort);
+    m_broadcastSocket.writeDatagram("is typing", address, s_broadcastPort);
 }
 
 #include "udpmanager.moc"
