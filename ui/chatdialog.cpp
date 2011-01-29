@@ -76,7 +76,7 @@ bool ChatDialog::eventFilter (QObject* obj, QEvent* event)
 {
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
-        Announcer::instance()->sendIsTyping(QHostAddress(PeerManager::instance()->peersModel()->data(m_ipAddress,
+        Announcer::instance()->peerStatus(QHostAddress(PeerManager::instance()->peersModel()->data(m_ipAddress,
                                                                                                      PeersModel::ipAddressRole).toString()));//send "is typing datagram"
         if ((keyEvent->modifiers()==Qt::NoModifier)  
             && (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter) ) {

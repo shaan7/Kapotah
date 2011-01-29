@@ -75,9 +75,9 @@ AbstractXMLData* TransferXMLParser::parseXML (const QString& xml)
                 }
                 break;
             }
-        } else {
-            reader.readNext();
         }
+        data->type = AbstractXMLData::Error;
+        break;
     }
 
     return data;

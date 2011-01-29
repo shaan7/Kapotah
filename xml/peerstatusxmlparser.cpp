@@ -17,34 +17,45 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "messagexmlparser.h"
+#include "peerstatusxmlparser.h"
 #include <QXmlStreamReader>
 #include <QDebug>
 
-QString MessageXMLParser::composeXML (AbstractXMLData* data)
+QString PeerStatusXMLParser::composeXML (AbstractXMLData* data)
 {
     QString xml;
     QXmlStreamWriter writer (&xml);
     writer.setAutoFormatting (true);
     writer.writeStartDocument();
-    writer.writeTextElement ("message", static_cast<MessageXMLData*>(data)->message);
+    writer.writeStartElement ("peerStatus");
+    if (static_cast<PeerStatusXMLData*>(data)->isTyping) {
+        writer.writeAttribute ("isTyping", "true");
+    } else {
+        writer.writeAttribute ("isTyping", "false");
+    }
+    writer.writeEndElement();
     writer.writeEndDocument();
     return xml;
 }
 
-AbstractXMLData* MessageXMLParser::parseXML (const QString& xml)
+AbstractXMLData* PeerStatusXMLParser::parseXML (const QString& xml)
 {
+    qDebug() << "HERE " << xml;
     QXmlStreamReader reader(xml);
     reader.readNext();
 
-    MessageXMLData *data = new MessageXMLData;
+    PeerStatusXMLData *data = new PeerStatusXMLData;
     data->type = AbstractXMLData::Error;
 
     while (!reader.atEnd()) {
         if (reader.isStartElement()) {
-            if (reader.name() == "message") {
-                data->type = AbstractXMLData::Message;
-                data->message = reader.readElementText();
+            if (reader.name() == "peerStatus") {
+                data->type = AbstractXMLData::PeerStatus;
+                if(reader.attributes().value("isTyping")=="true") {
+                    data->isTyping = true;
+                } else {
+                    data->isTyping = false;
+                }
                 break;
             }
             data->type = AbstractXMLData::Error;

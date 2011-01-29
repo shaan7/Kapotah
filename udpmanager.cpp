@@ -102,8 +102,7 @@ void UdpManager::sendBroadcast (const QByteArray& datagram)
 void UdpManager::sendDatagram (const QByteArray &datagram, const QHostAddress &host)
 {
     QHostAddress address(host);
-    qDebug()<< address;
-    m_broadcastSocket.writeDatagram("is typing", address, s_broadcastPort);
+    m_broadcastSocket.writeDatagram(datagram, address, s_broadcastPort);
 }
 
 #include "udpmanager.moc"

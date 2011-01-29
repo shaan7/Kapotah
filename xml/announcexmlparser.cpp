@@ -48,6 +48,8 @@ AbstractXMLData* AnnounceXMLParser::parseXML (const QString& xml)
                 data->senderName = reader.attributes().value ("senderName").toString();
                 break;
             }
+            data->type = AbstractXMLData::Error;
+            break;
         } else {
             reader.readNext();
         }

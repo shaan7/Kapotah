@@ -17,25 +17,24 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ABSTRACTXMLPARSER_H
-#define ABSTRACTXMLPARSER_H
+#ifndef PEERSTATUSXMLPARSER_H
+#define PEERSTATUSXMLPARSER_H
 
+#include <xml/abstractxmlparser.h>
 #include <QString>
 
-class AbstractXMLData
+class PeerStatusXMLData : public AbstractXMLData
 {
-
     public:
-        enum Type { Error, Announce, Message, Transfer, PeerStatus };
-        Type type;
+        bool isTyping;
 };
 
-class AbstractXMLParser
+class PeerStatusXMLParser : public AbstractXMLParser
 {
 
-    public:
-        virtual AbstractXMLData *parseXML (const QString &xml) = 0;
-        virtual QString composeXML (AbstractXMLData *data) = 0;
+public:
+    virtual QString composeXML(AbstractXMLData* data);
+    virtual AbstractXMLData* parseXML(const QString& xml);
 };
 
-#endif // ABSTRACTXMLPARSER_H
+#endif // PEERSTATUSXMLPARSER_H
