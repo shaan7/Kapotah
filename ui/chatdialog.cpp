@@ -36,6 +36,7 @@ ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent,
                    +")");
     connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)), this,
              SLOT(displayRecievedMessage(QString, QHostAddress)));
+    connect (Announcer::instance(), SIGNAL(peerTyping(QHostAddress)), this, SLOT(displayPeerStatus(QHostAddress)));
     connect (ui.sendMessage, SIGNAL(pressed()), this, SLOT(sendNewMessage()));
     connect (ui.sendMessage, SIGNAL(pressed()), this, SLOT(displaySendingMessage()));
     connect (ui.sendMessage, SIGNAL(pressed()), ui.messageEdit, SLOT(clear()));
@@ -46,7 +47,6 @@ ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent,
     setAcceptDrops(true);
 }
 
-
 void ChatDialog::displayRecievedMessage(QString message, QHostAddress peerAddress)
 {
         if(peerAddress.toString() == PeerManager::instance()->peersModel()->data(m_ipAddress, PeersModel::ipAddressRole).toString())
@@ -54,6 +54,22 @@ void ChatDialog::displayRecievedMessage(QString message, QHostAddress peerAddres
             ui.messageDisplay->appendPlainText(PeerManager::instance()->peersModel()->data(m_ipAddress, Qt::DisplayRole).toString()
                                                +"::"+message);
         }
+}
+
+void ChatDialog::displayPeerStatus(QHostAddress peerAddress)
+{
+        connect (&m_isTypingTimer, SIGNAL(timeout()), this, SLOT(clearStatus()));
+        m_isTypingTimer.start(2000);
+        if(peerAddress.toString() == PeerManager::instance()->peersModel()->data(m_ipAddress, PeersModel::ipAddressRole).toString())
+        {
+            ui.peerStatus->setText("is typing....");
+        }
+        
+}
+
+void ChatDialog::clearStatus()
+{
+    ui.peerStatus->clear();
 }
 
 void ChatDialog::displaySendingMessage()
