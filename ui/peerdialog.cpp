@@ -27,12 +27,14 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(0)
 {
     ui.setupUi(this);
     setWindowTitle("Kapotah");
+    createTrayIcon();
     ui.peersListView->setModel(PeerManager::instance()->peersModel());
     connect (ui.peersListView, SIGNAL(doubleClicked(QModelIndex)), SLOT(createChatDialog(QModelIndex)));
     connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)),
              SLOT(createChatDialogOnMessage(QString,QHostAddress)));
     connect(ui.transferButton, SIGNAL(clicked(bool)), SLOT(showTransferDialog(bool)));
     ui.transferButton->animateClick();
+    trayIcon->show();
 }
 
 ChatDialog* PeerDialog::createChatDialog(QModelIndex index)
@@ -76,6 +78,11 @@ void PeerDialog::removeKeyFromHash()
 {
     ChatDialog* dlg = qobject_cast<ChatDialog*> (sender());
     m_openChatDialogs.remove(m_openChatDialogs.key(dlg));
+}
+
+void PeerDialog::createTrayIcon()
+{
+    trayIcon = new QSystemTrayIcon(QIcon("/media/Data/ProAndDocs/kapotah/images/heart.svg"));
 }
 
 PeerDialog::~PeerDialog()

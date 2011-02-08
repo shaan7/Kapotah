@@ -26,6 +26,7 @@
 #include "transferdialog.h"
 #include <peermanager.h>
 #include <QDialog>
+#include <QtGui>
 
 class PeerDialog : public QDialog
 {
@@ -39,6 +40,9 @@ class PeerDialog : public QDialog
         Ui::PeersDialog ui;
         QHash<QString, ChatDialog*> m_openChatDialogs;
         TransferDialog *m_transferDialog;
+        
+        void createTrayIcon();
+        QSystemTrayIcon *trayIcon;
 
     private slots:
         ChatDialog* createChatDialog (QModelIndex index);
