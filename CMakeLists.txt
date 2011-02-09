@@ -8,6 +8,7 @@ set (QT_USE_QTNETWORK TRUE)
 set (QT_USE_QTXML TRUE)
 
 set(Kapotah_SRCS
+    xml/peerstatusxmlparser.cpp
     peerenvironment.cpp
     fileserversingleton.cpp
     xml/transferxmlparser.cpp

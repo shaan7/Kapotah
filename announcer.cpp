@@ -21,6 +21,7 @@
 #include "announcer.h"
 #include <udpmanager.h>
 #include <xml/announcexmlparser.h>
+#include <xml/peerstatusxmlparser.h>
 
 #include <QTimerEvent>
 
@@ -60,24 +61,43 @@ void Announcer::timerEvent (QTimerEvent* t)
             AnnounceXMLData data;
             data.senderName = m_username;
             data.type = AnnounceXMLData::Announce;
-            UdpManager::instance()->sendBroadcast (parser.composeXML(&data).toUtf8());
+            UdpManager::instance()->sendBroadcast(parser.composeXML(&data).toUtf8());
         }
     }
 
     QObject::timerEvent (t);
 }
 
+void Announcer::peerStatus(QHostAddress address)
+{
+    QString addr = address.toString();
+    PeerStatusXMLParser parser;
+    PeerStatusXMLData data;
+    data.isTyping = true;
+    data.type = PeerStatusXMLData::PeerStatus;
+    UdpManager::instance()->sendDatagram(parser.composeXML(&data).toUtf8(), QHostAddress(addr));
+}
+
 void Announcer::processDatagram (const QByteArray& datagram, const QHostAddress& host, quint16 port)
 {
-    AnnounceXMLParser parser;
+    AnnounceXMLParser announceParser;
+    PeerStatusXMLParser statusParser;
     QString xml (datagram);
-    AnnounceXMLData *data = static_cast<AnnounceXMLData*>(parser.parseXML(xml));
+    AnnounceXMLData *announceData = static_cast<AnnounceXMLData*>(announceParser.parseXML(xml));
 
-    if (data->type == AnnounceXMLData::Announce) {
-        Peer peer (data->senderName, host);
+    if (announceData->type == AnnounceXMLData::Announce) {
+        Peer peer (announceData->senderName, host);
         emit gotAnnounce (peer);
+        delete announceData;
+    } else {
+        PeerStatusXMLData *statusData = static_cast<PeerStatusXMLData*>(statusParser.parseXML(xml));
+        if (statusData->type == PeerStatusXMLData::PeerStatus) {
+            if (statusData->isTyping) {
+                emit peerTyping (host);
+            }
+        }
+        delete statusData;
     }
-    delete data;
 }
 
 #include "announcer.moc"

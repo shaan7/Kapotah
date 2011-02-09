@@ -54,6 +54,7 @@ namespace Kapotah
 
         public slots:
             void sendBroadcast (const QByteArray &datagram);
+            void sendDatagram (const QByteArray &datagram, const QHostAddress &host);
 
         signals:
             void gotDatagram (const QByteArray &datagram, const QHostAddress &host, quint16 port);

@@ -23,6 +23,7 @@
 #include <transfermanager.h>
 #include <transfer.h>
 #include <QUrl>
+#include <announcer.h>
 
 using namespace Kapotah;
 
@@ -73,15 +74,16 @@ ChatDialog::~ChatDialog()
 bool ChatDialog::eventFilter (QObject* obj, QEvent* event)
 {
     if (event->type() == QEvent::KeyPress) {
-        QKeyEvent *keyEvent = static_cast<QKeyEvent*> (event);
-
-        if ( (keyEvent->modifiers() == Qt::NoModifier)
-                && (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter)) {
-            ui.sendMessage->animateClick(); //Click the button
-            return true;
-        } else {
-            return false;
-        }
+        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+        Announcer::instance()->peerStatus(QHostAddress(PeerManager::instance()->peersModel()->data(m_ipAddress,
+                                                                                                     PeersModel::ipAddressRole).toString()));//send "is typing datagram"
+        if ((keyEvent->modifiers()==Qt::NoModifier)  
+            && (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter) ) {
+                ui.sendMessage->animateClick(); //Click the button
+                return true;
+            } else {
+                return false;
+            }
     } else {
         return QDialog::eventFilter (obj, event);
     }
