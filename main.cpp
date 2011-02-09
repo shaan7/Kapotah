@@ -18,6 +18,7 @@
 */
 
 #include <QApplication>
+#include <QtGui>
 #include <QDebug>
 #include <udpmanager.h>
 #include <announcer.h>
@@ -33,6 +34,8 @@ static const int s_fileServerPort = 45002;
 int main (int argc, char** argv)
 {
     QApplication app (argc, argv);
+    
+    QSystemTrayIcon::isSystemTrayAvailable();
 
     Kapotah::UdpManager::instance();   //Start the broadcast engine
     Kapotah::Announcer::instance()->setUserName(Kapotah::PeerEnvironment::getPeerName()); //Start the announcer

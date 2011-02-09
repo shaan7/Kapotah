@@ -27,6 +27,7 @@
 #include <QDialog>
 #include <QPersistentModelIndex>
 
+#include <QTimer>
 
 class ChatDialog : public QDialog
 {
@@ -39,11 +40,14 @@ class ChatDialog : public QDialog
     private:
         Ui::ChatDialog ui;
         QPersistentModelIndex m_ipAddress;
+        QTimer m_isTypingTimer;
 
     private slots:
         void displayRecievedMessage (QString message, QHostAddress peerAddress);
         void displaySendingMessage();
         void sendNewMessage();
+        void displayPeerStatus(QHostAddress);
+        void clearStatus();
 
     protected:
         bool eventFilter (QObject *obj, QEvent *event);
