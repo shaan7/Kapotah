@@ -7,6 +7,9 @@ include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_S
 set (QT_USE_QTNETWORK TRUE)
 set (QT_USE_QTXML TRUE)
 
+set (kapotah_RCCS systray.qrc)
+qt4_add_resources(kapotah_RCC_SRCS ${Kapotah_RCCS})
+
 set(Kapotah_SRCS
     xml/peerstatusxmlparser.cpp
     peerenvironment.cpp
@@ -36,12 +39,11 @@ set(Kapotah_SRCS
     peer.cpp
     udpmanager.cpp
     fileserver.cpp
-    main.cpp)
+    main.cpp
+    ${kapotah_RCC_SRCS}
+)
 
 SET(Kapotah_FORMS ui/peerdialog.ui ui/chatdialog.ui)
-
-set (kapotah_RCCS systray.qrc)
-qt4_add_resources(kapotah_RCC_SRCS ${Kapotah_RCCS})
 
 qt4_automoc(${Kapotah_SRCS})
 QT4_WRAP_UI(Kapotah_FORMS_HEADERS ${Kapotah_FORMS})

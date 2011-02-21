@@ -37,13 +37,12 @@ namespace Kapotah
         public:
             UdpManager();
             virtual ~UdpManager();
+            void updateAddresses();
 
         protected:
             virtual void timerEvent (QTimerEvent*);
 
         private:
-            void updateAddresses();
-
             QList<QHostAddress> m_broadcastAddresses;
             QList<QHostAddress> m_ipAddresses;
             QUdpSocket m_broadcastSocket;

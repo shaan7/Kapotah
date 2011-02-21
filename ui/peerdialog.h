@@ -42,13 +42,26 @@ class PeerDialog : public QDialog
         TransferDialog *m_transferDialog;
         
         void createTrayIcon();
+        void createActions();
+        
         QSystemTrayIcon *trayIcon;
+        QMenu *trayIconMenu;
+        QAction *minimizeAction;
+        QAction *maximizeAction;
+        QAction *restoreAction;
+        QAction *quitAction;
+        
+    protected:
+        void closeEvent(QCloseEvent *event);
 
     private slots:
         ChatDialog* createChatDialog (QModelIndex index);
         ChatDialog* createChatDialogOnMessage (QString message, QHostAddress peerAddress);
         void showTransferDialog (bool checked);
         void removeKeyFromHash();
+        void iconActivated(QSystemTrayIcon::ActivationReason);
+        void quitApplication();
+        void updatePeer();
 };
 
 #endif // PEERDIALOG_H
