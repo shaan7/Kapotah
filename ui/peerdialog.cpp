@@ -20,19 +20,26 @@
 
 #include "peerdialog.h"
 #include "peermanager.h"
+#include "udpmanager.h"
+#include <QtGui>
 
 using namespace Kapotah;
 
 PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(0)
 {
-    ui.setupUi(this);
+    QSystemTrayIcon::isSystemTrayAvailable();
+    ui.setupUi(this);    
     setWindowTitle("Kapotah");
+    createActions();
     createTrayIcon();
     ui.peersListView->setModel(PeerManager::instance()->peersModel());
+    connect (ui.refreshButton, SIGNAL(clicked()), this, SLOT(updatePeer()));
     connect (ui.peersListView, SIGNAL(doubleClicked(QModelIndex)), SLOT(createChatDialog(QModelIndex)));
     connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)),
              SLOT(createChatDialogOnMessage(QString,QHostAddress)));
-    connect(ui.transferButton, SIGNAL(clicked(bool)), SLOT(showTransferDialog(bool)));
+    connect (ui.transferButton, SIGNAL(clicked(bool)), SLOT(showTransferDialog(bool)));
+    connect (trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, 
+             SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
     ui.transferButton->animateClick();
     trayIcon->show();
 }
@@ -80,9 +87,69 @@ void PeerDialog::removeKeyFromHash()
     m_openChatDialogs.remove(m_openChatDialogs.key(dlg));
 }
 
+void PeerDialog::updatePeer()
+{
+    UdpManager::instance()->updateAddresses();
+}
+
+/*--------------------------------------------
+ * 
+ * code for system tray icon starts here
+ * 
+----------------------------------------------*/
+
 void PeerDialog::createTrayIcon()
 {
+<<<<<<< HEAD
     trayIcon = new QSystemTrayIcon(QIcon(":/images/heart.svg"));
+    trayIcon->setToolTip("Kapotah()");
+
+    trayIconMenu = new QMenu(this);
+    trayIconMenu->addAction(minimizeAction);
+    trayIconMenu->addAction(maximizeAction);
+    trayIconMenu->addAction(restoreAction);
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(quitAction);
+    trayIcon->setContextMenu(trayIconMenu);
+}
+
+void PeerDialog::createActions()
+{
+    minimizeAction = new QAction(tr("Mi&nimize"), this);
+    connect(minimizeAction, SIGNAL(triggered()), this, SLOT(hide()));
+    maximizeAction = new QAction(tr("Ma&ximize"), this);
+    connect(maximizeAction, SIGNAL(triggered()), this, SLOT(showMaximized()));
+    restoreAction = new QAction(tr("&Restore"), this);
+    connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
+    quitAction = new QAction(tr("&Quit"), this);
+    connect(quitAction, SIGNAL(triggered()), this, SLOT(quitApplication()));
+}
+
+void PeerDialog::iconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+    switch (reason) {
+    case QSystemTrayIcon::Trigger:
+    case QSystemTrayIcon::DoubleClick:
+                this->showNormal();
+        break;
+    case QSystemTrayIcon::MiddleClick:
+        break;
+    default:
+        ;
+    }
+}
+
+void PeerDialog::closeEvent(QCloseEvent* event)
+{
+    QDialog::closeEvent(event);
+    if(trayIcon->isVisible()){
+    event->ignore();
+    }
+}
+
+void PeerDialog::quitApplication()
+{
+    QApplication::quit();
 }
 
 PeerDialog::~PeerDialog()
