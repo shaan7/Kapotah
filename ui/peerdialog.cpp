@@ -82,7 +82,7 @@ void PeerDialog::removeKeyFromHash()
 
 void PeerDialog::createTrayIcon()
 {
-    trayIcon = new QSystemTrayIcon(QIcon("/media/Data/ProAndDocs/kapotah/images/heart.svg"));
+    trayIcon = new QSystemTrayIcon(QIcon(":/images/heart.svg"));
 }
 
 PeerDialog::~PeerDialog()

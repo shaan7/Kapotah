@@ -46,9 +46,10 @@ AbstractXMLData* MessageXMLParser::parseXML (const QString& xml)
                 data->type = AbstractXMLData::Message;
                 data->message = reader.readElementText();
                 break;
+            } else {
+                data->type = AbstractXMLData::Error;
+                break;
             }
-            data->type = AbstractXMLData::Error;
-            break;
         }
         else {
             reader.readNext();
