@@ -51,6 +51,7 @@ class TransferWidget : public QWidget
         QLabel *m_peerLabel;
         QProgressBar *m_progress;
         QToolButton *m_startStop;
+        QLabel *m_progressLabel;
         QVBoxLayout *m_verticalLayout;
         QHBoxLayout *m_horizontalLayout;
         Kapotah::Transfer *m_transfer;
@@ -61,7 +62,7 @@ class TransferWidget : public QWidget
         void startTransfer();
         void transferFinished();
         void transferNeedsDestinationDir();
-        void updateProgress(quint64 done, quint64 total);
+        void updateProgress(quint64 done, quint64 total, quint32 speed);
 };
 
 #endif // TRANSFERWIDGET_H

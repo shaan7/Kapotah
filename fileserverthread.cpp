@@ -77,7 +77,7 @@ void FileServerThread::run()
                     socket.flush();
 
                 emit transferProgress (ID, file.pos() / file.size() *100);
-                qDebug() << "Sent " << file.pos() << " of " << file.size();
+                //qDebug() << "Sent " << file.pos() << " of " << file.size();
             }
 
             file.close();

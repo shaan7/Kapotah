@@ -27,7 +27,7 @@
 
 using namespace Kapotah;
 
-ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent, Qt::WindowFlags f) : QDialog (parent,f)
+ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent, Qt::WindowFlags f) : QDialog (parent, f)
 {
     ui.setupUi(this);
     m_ipAddress=ipAddress;
@@ -42,18 +42,18 @@ ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent,
     connect (ui.sendMessage, SIGNAL(pressed()), ui.messageEdit, SLOT(clear()));
 
     ui.messageEdit->setFocus();
-    ui.messageEdit->installEventFilter(this);
+    ui.messageEdit->installEventFilter (this);
 
-    setAcceptDrops(true);
+    setAcceptDrops (true);
 }
+
 
 void ChatDialog::displayRecievedMessage(QString message, QHostAddress peerAddress)
 {
-        if(peerAddress.toString() == PeerManager::instance()->peersModel()->data(m_ipAddress, PeersModel::ipAddressRole).toString())
-        {
-            ui.messageDisplay->appendPlainText(PeerManager::instance()->peersModel()->data(m_ipAddress, Qt::DisplayRole).toString()
-                                               +"::"+message);
-        }
+    if (peerAddress.toString() == PeerManager::instance()->peersModel()->data (m_ipAddress, PeersModel::ipAddressRole).toString()) {
+        ui.messageDisplay->appendPlainText (PeerManager::instance()->peersModel()->data (m_ipAddress, Qt::DisplayRole).toString()
+                                            + "::" + message);
+    }
 }
 
 void ChatDialog::displayPeerStatus(QHostAddress peerAddress)
@@ -64,7 +64,6 @@ void ChatDialog::displayPeerStatus(QHostAddress peerAddress)
         {
             ui.peerStatus->setText("is typing....");
         }
-        
 }
 
 void ChatDialog::clearStatus()
@@ -74,13 +73,13 @@ void ChatDialog::clearStatus()
 
 void ChatDialog::displaySendingMessage()
 {
-    ui.messageDisplay->appendPlainText("Me:: "+ ui.messageEdit->toPlainText());
+    ui.messageDisplay->appendPlainText ("Me:: " + ui.messageEdit->toPlainText());
 }
 
 void ChatDialog::sendNewMessage()
 {
-    QHostAddress address(PeerManager::instance()->peersModel()->data(m_ipAddress, PeersModel::ipAddressRole).toString());
-    Kapotah::MessageDispatcher::instance()->sendNewMessage(ui.messageEdit->toPlainText(),address);
+    QHostAddress address (PeerManager::instance()->peersModel()->data (m_ipAddress, PeersModel::ipAddressRole).toString());
+    Kapotah::MessageDispatcher::instance()->sendNewMessage (ui.messageEdit->toPlainText(), address);
 }
 
 ChatDialog::~ChatDialog()
@@ -108,7 +107,7 @@ bool ChatDialog::eventFilter (QObject* obj, QEvent* event)
 
 void ChatDialog::dragEnterEvent (QDragEnterEvent *event)
 {
-    setBackgroundRole(QPalette::Highlight);
+    setBackgroundRole (QPalette::Highlight);
     event->acceptProposedAction();
 }
 
@@ -119,12 +118,12 @@ void ChatDialog::dragMoveEvent (QDragMoveEvent *event)
 
 void ChatDialog::dragLeaveEvent (QDragLeaveEvent*)
 {
-    setBackgroundRole(QPalette::NoRole);
+    setBackgroundRole (QPalette::NoRole);
 }
 
 void ChatDialog::dropEvent (QDropEvent* event)
 {
-    setBackgroundRole(QPalette::NoRole);
+    setBackgroundRole (QPalette::NoRole);
     const QMimeData *mimeData = event->mimeData();
 
     if (mimeData->hasUrls()) {
@@ -132,10 +131,11 @@ void ChatDialog::dropEvent (QDropEvent* event)
         foreach (QUrl url, mimeData->urls()) {
             TransferFile file;
             file.path = url.toLocalFile();
-            files.append(file);
+            files.append (file);
         }
-        QHostAddress address(PeerManager::instance()->peersModel()->data(m_ipAddress, PeersModel::ipAddressRole).toString());
-        Transfer *transfer = TransferManager::instance()->addTransfer(Transfer::Outgoing, files,address);
+
+        QHostAddress address (PeerManager::instance()->peersModel()->data (m_ipAddress, PeersModel::ipAddressRole).toString());
+        Transfer *transfer = TransferManager::instance()->addTransfer (Transfer::Outgoing, files, 0, 0, 0, address);
         transfer->start();
     }
 }

@@ -42,6 +42,9 @@ class OutgoingTransferThread : public TransferThread
         QList<Kapotah::TransferFile> m_files;
         bool doQuit;
         QString m_parentDir;    //Stores the current parent dir while recursing
+        quint64 m_totalSize;
+        quint64 m_totalFileCount;
+        quint64 m_totalDirCount;
 
         void addFilesInDir (QString path);
         void addFileToList (QString fullPath, QString relativePath);

@@ -32,14 +32,18 @@ namespace Kapotah
             Q_OBJECT
 
         public:
-            explicit IncomingTransfer (QList< TransferFile > files, QHostAddress peer,
-                                       QObject* parent = 0);
+            explicit IncomingTransfer (QList< TransferFile > files, quint64 totalSize, quint64 numFiles,
+                                       quint64 numDirs, QHostAddress peer, QObject* parent = 0);
             virtual ~IncomingTransfer();
             virtual void start();
             virtual TransferType type();
 
         private:
             QString m_destinationDir;
+            quint64 m_doneSinceLastSpeedEstimate;
+            quint64 m_doneTillLastProgressReport;
+            quint64 m_prevTime;
+            quint32 m_speed;
 
         protected slots:
             void startNextFile();
@@ -51,6 +55,9 @@ namespace Kapotah
 
         signals:
             void needDestinationDir();
+
+        protected:
+            virtual void timerEvent (QTimerEvent* event);
     };
 
 }

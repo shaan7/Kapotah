@@ -18,9 +18,10 @@
 */
 
 #include "transferwidget.h"
-#include "transfer.h"
-#include "incomingtransfer.h"
-#include "outgoingtransfer.h"
+#include <transfer.h>
+#include <incomingtransfer.h>
+#include <outgoingtransfer.h>
+#include <peermanager.h>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -44,6 +45,7 @@ TransferWidget::TransferWidget (Transfer* transfer, QWidget* parent, Qt::WindowF
     m_peerLabel = new QLabel(transfer->peerAddress().toString(), this);
     m_startStop = new QToolButton(this);
     m_progress = new QProgressBar(this);
+    m_progressLabel = new QLabel("Waiting for transfer to begin");
 
     m_horizontalLayout = new QHBoxLayout();
     m_verticalLayout = new QVBoxLayout();
@@ -52,13 +54,13 @@ TransferWidget::TransferWidget (Transfer* transfer, QWidget* parent, Qt::WindowF
 
     m_verticalLayout->addItem(m_horizontalLayout);
     m_verticalLayout->addWidget(m_progress);
-    m_verticalLayout->addStretch();
+    m_verticalLayout->addWidget(m_progressLabel);
 
     setLayout(m_verticalLayout);
 
     connect(m_startStop, SIGNAL(clicked(bool)), SLOT(startTransfer()));
     connect(m_transfer, SIGNAL(done()), SLOT(transferFinished()));
-    connect(m_transfer, SIGNAL(progress(quint64,quint64)), SLOT(updateProgress(quint64,quint64)));
+    connect(m_transfer, SIGNAL(progress(quint64,quint64,quint32)), SLOT(updateProgress(quint64,quint64,quint32)));
 }
 
 TransferWidget::~TransferWidget()
@@ -81,16 +83,18 @@ void TransferWidget::transferFinished()
 void TransferWidget::transferNeedsDestinationDir()
 {
     QString dirname = QFileDialog::getExistingDirectory(this, "Select a dir");
-    if (dirname=="")
-        dirname = ".";
+    if (dirname.isEmpty())
+        return;
     m_incomingTransfer->setDestinationDir(dirname);
     m_transfer->start();
 }
 
-void TransferWidget::updateProgress (quint64 done, quint64 total)
+void TransferWidget::updateProgress (quint64 done, quint64 total, quint32 speed)
 {
     m_progress->setMaximum(total);
     m_progress->setValue(done);
+    m_progressLabel->setText(QString("%1 MiB of %2 MiB done at %3 MiB/s").arg(done/1024/1024)
+                                .arg(total/1024/1024).arg(speed/1024));
 }
 
 #include "transferwidget.moc"

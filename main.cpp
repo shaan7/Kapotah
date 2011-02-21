@@ -37,10 +37,12 @@ int main (int argc, char** argv)
     Kapotah::UdpManager::instance();   //Start the broadcast engine
     Kapotah::Announcer::instance()->setUserName(Kapotah::PeerEnvironment::getPeerName()); //Start the announcer
     Kapotah::PeerManager::instance();
-    Kapotah::MessageDispatcher::instance()->messageDispatcherServer()->listen(QHostAddress::Any,
-        s_messageServerPort);
-    Kapotah::FileServerSingleton::instance()->fileServer()->listen(QHostAddress::Any,
-        s_fileServerPort);
+    if (!Kapotah::MessageDispatcher::instance()->messageDispatcherServer()->listen(QHostAddress::Any,
+        s_messageServerPort))
+        qFatal("Can't listen to message port");
+    if (!Kapotah::FileServerSingleton::instance()->fileServer()->listen(QHostAddress::Any,
+        s_fileServerPort))
+        qFatal("Can't listen to file port");
     PeerDialog peerDialog;
     peerDialog.show();
     return app.exec();

@@ -42,12 +42,8 @@ TransferDialog::~TransferDialog()
 
 void TransferDialog::addTransfer (Transfer* transfer)
 {
-    if (transfer->type() == Transfer::Outgoing) {   //FIXME: TEMP
+    if (transfer->type() != Transfer::Incoming)
         return;
-    }
-
-    qDebug() << "INCOMING from " << transfer->peerAddress();
-
     TransferWidget *widget = new TransferWidget (transfer, this);
     m_layout->addWidget (widget);
 }
