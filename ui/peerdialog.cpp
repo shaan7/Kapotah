@@ -21,6 +21,7 @@
 #include "peerdialog.h"
 #include "peermanager.h"
 #include "udpmanager.h"
+#include "peersmodel.h"
 #include <QtGui>
 
 using namespace Kapotah;
@@ -101,8 +102,8 @@ void PeerDialog::updatePeer()
 void PeerDialog::createTrayIcon()
 {
     trayIcon = new QSystemTrayIcon(QIcon("/media/Data/ProAndDocs/kapotah/images/heart.svg"));
-    trayIcon->setToolTip("Kapotah()");
-    
+    trayIcon->setToolTip("Kapotah (" +
+                          QString(Kapotah::PeerManager::instance()->peersModel()->rowCount()) +")");
     trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(minimizeAction);
     trayIconMenu->addAction(maximizeAction);
