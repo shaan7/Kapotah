@@ -2,4 +2,3 @@ BUG:
 1. Let the incoming transfer thread verify file size from the server.
 2. Make it less lenthy to typecast from model.
 3. find no. of peers available.
-4. correct the path of image folder.

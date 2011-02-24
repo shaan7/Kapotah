@@ -8,7 +8,7 @@ set (QT_USE_QTNETWORK TRUE)
 set (QT_USE_QTXML TRUE)
 
 set (kapotah_RCCS systray.qrc)
-qt4_add_resources(kapotah_RCC_SRCS ${Kapotah_RCCS})
+qt4_add_resources(kapotah_RCC_SRCS ${kapotah_RCCS})
 
 set(Kapotah_SRCS
     xml/peerstatusxmlparser.cpp
@@ -51,3 +51,4 @@ QT4_WRAP_UI(Kapotah_FORMS_HEADERS ${Kapotah_FORMS})
 add_executable(Kapotah ${Kapotah_SRCS} ${Kapotah_FORMS_HEADERS})
 target_link_libraries(Kapotah ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY}
                                 ${QT_QTXML_LIBRARY})
+

@@ -62,6 +62,7 @@ class PeerDialog : public QDialog
         void iconActivated(QSystemTrayIcon::ActivationReason);
         void quitApplication();
         void updatePeer();
+        void updateSystrayTooltip(QModelIndex parent, int start, int end);
 };
 
 #endif // PEERDIALOG_H

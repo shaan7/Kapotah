@@ -35,6 +35,10 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(0)
     createTrayIcon();
     ui.peersListView->setModel(PeerManager::instance()->peersModel());
     connect (ui.refreshButton, SIGNAL(clicked()), this, SLOT(updatePeer()));
+    connect (PeerManager::instance()->peersModel(), SIGNAL(rowsInserted(QModelIndex, int, int)), this,
+             SLOT(updateSystrayTooltip(QModelIndex, int, int)));
+    connect (PeerManager::instance()->peersModel(), SIGNAL(rowsRemoved(QModelIndex, int, int)), this,
+             SLOT(updateSystrayTooltip(QModelIndex, int, int)));
     connect (ui.peersListView, SIGNAL(doubleClicked(QModelIndex)), SLOT(createChatDialog(QModelIndex)));
     connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)),
              SLOT(createChatDialogOnMessage(QString,QHostAddress)));
@@ -101,9 +105,8 @@ void PeerDialog::updatePeer()
 
 void PeerDialog::createTrayIcon()
 {
-    trayIcon = new QSystemTrayIcon(QIcon("/media/Data/ProAndDocs/kapotah/images/heart.svg"));
-    trayIcon->setToolTip("Kapotah (" +
-                          QString(Kapotah::PeerManager::instance()->peersModel()->rowCount()) +")");
+    trayIcon = new QSystemTrayIcon(QIcon(":/images/heart.svg"));
+    
     trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(minimizeAction);
     trayIconMenu->addAction(maximizeAction);
@@ -129,14 +132,11 @@ void PeerDialog::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
     switch (reason) {
     case QSystemTrayIcon::Trigger:
-        
     case QSystemTrayIcon::DoubleClick:
                 this->showNormal();
         break;
-        
     case QSystemTrayIcon::MiddleClick:
         break;
-        
     default:
         ;
     }
@@ -148,6 +148,11 @@ void PeerDialog::closeEvent(QCloseEvent* event)
     if(trayIcon->isVisible()){
     event->ignore();
     }
+}
+
+void PeerDialog::updateSystrayTooltip(QModelIndex parent,int start,int end)
+{
+    trayIcon->setToolTip("Kapotah (" + QString::number(Kapotah::PeerManager::instance()->peersModel()->rowCount()) + ")");
 }
 
 void PeerDialog::quitApplication()
