@@ -42,8 +42,6 @@ TransferDialog::~TransferDialog()
 
 void TransferDialog::addTransfer (Transfer* transfer)
 {
-    if (transfer->type() != Transfer::Incoming)
-        return;
     TransferWidget *widget = new TransferWidget (transfer, this);
     m_layout->addWidget (widget);
 }
