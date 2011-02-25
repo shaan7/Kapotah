@@ -61,6 +61,7 @@ namespace Kapotah
             TransferFile m_currentFile;
             TransferThread *m_thread;
             QList<TransferFile>::iterator m_filesIterator;
+            QString m_id;
 
         signals:
             void progress (quint64 done, quint64 total, quint32 speed);

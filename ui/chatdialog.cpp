@@ -135,7 +135,7 @@ void ChatDialog::dropEvent (QDropEvent* event)
         }
 
         QHostAddress address (PeerManager::instance()->peersModel()->data (m_ipAddress, PeersModel::ipAddressRole).toString());
-        Transfer *transfer = TransferManager::instance()->addTransfer (Transfer::Outgoing, files, 0, 0, 0, address);
+        Transfer *transfer = TransferManager::instance()->addTransfer (Transfer::Outgoing, files, 0, 0, 0, "", address);
         transfer->start();
     }
 }

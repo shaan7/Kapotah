@@ -22,6 +22,7 @@
 #include <udpmanager.h>
 #include <xml/announcexmlparser.h>
 #include <xml/peerstatusxmlparser.h>
+#include <xml/transferstatusxmlparser.h>
 
 #include <QTimerEvent>
 
@@ -82,6 +83,7 @@ void Announcer::processDatagram (const QByteArray& datagram, const QHostAddress&
 {
     AnnounceXmlParser announceParser;
     PeerStatusXmlParser statusParser;
+    TransferStatusXmlParser transferStatusParser;
     QString xml (datagram);
     AnnounceXmlData *announceData = static_cast<AnnounceXmlData*>(announceParser.parseXml(xml));
 
@@ -95,8 +97,14 @@ void Announcer::processDatagram (const QByteArray& datagram, const QHostAddress&
             if (statusData->isTyping) {
                 emit peerTyping (host);
             }
-        }
         delete statusData;
+        } else {
+            TransferStatusXmlData *transferStatusData = static_cast<TransferStatusXmlData*>(transferStatusParser.parseXml(xml));
+            if (transferStatusData->type == TransferStatusXmlData::TransferStatus) {
+                gotProgress(host, transferStatusData->id, transferStatusData->percentDone);
+            }
+            delete transferStatusData;
+        }
     }
 }
 

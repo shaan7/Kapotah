@@ -17,52 +17,55 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "peerstatusxmlparser.h"
+#include "transferstatusxmlparser.h"
 #include <QXmlStreamReader>
-#include <QDebug>
 
-QString PeerStatusXmlParser::composeXml (AbstractXmlData* data)
+QString TransferStatusXmlParser::composeXml(AbstractXmlData* data)
 {
     QString xml;
     QXmlStreamWriter writer (&xml);
     writer.setAutoFormatting (true);
     writer.writeStartDocument();
-    writer.writeStartElement ("peerStatus");
-    if (static_cast<PeerStatusXmlData*>(data)->isTyping) {
-        writer.writeAttribute ("isTyping", "true");
-    } else {
-        writer.writeAttribute ("isTyping", "false");
-    }
+    writer.writeStartElement ("transferStatus");
+    writer.writeAttribute ("id", static_cast<TransferStatusXmlData*>(data)->id);
+    writer.writeAttribute ("percentDone", QString::number(static_cast<TransferStatusXmlData*>(data)->percentDone));
     writer.writeEndElement();
     writer.writeEndDocument();
     return xml;
 }
 
-AbstractXmlData* PeerStatusXmlParser::parseXml (const QString& xml)
+AbstractXmlData* TransferStatusXmlParser::parseXml(const QString& xml)
 {
     QXmlStreamReader reader(xml);
     reader.readNext();
 
-    PeerStatusXmlData *data = new PeerStatusXmlData;
+    TransferStatusXmlData *data = new TransferStatusXmlData;
     data->type = AbstractXmlData::Error;
 
     while (!reader.atEnd()) {
         if (reader.isStartElement()) {
-            if (reader.name() == "peerStatus") {
-                data->type = AbstractXmlData::PeerStatus;
-                if(reader.attributes().value("isTyping")=="true") {
-                    data->isTyping = true;
-                } else {
-                    data->isTyping = false;
-                }
+            if (reader.name() == "transferStatus") {
+                data->type = AbstractXmlData::TransferStatus;
+                data->id = reader.attributes().value ("id").toString();
+                data->percentDone = reader.attributes().value ("percentDone").toString().toInt();
                 break;
             }
             data->type = AbstractXmlData::Error;
             break;
-        }
-        else {
+        } else {
             reader.readNext();
         }
     }
     return data;
 }
+
+TransferStatusXmlParser::TransferStatusXmlParser()
+{
+
+}
+
+TransferStatusXmlParser::~TransferStatusXmlParser()
+{
+
+}
+

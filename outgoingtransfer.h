@@ -43,8 +43,10 @@ namespace Kapotah
             void onThreadStartPreparingList();
             void onThreadStartSendingList();
             void onThreadDoneSendingList();
+            void processProgress(const QHostAddress &peer, QString id,int percentDone);
     };
 
 }
 
 #endif // KAPOTAH_OUTGOINGTRANSFER_H
+

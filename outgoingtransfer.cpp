@@ -20,6 +20,8 @@
 #include "outgoingtransfer.h"
 
 #include "outgoingtransferthread.h"
+#include "announcer.h"
+#include <QDateTime>
 
 using namespace Kapotah;
 
@@ -27,6 +29,9 @@ OutgoingTransfer::OutgoingTransfer (QList< TransferFile > files, QHostAddress pe
                                         : Transfer (files, 0, 0, 0, peer, parent)
 {
     m_state = Stopped;
+    m_id = peer.toString() + QString::number(QDateTime::currentMSecsSinceEpoch());
+    connect(Kapotah::Announcer::instance(), SIGNAL(gotProgress(QHostAddress,QString,int)),
+            SLOT(processProgress(QHostAddress,QString,int)));
 }
 
 
@@ -37,7 +42,7 @@ OutgoingTransfer::~OutgoingTransfer()
 
 void OutgoingTransfer::start()
 {
-    m_thread = new OutgoingTransferThread (m_peerAddress, m_files, this);
+    m_thread = new OutgoingTransferThread (m_peerAddress, m_files, m_id, this);
     m_thread->start();
 }
 
@@ -60,5 +65,14 @@ void OutgoingTransfer::onThreadStartSendingList()
 {
     m_state = SendingFileList;
 }
+
+void OutgoingTransfer::processProgress(const QHostAddress& peer, QString id, int percentDone)
+{
+    if (peer == m_peerAddress) {
+        emit progress(percentDone, 100, 1);  //FIXME: Dummy speed
+    }
+}
+
+
 
 #include "outgoingtransfer.moc"

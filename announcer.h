@@ -49,11 +49,11 @@ namespace Kapotah
         public slots:
             void processDatagram (const QByteArray &datagram, const QHostAddress &host, quint16 port);
             void peerStatus(QHostAddress address);
-            
 
         signals:
             void gotAnnounce (const Peer &peer);
             void peerTyping (const QHostAddress &peer);
+            void gotProgress (const QHostAddress &peer, QString id, int percentDone);
     };
 
 }

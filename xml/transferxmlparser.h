@@ -31,6 +31,7 @@ class TransferXmlData : public AbstractXmlData
         quint64 totalSize;
         quint64 totalNumFiles;
         quint64 totalNumDirs;
+        QString id;
 };
 
 class TransferXmlParser : public AbstractXmlParser

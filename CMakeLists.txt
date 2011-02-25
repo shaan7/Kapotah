@@ -12,6 +12,7 @@ qt4_add_resources(kapotah_RCC_SRCS ${kapotah_RCCS})
 
 set(Kapotah_SRCS
     ui/multicastdialog.cpp
+    xml/transferstatusxmlparser.cpp
     xml/peerstatusxmlparser.cpp
     peerenvironment.cpp
     fileserversingleton.cpp

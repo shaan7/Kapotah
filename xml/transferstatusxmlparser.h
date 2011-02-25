@@ -17,33 +17,28 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "transferdialog.h"
-#include <transfermanager.h>
-#include "transferwidget.h"
-#include "transfer.h"
-#include <QHBoxLayout>
+#ifndef TRANSFERSTATUSXMLPARSER_H
+#define TRANSFERSTATUSXMLPARSER_H
 
-using namespace Kapotah;
+#include "abstractxmlparser.h"
 
-TransferDialog::TransferDialog (QWidget* parent, Qt::WindowFlags f) : QDialog (parent, f)
+#include <QString>
+
+class TransferStatusXmlData : public AbstractXmlData
 {
-    setWindowTitle ("Transfers");
-    m_layout = new QVBoxLayout();
-    setLayout (m_layout);
-    connect (TransferManager::instance(), SIGNAL (newTransferAdded (Transfer*)),
-             SLOT (addTransfer (Transfer*)));
-    resize(200, 100);
-}
+public:
+    QString id;
+    int percentDone;
+};
 
-TransferDialog::~TransferDialog()
+class TransferStatusXmlParser : public AbstractXmlParser
 {
 
-}
+public:
+    virtual QString composeXml(AbstractXmlData* data);
+    virtual AbstractXmlData* parseXml(const QString& xml);
+    TransferStatusXmlParser();
+    virtual ~TransferStatusXmlParser();
+};
 
-void TransferDialog::addTransfer (Transfer* transfer)
-{
-    TransferWidget *widget = new TransferWidget (transfer, this);
-    m_layout->addWidget (widget);
-}
-
-#include "transferdialog.moc"
+#endif // TRANSFERSTATUSXMLPARSER_H
