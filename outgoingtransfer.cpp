@@ -20,6 +20,7 @@
 #include "outgoingtransfer.h"
 
 #include "outgoingtransferthread.h"
+#include <QDateTime>
 
 using namespace Kapotah;
 
@@ -27,6 +28,7 @@ OutgoingTransfer::OutgoingTransfer (QList< TransferFile > files, QHostAddress pe
                                         : Transfer (files, 0, 0, 0, peer, parent)
 {
     m_state = Stopped;
+    m_id = peer.toString() + QString::number(QDateTime::currentMSecsSinceEpoch());
 }
 
 

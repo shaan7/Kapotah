@@ -17,29 +17,28 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TRANSFERXMLPARSER_H
-#define TRANSFERXMLPARSER_H
+#ifndef TRANSFERSTATUSXMLPARSER_H
+#define TRANSFERSTATUSXMLPARSER_H
 
 #include "abstractxmlparser.h"
-#include <transfer.h>
-#include <QList>
 
-class TransferXmlData : public AbstractXmlData
+#include <QString>
+
+class TransferStatusXmlData : public AbstractXmlData
 {
-    public:
-        QList<Kapotah::TransferFile> files;
-        quint64 totalSize;
-        quint64 totalNumFiles;
-        quint64 totalNumDirs;
-        QString id;
+public:
+    QString id;
+    int percentDone;
 };
 
-class TransferXmlParser : public AbstractXmlParser
+class TransferStatusXmlParser : public AbstractXmlParser
 {
 
-    public:
-        virtual QString composeXml (AbstractXmlData* data);
-        virtual AbstractXmlData* parseXml (const QString& xml);
+public:
+    virtual QString composeXml(AbstractXmlData* data);
+    virtual AbstractXmlData* parseXml(const QString& xml);
+    TransferStatusXmlParser();
+    virtual ~TransferStatusXmlParser();
 };
 
-#endif // TRANSFERXMLPARSER_H
+#endif // TRANSFERSTATUSXMLPARSER_H

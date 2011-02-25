@@ -20,6 +20,7 @@
 #include "incomingtransfer.h"
 
 #include "incomingtransferthread.h"
+#include "udpmanager.h"
 #include <QDir>
 #include <QDateTime>
 #include <QTimerEvent>
@@ -27,13 +28,14 @@
 using namespace Kapotah;
 
 IncomingTransfer::IncomingTransfer (QList< TransferFile > files, quint64 totalSize, quint64 numFiles,
-                                    quint64 numDirs, QHostAddress peer, QObject* parent)
+                                    quint64 numDirs, QHostAddress peer, QString id, QObject* parent)
                                         : Transfer (files, totalSize, numFiles, numDirs, peer, parent)
 {
     m_doneSinceLastSpeedEstimate = 0;
     m_prevTime = QDateTime::currentMSecsSinceEpoch()/1000;  //secs
     m_speed = 0;
     startTimer(1000);
+    m_id = id;
 }
 
 IncomingTransfer::~IncomingTransfer()
@@ -90,6 +92,9 @@ void IncomingTransfer::reportProgress (quint64 done, quint64 size)
 {
     m_doneTillLastProgressReport = m_sizeDone + done;
     emit progress (m_sizeDone + done, m_totalSize, m_speed);
+
+    //Send progress to sender
+    
 }
 
 void IncomingTransfer::timerEvent (QTimerEvent* event)

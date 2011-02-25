@@ -31,6 +31,7 @@ QString TransferXmlParser::composeXml (AbstractXmlData* data)
     writer.writeAttribute("size", QString::number(tdata->totalSize));
     writer.writeAttribute("files", QString::number(tdata->totalNumFiles));
     writer.writeAttribute("dirs", QString::number(tdata->totalNumDirs));
+    writer.writeAttribute("id", tdata->id);
 
     foreach (Kapotah::TransferFile file, tdata->files) {
         writer.writeStartElement ("file");
@@ -61,6 +62,7 @@ AbstractXmlData* TransferXmlParser::parseXml (const QString& xml)
                 data->totalSize = reader.attributes().value ("size").toString().toULongLong();
                 data->totalNumFiles = reader.attributes().value ("files").toString().toULongLong();
                 data->totalNumDirs = reader.attributes().value ("dirs").toString().toULongLong();
+                data->id = reader.attributes().value("id").toString();
                 reader.readNext();
 
                 while (!reader.atEnd()) {
