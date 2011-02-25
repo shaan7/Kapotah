@@ -40,7 +40,6 @@ QString PeerStatusXmlParser::composeXml (AbstractXmlData* data)
 
 AbstractXmlData* PeerStatusXmlParser::parseXml (const QString& xml)
 {
-    qDebug() << "HERE " << xml;
     QXmlStreamReader reader(xml);
     reader.readNext();
 

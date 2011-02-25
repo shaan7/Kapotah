@@ -48,3 +48,4 @@ namespace Kapotah
 }
 
 #endif // KAPOTAH_OUTGOINGTRANSFER_H
+

@@ -21,6 +21,7 @@
 
 #include "incomingtransferthread.h"
 #include "udpmanager.h"
+#include <xml/transferstatusxmlparser.h>
 #include <QDir>
 #include <QDateTime>
 #include <QTimerEvent>
@@ -94,7 +95,12 @@ void IncomingTransfer::reportProgress (quint64 done, quint64 size)
     emit progress (m_sizeDone + done, m_totalSize, m_speed);
 
     //Send progress to sender
-    
+    TransferStatusXmlData data;
+    data.id = m_id;
+    data.percentDone = ((m_sizeDone + done)*100)/m_totalSize;
+    data.type = AbstractXmlData::TransferStatus;
+    TransferStatusXmlParser parser;
+    Kapotah::UdpManager::instance()->sendDatagram(parser.composeXml(&data).toUtf8(), m_peerAddress);
 }
 
 void IncomingTransfer::timerEvent (QTimerEvent* event)
