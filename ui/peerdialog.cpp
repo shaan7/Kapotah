@@ -33,6 +33,7 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(0)
     setWindowTitle("Kapotah");
     createActions();
     createTrayIcon();
+    ui.multicastButton->setToolTip("To multicast, select users and click on \"multicast\" button");
     ui.peersListView->setModel(PeerManager::instance()->peersModel());
     connect (ui.refreshButton, SIGNAL(clicked()), this, SLOT(updatePeer()));
     connect (PeerManager::instance()->peersModel(), SIGNAL(rowsInserted(QModelIndex, int, int)), this,
@@ -42,6 +43,9 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(0)
     connect (ui.peersListView, SIGNAL(doubleClicked(QModelIndex)), SLOT(createChatDialog(QModelIndex)));
     connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)),
              SLOT(createChatDialogOnMessage(QString,QHostAddress)));
+    connect (ui.multicastButton, SIGNAL(clicked()), this, SLOT(createMulticastDialog()));
+    /*connect (MessageDispatcher::instance(), SIGNAL(gotNewMulticast(QString, QHostAddress)),
+             SLOT(createMulticastDialogOnMessage(QString, QHostAddress));*/
     connect (ui.transferButton, SIGNAL(clicked(bool)), SLOT(showTransferDialog(bool)));
     connect (trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, 
              SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
@@ -77,6 +81,29 @@ ChatDialog* PeerDialog::createChatDialogOnMessage(QString message, QHostAddress 
         createChatDialog(list.at(0))->displayRecievedMessage(message, peerAddress);
     }
 }
+
+MulticastDialog* PeerDialog::createMulticastDialog()
+{
+    PeersModel *model = PeerManager::instance()->peersModel();
+    MulticastDialog *multiDlg = new MulticastDialog(ui.peersListView->selectionModel()->selectedIndexes());
+    multiDlg->show();
+    return multiDlg;
+}
+
+/*ChatDialog* PeerDialog::createMulticastDialogOnMessage(QString message, QHostAddress peerAddress)
+{
+    if (m_openMulticastDialog.contains(peerAddress.toString())) //Already created
+        return m_openChatDialogs[peerAddress.toString()];
+
+    PeersModel *model = PeerManager::instance()->peersModel();
+    QModelIndexList list = model->match(model->index(0), PeersModel::ipAddressRole, peerAddress.toString());
+
+    if (list.count() == 0) {
+        qDebug() << "NOOOO! someone sent message after being offline, huh?";
+    } else {
+        createMulticastDialog(list.at(0))->displayRecievedMessage(message, peerAddress);
+    }
+}*/
 
 void PeerDialog::showTransferDialog (bool checked)
 {

@@ -37,6 +37,7 @@ int main (int argc, char** argv)
     Kapotah::UdpManager::instance();   //Start the broadcast engine
     Kapotah::Announcer::instance()->setUserName(Kapotah::PeerEnvironment::getPeerName()); //Start the announcer
     Kapotah::PeerManager::instance();
+    QApplication::setQuitOnLastWindowClosed(false);
     if (!Kapotah::MessageDispatcher::instance()->messageDispatcherServer()->listen(QHostAddress::Any,
         s_messageServerPort))
         qFatal("Can't listen to message port");
