@@ -22,7 +22,7 @@
 
 #include <QString>
 
-class AbstractXMLData
+class AbstractXmlData
 {
 
     public:
@@ -30,12 +30,12 @@ class AbstractXMLData
         Type type;
 };
 
-class AbstractXMLParser
+class AbstractXmlParser
 {
 
     public:
-        virtual AbstractXMLData *parseXML (const QString &xml) = 0;
-        virtual QString composeXML (AbstractXMLData *data) = 0;
+        virtual AbstractXmlData *parseXml (const QString &xml) = 0;
+        virtual QString composeXml (AbstractXmlData *data) = 0;
 };
 
 #endif // ABSTRACTXMLPARSER_H

@@ -78,8 +78,8 @@ QString TransferManager::pathForId (QString id)
 
 void TransferManager::handleIncomingTransfer (QString transfer, QHostAddress peer)
 {
-    TransferXMLParser parser;
-    TransferXMLData *data = static_cast<TransferXMLData*>(parser.parseXML(transfer));
+    TransferXmlParser parser;
+    TransferXmlData *data = static_cast<TransferXmlData*>(parser.parseXml(transfer));
     addTransfer (Transfer::Incoming, data->files, data->totalSize, data->totalNumFiles, data->totalNumDirs, peer);
     delete data;
 }

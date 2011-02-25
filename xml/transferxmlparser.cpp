@@ -20,9 +20,9 @@
 #include "transferxmlparser.h"
 #include <QXmlStreamReader>
 
-QString TransferXMLParser::composeXML (AbstractXMLData* data)
+QString TransferXmlParser::composeXml (AbstractXmlData* data)
 {
-    TransferXMLData *tdata = static_cast<TransferXMLData*> (data);
+    TransferXmlData *tdata = static_cast<TransferXmlData*> (data);
     QString xml;
     QXmlStreamWriter writer (&xml);
     writer.setAutoFormatting (true);
@@ -45,18 +45,18 @@ QString TransferXMLParser::composeXML (AbstractXMLData* data)
     return xml;
 }
 
-AbstractXMLData* TransferXMLParser::parseXML (const QString& xml)
+AbstractXmlData* TransferXmlParser::parseXml (const QString& xml)
 {
     QXmlStreamReader reader (xml);
     reader.readNext();
 
-    TransferXMLData *data = new TransferXMLData;
-    data->type = AbstractXMLData::Error;
+    TransferXmlData *data = new TransferXmlData;
+    data->type = AbstractXmlData::Error;
 
     while (!reader.atEnd()) {
         if (reader.isStartElement()) {
             if (reader.name() == "transfer") {
-                data->type = AbstractXMLData::Transfer;
+                data->type = AbstractXmlData::Transfer;
                 data->files.clear();
                 data->totalSize = reader.attributes().value ("size").toString().toULongLong();
                 data->totalNumFiles = reader.attributes().value ("files").toString().toULongLong();

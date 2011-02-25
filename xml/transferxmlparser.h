@@ -24,7 +24,7 @@
 #include <transfer.h>
 #include <QList>
 
-class TransferXMLData : public AbstractXMLData
+class TransferXmlData : public AbstractXmlData
 {
     public:
         QList<Kapotah::TransferFile> files;
@@ -33,12 +33,12 @@ class TransferXMLData : public AbstractXMLData
         quint64 totalNumDirs;
 };
 
-class TransferXMLParser : public AbstractXMLParser
+class TransferXmlParser : public AbstractXmlParser
 {
 
     public:
-        virtual QString composeXML (AbstractXMLData* data);
-        virtual AbstractXMLData* parseXML (const QString& xml);
+        virtual QString composeXml (AbstractXmlData* data);
+        virtual AbstractXmlData* parseXml (const QString& xml);
 };
 
 #endif // TRANSFERXMLPARSER_H

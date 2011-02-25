@@ -21,14 +21,14 @@
 #include <QXmlStreamReader>
 #include <QDebug>
 
-QString PeerStatusXMLParser::composeXML (AbstractXMLData* data)
+QString PeerStatusXmlParser::composeXml (AbstractXmlData* data)
 {
     QString xml;
     QXmlStreamWriter writer (&xml);
     writer.setAutoFormatting (true);
     writer.writeStartDocument();
     writer.writeStartElement ("peerStatus");
-    if (static_cast<PeerStatusXMLData*>(data)->isTyping) {
+    if (static_cast<PeerStatusXmlData*>(data)->isTyping) {
         writer.writeAttribute ("isTyping", "true");
     } else {
         writer.writeAttribute ("isTyping", "false");
@@ -38,19 +38,19 @@ QString PeerStatusXMLParser::composeXML (AbstractXMLData* data)
     return xml;
 }
 
-AbstractXMLData* PeerStatusXMLParser::parseXML (const QString& xml)
+AbstractXmlData* PeerStatusXmlParser::parseXml (const QString& xml)
 {
     qDebug() << "HERE " << xml;
     QXmlStreamReader reader(xml);
     reader.readNext();
 
-    PeerStatusXMLData *data = new PeerStatusXMLData;
-    data->type = AbstractXMLData::Error;
+    PeerStatusXmlData *data = new PeerStatusXmlData;
+    data->type = AbstractXmlData::Error;
 
     while (!reader.atEnd()) {
         if (reader.isStartElement()) {
             if (reader.name() == "peerStatus") {
-                data->type = AbstractXMLData::PeerStatus;
+                data->type = AbstractXmlData::PeerStatus;
                 if(reader.attributes().value("isTyping")=="true") {
                     data->isTyping = true;
                 } else {
@@ -58,7 +58,7 @@ AbstractXMLData* PeerStatusXMLParser::parseXML (const QString& xml)
                 }
                 break;
             }
-            data->type = AbstractXMLData::Error;
+            data->type = AbstractXmlData::Error;
             break;
         }
         else {

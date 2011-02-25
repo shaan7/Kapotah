@@ -46,10 +46,10 @@ MessageDispatcherServer* MessageDispatcher::messageDispatcherServer()
 void MessageDispatcher::newMessage (QString message, QHostAddress peerAddress)
 {
     //Try parsing as Message
-    MessageXMLParser parser;
-    MessageXMLData *data = static_cast<MessageXMLData*>(parser.parseXML(message));
+    MessageXmlParser parser;
+    MessageXmlData *data = static_cast<MessageXmlData*>(parser.parseXml(message));
 
-    if (data->type == AbstractXMLData::Message) {
+    if (data->type == AbstractXmlData::Message) {
         qDebug() << "New Message from " << peerAddress.toString() << " reading " << data->message;
         emit gotNewMessage (data->message, peerAddress);
     } else {    //FIXME: Don't straightaway assume its Transfer, do sanity checks
@@ -59,11 +59,11 @@ void MessageDispatcher::newMessage (QString message, QHostAddress peerAddress)
 
 void MessageDispatcher::sendNewMessage (QString message, QHostAddress peerAddress)
 {
-    MessageXMLData data;
-    MessageXMLParser parser;
-    data.type = AbstractXMLData::Message;
+    MessageXmlData data;
+    MessageXmlParser parser;
+    data.type = AbstractXmlData::Message;
     data.message = message;
-    MessageSenderThread *thread = new MessageSenderThread (parser.composeXML(&data), peerAddress);
+    MessageSenderThread *thread = new MessageSenderThread (parser.composeXml(&data), peerAddress);
     thread->start();
 }
 

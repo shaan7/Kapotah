@@ -19,12 +19,12 @@
 
 #include "abstractxmlparser.h"
 
-AbstractXMLParser::AbstractXMLParser()
+AbstractXmlParser::AbstractXmlParser()
 {
 
 }
 
-AbstractXMLParser::~AbstractXMLParser()
+AbstractXmlParser::~AbstractXmlParser()
 {
 
 }

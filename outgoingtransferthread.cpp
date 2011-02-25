@@ -61,14 +61,14 @@ void OutgoingTransferThread::run()
     emit donePreparingList();
 
     emit startSendingList();
-    TransferXMLData data;
-    TransferXMLParser parser;
-    data.type = AbstractXMLData::Transfer;
+    TransferXmlData data;
+    TransferXmlParser parser;
+    data.type = AbstractXmlData::Transfer;
     data.files = m_files;
     data.totalNumDirs = m_totalDirCount;
     data.totalNumFiles = m_totalFileCount;
     data.totalSize = m_totalSize;
-    MessageSenderThread *thread = new MessageSenderThread (parser.composeXML(&data), m_ip);
+    MessageSenderThread *thread = new MessageSenderThread (parser.composeXml(&data), m_ip);
     thread->start();
     emit doneSendingList();
 }

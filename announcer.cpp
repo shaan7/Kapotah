@@ -57,11 +57,11 @@ void Announcer::timerEvent (QTimerEvent* t)
 {
     if (t->timerId() == m_timerId) {
         if (!m_username.isEmpty()) {
-            AnnounceXMLParser parser;
-            AnnounceXMLData data;
+            AnnounceXmlParser parser;
+            AnnounceXmlData data;
             data.senderName = m_username;
-            data.type = AnnounceXMLData::Announce;
-            UdpManager::instance()->sendBroadcast(parser.composeXML(&data).toUtf8());
+            data.type = AnnounceXmlData::Announce;
+            UdpManager::instance()->sendBroadcast(parser.composeXml(&data).toUtf8());
         }
     }
 
@@ -71,27 +71,27 @@ void Announcer::timerEvent (QTimerEvent* t)
 void Announcer::peerStatus(QHostAddress address)
 {
     QString addr = address.toString();
-    PeerStatusXMLParser parser;
-    PeerStatusXMLData data;
+    PeerStatusXmlParser parser;
+    PeerStatusXmlData data;
     data.isTyping = true;
-    data.type = PeerStatusXMLData::PeerStatus;
-    UdpManager::instance()->sendDatagram(parser.composeXML(&data).toUtf8(), QHostAddress(addr));
+    data.type = PeerStatusXmlData::PeerStatus;
+    UdpManager::instance()->sendDatagram(parser.composeXml(&data).toUtf8(), QHostAddress(addr));
 }
 
 void Announcer::processDatagram (const QByteArray& datagram, const QHostAddress& host, quint16 port)
 {
-    AnnounceXMLParser announceParser;
-    PeerStatusXMLParser statusParser;
+    AnnounceXmlParser announceParser;
+    PeerStatusXmlParser statusParser;
     QString xml (datagram);
-    AnnounceXMLData *announceData = static_cast<AnnounceXMLData*>(announceParser.parseXML(xml));
+    AnnounceXmlData *announceData = static_cast<AnnounceXmlData*>(announceParser.parseXml(xml));
 
-    if (announceData->type == AnnounceXMLData::Announce) {
+    if (announceData->type == AnnounceXmlData::Announce) {
         Peer peer (announceData->senderName, host);
         emit gotAnnounce (peer);
         delete announceData;
     } else {
-        PeerStatusXMLData *statusData = static_cast<PeerStatusXMLData*>(statusParser.parseXML(xml));
-        if (statusData->type == PeerStatusXMLData::PeerStatus) {
+        PeerStatusXmlData *statusData = static_cast<PeerStatusXmlData*>(statusParser.parseXml(xml));
+        if (statusData->type == PeerStatusXmlData::PeerStatus) {
             if (statusData->isTyping) {
                 emit peerTyping (host);
             }

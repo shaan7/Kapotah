@@ -23,18 +23,18 @@
 #include <xml/abstractxmlparser.h>
 #include <QString>
 
-class PeerStatusXMLData : public AbstractXMLData
+class PeerStatusXmlData : public AbstractXmlData
 {
     public:
         bool isTyping;
 };
 
-class PeerStatusXMLParser : public AbstractXMLParser
+class PeerStatusXmlParser : public AbstractXmlParser
 {
 
 public:
-    virtual QString composeXML(AbstractXMLData* data);
-    virtual AbstractXMLData* parseXML(const QString& xml);
+    virtual QString composeXml(AbstractXmlData* data);
+    virtual AbstractXmlData* parseXml(const QString& xml);
 };
 
 #endif // PEERSTATUSXMLPARSER_H

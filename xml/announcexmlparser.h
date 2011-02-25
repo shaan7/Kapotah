@@ -23,17 +23,17 @@
 #include "abstractxmlparser.h"
 #include <QString>
 
-class AnnounceXMLData : public AbstractXMLData
+class AnnounceXmlData : public AbstractXmlData
 {
     public:
         QString senderName;
 };
 
-class AnnounceXMLParser : public AbstractXMLParser
+class AnnounceXmlParser : public AbstractXmlParser
 {
     public:
-        virtual QString composeXML (AbstractXMLData *data);
-        virtual AbstractXMLData* parseXML (const QString& xml);
+        virtual QString composeXml (AbstractXmlData *data);
+        virtual AbstractXmlData* parseXml (const QString& xml);
 };
 
 #endif // ANNOUNCEXMLPARSER_H

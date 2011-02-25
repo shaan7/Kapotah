@@ -20,35 +20,35 @@
 #include "announcexmlparser.h"
 #include <QXmlStreamReader>
 
-QString AnnounceXMLParser::composeXML (AbstractXMLData *data)
+QString AnnounceXmlParser::composeXml (AbstractXmlData *data)
 {
     QString xml;
     QXmlStreamWriter writer (&xml);
     writer.setAutoFormatting (true);
     writer.writeStartDocument();
     writer.writeStartElement ("announce");
-    writer.writeAttribute ("senderName", static_cast<AnnounceXMLData*>(data)->senderName);
+    writer.writeAttribute ("senderName", static_cast<AnnounceXmlData*>(data)->senderName);
     writer.writeEndElement();
     writer.writeEndDocument();
     return xml;
 }
 
-AbstractXMLData* AnnounceXMLParser::parseXML (const QString& xml)
+AbstractXmlData* AnnounceXmlParser::parseXml (const QString& xml)
 {
     QXmlStreamReader reader(xml);
     reader.readNext();
 
-    AnnounceXMLData *data = new AnnounceXMLData;
-    data->type = AbstractXMLData::Error;
+    AnnounceXmlData *data = new AnnounceXmlData;
+    data->type = AbstractXmlData::Error;
 
     while (!reader.atEnd()) {
         if (reader.isStartElement()) {
             if (reader.name() == "announce") {
-                data->type = AbstractXMLData::Announce;
+                data->type = AbstractXmlData::Announce;
                 data->senderName = reader.attributes().value ("senderName").toString();
                 break;
             }
-            data->type = AbstractXMLData::Error;
+            data->type = AbstractXmlData::Error;
             break;
         } else {
             reader.readNext();
