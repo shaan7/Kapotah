@@ -40,11 +40,11 @@ class MulticastDialog : public QDialog
         void sendMessage();
     
     protected:
-        /*bool eventFilter (QObject *obj, QEvent *event);
+        bool eventFilter (QObject *obj, QEvent *event);
         virtual void dragEnterEvent (QDragEnterEvent *event);
         virtual void dragMoveEvent (QDragMoveEvent *event);
         virtual void dragLeaveEvent (QDragLeaveEvent*);
-        virtual void dropEvent (QDropEvent *event);*/
+        virtual void dropEvent (QDropEvent *event);
         
     friend class PeerDialog;
 };

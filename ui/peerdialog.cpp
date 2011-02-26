@@ -87,6 +87,7 @@ MulticastDialog* PeerDialog::createMulticastDialog()
     PeersModel *model = PeerManager::instance()->peersModel();
     MulticastDialog *multiDlg = new MulticastDialog(ui.peersListView->selectionModel()->selectedIndexes());
     multiDlg->show();
+    multiDlg->ui.reply->setEnabled(false);
     return multiDlg;
 }
 
