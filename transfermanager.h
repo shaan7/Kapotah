@@ -45,6 +45,7 @@ namespace Kapotah
         private:
             QList<Transfer*> m_transfersList;
             QHash<QString, QString> m_paths;
+            quint64 m_seqNo;
 
         private slots:
             void handleIncomingTransfer (QString transfer, QHostAddress peer);

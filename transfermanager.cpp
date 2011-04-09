@@ -29,7 +29,7 @@ using namespace Kapotah;
 
 template<> TransferManager *Kapotah::Singleton<TransferManager>::m_instance = 0;
 
-TransferManager::TransferManager()
+TransferManager::TransferManager():m_seqNo(0)
 {
     connect(MessageDispatcher::instance(), SIGNAL(gotNewTransfer(QString,QHostAddress)),
             SLOT(handleIncomingTransfer(QString,QHostAddress)));
@@ -61,7 +61,7 @@ Transfer* TransferManager::addTransfer (Transfer::TransferType type, QList< Tran
 
 QString TransferManager::newId (QString path)
 {
-    QString id = path + QString::number (QDateTime::currentMSecsSinceEpoch());
+    QString id = QString::number(m_seqNo++) + QString::number (QDateTime::currentMSecsSinceEpoch());
 
     if (m_paths.contains (id)) {
         qFatal ("THIS IS NASTY, I MEAN IT, STOP _NOW_");

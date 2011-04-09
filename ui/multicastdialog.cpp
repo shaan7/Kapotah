@@ -21,14 +21,18 @@
 #include "peermanager.h"
 #include "transfermanager.h"
 #include "messagedispatcher.h"
+#include <QUrl>
 
 using namespace Kapotah;
 
 MulticastDialog::MulticastDialog(const QModelIndexList &ipAddressList, QWidget* parent, Qt::WindowFlags f) : QDialog (parent, f)
 {
     ui.setupUi(this);
+    setWindowTitle("Multicast");
     m_ipAddressList=ipAddressList;
     connect (ui.sendMessage, SIGNAL(pressed()), this, SLOT(sendMessage()));
+    
+    setAcceptDrops (true);
 }
 
 void MulticastDialog::sendMessage()
@@ -39,5 +43,61 @@ void MulticastDialog::sendMessage()
     }
     accept();
 }
+
+bool MulticastDialog::eventFilter (QObject* obj, QEvent* event)
+{
+    if (event->type() == QEvent::KeyPress) {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+        if ((keyEvent->modifiers()==Qt::NoModifier)  
+            && (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter) ) {
+                ui.sendMessage->animateClick(); //Click the button
+                return true;
+            } else {
+                return false;
+            }
+    } else {
+        return QDialog::eventFilter (obj, event);
+    }
+}
+
+void MulticastDialog::dragEnterEvent (QDragEnterEvent *event)
+{
+    setBackgroundRole (QPalette::Highlight);
+    event->acceptProposedAction();
+}
+
+void MulticastDialog::dragMoveEvent (QDragMoveEvent *event)
+{
+    event->acceptProposedAction();
+}
+
+void MulticastDialog::dragLeaveEvent (QDragLeaveEvent*)
+{
+    setBackgroundRole (QPalette::NoRole);
+}
+
+void MulticastDialog::dropEvent (QDropEvent* event)
+{
+    setBackgroundRole (QPalette::NoRole);
+    const QMimeData *mimeData = event->mimeData();
+
+    if (mimeData->hasUrls()) {
+        QList<TransferFile> files;
+        foreach (QUrl url, mimeData->urls()) {
+            TransferFile file;
+            file.path = url.toLocalFile();
+            files.append (file);
+        }
+        
+     foreach (QModelIndex index, m_ipAddressList) {
+        QHostAddress address (PeerManager::instance()->peersModel()->data (index, PeersModel::ipAddressRole).toString());
+        Transfer *transfer = TransferManager::instance()->addTransfer (Transfer::Outgoing, files, 0, 0, 0, "", address);
+        qDebug()<<transfer;
+        transfer->start();
+        }
+     }
+     accept();
+}
+
 
 #include "multicastdialog.moc"
