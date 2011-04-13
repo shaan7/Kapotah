@@ -1,5 +1,9 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/knetattach.png</file>
+        <file>images/sysTrayIcon.png</file>
+        <file>images/refresh.png</file>
+        <file>images/transfer.png</file>
+        <file>images/multicast.png</file>
+        <file>images/search.png</file>
     </qresource>
 </RCC>

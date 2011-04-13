@@ -38,6 +38,12 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(0)
     ui.multicastButton->setToolTip("To multicast, select users and click on \"multicast\" button");
     ui.peersListView->setModel(PeerManager::instance()->peersModel());
     ui.nameEdit->setText(Kapotah::Announcer::instance()->username());
+    ui.refreshButton->setIcon(QIcon(":/images/refresh.png"));
+    ui.transferButton->setIcon(QIcon(":/images/transfer.png"));
+    ui.searchButton->setIcon(QIcon(":/images/search.png"));
+    ui.refreshButton->setToolTip("Refresh Peers");
+    ui.transferButton->setToolTip("Transfer Log");
+    ui.searchButton->setToolTip("Search");
     connect (ui.refreshButton, SIGNAL(clicked()), this, SLOT(updatePeer()));
     connect (PeerManager::instance()->peersModel(), SIGNAL(rowsInserted(QModelIndex, int, int)), this,
              SLOT(updateSystrayTooltip(QModelIndex, int, int)));
@@ -136,7 +142,7 @@ void PeerDialog::updatePeer()
 
 void PeerDialog::createTrayIcon()
 {
-    trayIcon = new QSystemTrayIcon(QIcon(":/images/knetattach.png"));
+    trayIcon = new QSystemTrayIcon(QIcon(":/images/sysTrayIcon.png"));
     
     trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(minimizeAction);

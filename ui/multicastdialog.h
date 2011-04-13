@@ -45,7 +45,7 @@ class MulticastDialog : public QDialog
         virtual void dragMoveEvent (QDragMoveEvent *event);
         virtual void dragLeaveEvent (QDragLeaveEvent*);
         virtual void dropEvent (QDropEvent *event);
-        
+               
     friend class PeerDialog;
 };
 
