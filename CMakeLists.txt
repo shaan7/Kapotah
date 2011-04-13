@@ -11,6 +11,8 @@ set (kapotah_RCCS systray.qrc)
 qt4_add_resources(kapotah_RCC_SRCS ${kapotah_RCCS})
 
 set(Kapotah_SRCS
+    filesearcherthread.cpp
+    filesearcher.cpp
     xml/searchxmlparser.cpp
     ui/multicastdialog.cpp
     xml/transferstatusxmlparser.cpp
