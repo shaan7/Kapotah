@@ -11,6 +11,9 @@ set (kapotah_RCCS systray.qrc)
 qt4_add_resources(kapotah_RCC_SRCS ${kapotah_RCCS})
 
 set(Kapotah_SRCS
+    filesearcherthread.cpp
+    filesearcher.cpp
+    xml/searchxmlparser.cpp
     ui/multicastdialog.cpp
     ui/searchdialog.cpp
     xml/transferstatusxmlparser.cpp
@@ -53,5 +56,5 @@ QT4_WRAP_UI(Kapotah_FORMS_HEADERS ${Kapotah_FORMS})
 
 add_executable(Kapotah ${Kapotah_SRCS} ${Kapotah_FORMS_HEADERS})
 target_link_libraries(Kapotah ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY}
-                                ${QT_QTXML_LIBRARY})
+                                ${QT_QTXML_LIBRARY} ${QT_QT_LIBRARY})
 
