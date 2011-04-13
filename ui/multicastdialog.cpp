@@ -31,6 +31,8 @@ MulticastDialog::MulticastDialog(const QModelIndexList &ipAddressList, QWidget* 
     setWindowTitle("Multicast");
     m_ipAddressList=ipAddressList;
     connect (ui.sendMessage, SIGNAL(pressed()), this, SLOT(sendMessage()));
+    ui.sendMessage->setIcon(QIcon(":/images/send.png"));
+    ui.sendMessage->setToolTip("Send Message");
     
     setAcceptDrops (true);
 }
