@@ -57,8 +57,15 @@ PeersModel::~PeersModel()
 
 void PeersModel::addNewPeer (Peer peer)
 {
-    if (m_peers.contains (peer.ipAddress()))
+    if (m_peers.contains (peer.ipAddress())) {
+        if (m_peers[peer.ipAddress()].name() != peer.name()) {
+            Peer &existingPeer = m_peers[peer.ipAddress()];
+            existingPeer.setName(peer.name());
+            emit dataChanged(createIndex(m_peerList.indexOf(peer.ipAddress()), 0),
+                        createIndex(m_peerList.indexOf(peer.ipAddress()), 0));
+        }
         return;
+    }
 
     int row = rowCount();
 

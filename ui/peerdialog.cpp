@@ -22,6 +22,8 @@
 #include "peermanager.h"
 #include "udpmanager.h"
 #include "peersmodel.h"
+#include "announcer.h"
+
 #include <QtGui>
 
 using namespace Kapotah;
@@ -29,12 +31,13 @@ using namespace Kapotah;
 PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(0)
 {
     QSystemTrayIcon::isSystemTrayAvailable();
-    ui.setupUi(this);    
+    ui.setupUi(this);
     setWindowTitle("Kapotah");
     createActions();
     createTrayIcon();
     ui.multicastButton->setToolTip("To multicast, select users and click on \"multicast\" button");
     ui.peersListView->setModel(PeerManager::instance()->peersModel());
+    ui.nameEdit->setText(Kapotah::Announcer::instance()->username());
     connect (ui.refreshButton, SIGNAL(clicked()), this, SLOT(updatePeer()));
     connect (PeerManager::instance()->peersModel(), SIGNAL(rowsInserted(QModelIndex, int, int)), this,
              SLOT(updateSystrayTooltip(QModelIndex, int, int)));
@@ -49,7 +52,7 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(0)
     connect (ui.transferButton, SIGNAL(clicked(bool)), SLOT(showTransferDialog(bool)));
     connect (trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, 
              SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
-    ui.transferButton->animateClick();
+    connect (ui.nameEdit, SIGNAL(returnPressed()), SLOT(setPeerNameFromUi()));
     trayIcon->show();
 }
 
@@ -133,7 +136,7 @@ void PeerDialog::updatePeer()
 
 void PeerDialog::createTrayIcon()
 {
-    trayIcon = new QSystemTrayIcon(QIcon(":/images/heart.svg"));
+    trayIcon = new QSystemTrayIcon(QIcon(":/images/knetattach.png"));
     
     trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(minimizeAction);
@@ -191,6 +194,11 @@ void PeerDialog::quitApplication()
 PeerDialog::~PeerDialog()
 {
 
+}
+
+void PeerDialog::setPeerNameFromUi()
+{
+    Kapotah::Announcer::instance()->setUserName(ui.nameEdit->text());
 }
 
 #include "peerdialog.moc"

@@ -43,19 +43,22 @@ class PeerDialog : public QDialog
         QHash<QString, ChatDialog*> m_openChatDialogs;
         TransferDialog *m_transferDialog;
         MulticastDialog *m_openMulticastDialog;
-        
+
         void createTrayIcon();
         void createActions();
-        
+
         QSystemTrayIcon *trayIcon;
         QMenu *trayIconMenu;
         QAction *minimizeAction;
         QAction *maximizeAction;
         QAction *restoreAction;
         QAction *quitAction;
-        
+
     protected:
         void closeEvent(QCloseEvent *event);
+
+    private slots:
+        void setPeerNameFromUi();
 
     private slots:
         ChatDialog* createChatDialog (QModelIndex index);
@@ -71,3 +74,4 @@ class PeerDialog : public QDialog
 };
 
 #endif // PEERDIALOG_H
+
