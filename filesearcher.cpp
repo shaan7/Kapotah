@@ -21,6 +21,7 @@
 
 #include "filesearcherthread.h"
 #include "announcer.h"
+#include "transfermanager.h"
 
 using namespace Kapotah;
 
@@ -112,6 +113,13 @@ void FileSearcher::processIndex (QModelIndex index)
             }
         }
     }
+}
+
+void FileSearcher::sendMatchingFiles (QList< TransferFile > matches, QHostAddress address)
+{
+    Transfer *transfer = TransferManager::instance()->addTransfer(Transfer::Outgoing,
+                                                                    matches, 0, 0, 0, "", address);
+    transfer->start();
 }
 
 #include "filesearcher.moc"

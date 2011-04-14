@@ -50,9 +50,7 @@ void FileSearcherThread::run()
             qDebug() << "MATCH " << file.path << " SIZE " << file.path;
         }
 
-        Transfer *transfer = TransferManager::instance()->addTransfer(Transfer::Outgoing,
-                                                                    fileList, 0, 0, 0, "", m_host);
-        transfer->start();
+        m_fileSearcher.sendMatchingFiles(fileList, m_host);
     }
 }
 
