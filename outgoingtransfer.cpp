@@ -69,7 +69,7 @@ void OutgoingTransfer::onThreadStartSendingList()
 void OutgoingTransfer::processProgress(const QHostAddress& peer, QString id, quint64 bytesDone,
                                        quint64 total, quint64 speed)
 {
-    if (peer == m_peerAddress) {
+    if (peer == m_peerAddress && id == m_id) {
         emit progress(bytesDone, total, speed);
     }
 }
