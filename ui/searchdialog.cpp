@@ -20,6 +20,8 @@
 #include "searchdialog.h"
 
 #include "announcer.h"
+#include "filesearcher.h"
+#include <QFileDialog>
 
 SearchDialog::SearchDialog(QWidget* parent, Qt::WindowFlags f) : QDialog (parent, f)
 {
@@ -27,16 +29,26 @@ SearchDialog::SearchDialog(QWidget* parent, Qt::WindowFlags f) : QDialog (parent
     setWindowTitle("Search");
     ui.searchButton->setIcon(QIcon(":/images/search.png"));
     ui.downloadButton->setIcon(QIcon(":/images/download.png"));
+    ui.settingsButton->setIcon(QIcon(":/images/folder-development.png"));
     ui.searchButton->setToolTip("Search");
     ui.downloadButton->setToolTip("Download");
 
     connect(ui.searchButton, SIGNAL(clicked()), SLOT(search()));
+    connect(ui.settingsButton, SIGNAL(clicked()), SLOT(setSharedDir()));
 }
 
 void SearchDialog::search()
 {
     qDebug() << "Searching for " << ui.searchPatternEdit->text();
     Kapotah::Announcer::instance()->searchPeersForFile(ui.searchPatternEdit->text());
+}
+
+void SearchDialog::setSharedDir()
+{
+    QString dirname = QFileDialog::getExistingDirectory(this, "Select a directory to share");
+    if (dirname.isEmpty())
+        return;
+    Kapotah::FileSearcher::instance()->setSearchPath(dirname);
 }
 
 #include "searchdialog.moc"

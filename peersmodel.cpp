@@ -22,6 +22,9 @@
 
 using namespace Kapotah;
 
+static const int agingInterval = 1000;          //milliseconds after which to age the peers
+static const int peerAnnounceTimeout = 4;    //seconds after which a peer can be assumed dead
+
 QVariant PeersModel::data (const QModelIndex& index, int role) const
 {
     if (!index.isValid())
@@ -29,12 +32,12 @@ QVariant PeersModel::data (const QModelIndex& index, int role) const
 
     if (role == Qt::DisplayRole)
     {
-        return m_peers[m_peerList.at (index.row()) ].name();
+        return m_peers[m_peers.keys().at (index.row()) ].name();
     }
 
     else if (role == ipAddressRole)
     {
-        return m_peers[m_peerList.at (index.row()) ].ipAddress().toString();
+        return m_peers[m_peers.keys().at (index.row()) ].ipAddress().toString();
     }
 
     return QVariant();
@@ -42,12 +45,13 @@ QVariant PeersModel::data (const QModelIndex& index, int role) const
 
 int PeersModel::rowCount (const QModelIndex& parent) const
 {
-    return m_peerList.count();
+    return m_peers.keys().count();
 }
 
 PeersModel::PeersModel (QObject* parent) : QAbstractListModel (parent)
 {
     connect (Announcer::instance(), SIGNAL (gotAnnounce (Peer)), SLOT (addNewPeer (Peer)));
+    startTimer(1000);
 }
 
 PeersModel::~PeersModel()
@@ -58,11 +62,12 @@ PeersModel::~PeersModel()
 void PeersModel::addNewPeer (Peer peer)
 {
     if (m_peers.contains (peer.ipAddress())) {
+        m_ages[peer.ipAddress()] = 0;
         if (m_peers[peer.ipAddress()].name() != peer.name()) {
             Peer &existingPeer = m_peers[peer.ipAddress()];
             existingPeer.setName(peer.name());
-            emit dataChanged(createIndex(m_peerList.indexOf(peer.ipAddress()), 0),
-                        createIndex(m_peerList.indexOf(peer.ipAddress()), 0));
+            emit dataChanged(createIndex(m_peers.keys().indexOf(peer.ipAddress()), 0),
+                        createIndex(m_peers.keys().indexOf(peer.ipAddress()), 0));
         }
         return;
     }
@@ -73,11 +78,34 @@ void PeersModel::addNewPeer (Peer peer)
 
     qDebug() << "Adding " << peer.name() << " at " << peer.ipAddress() << " as " << row;
 
-    m_peerList.append (peer.ipAddress());
-
     m_peers[peer.ipAddress() ] = peer;
+    m_ages[peer.ipAddress()] = 0;
 
     endInsertRows();
+}
+
+void PeersModel::checkStatus()
+{
+    QList<QHostAddress> addressesToRemove;
+
+    foreach (QHostAddress host, m_peers.keys()) {
+        m_ages[host]++;
+        if (m_ages[host] > peerAnnounceTimeout) {
+            addressesToRemove.append(host);
+        }
+    }
+
+    foreach (QHostAddress address, addressesToRemove) {
+        int row = m_peers.keys().indexOf(address);
+        beginRemoveRows(QModelIndex(), row, row);
+        m_peers.remove(address);
+        endRemoveRows();
+    }
+}
+
+void PeersModel::timerEvent(QTimerEvent* event)
+{
+    checkStatus();
 }
 
 #include "peersmodel.moc"

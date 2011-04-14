@@ -7,5 +7,6 @@
         <file>images/search.png</file>
         <file>images/download.png</file>
         <file>images/send.png</file>
+        <file>images/folder-development.png</file>
     </qresource>
 </RCC>

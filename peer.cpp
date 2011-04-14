@@ -57,3 +57,8 @@ void Peer::setName (const QString& name)
 {
     m_name = name;
 }
+
+bool Peer::operator== (const Peer& peer)
+{
+    return ((m_ipAddress == peer.ipAddress()) && (m_name == peer.name()));
+}

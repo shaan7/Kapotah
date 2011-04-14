@@ -40,10 +40,16 @@ namespace Kapotah
 
         private:
             QHash<QHostAddress, Peer> m_peers;
-            QList<QHostAddress> m_peerList;
+            QHash<QHostAddress, int> m_ages;
 
         public slots:
             void addNewPeer (Peer peer);
+
+        private slots:
+            void checkStatus();
+
+        protected:
+            virtual void timerEvent (QTimerEvent* event);
     };
 
 }

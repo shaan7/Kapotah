@@ -47,6 +47,5 @@ int main (int argc, char** argv)
         qFatal("Can't listen to file port");
     PeerDialog peerDialog;
     peerDialog.show();
-    FileSearcher::instance()->setSearchPath("/media/Data/Videos/");     //Needs GUI instance
     return app.exec();
 }

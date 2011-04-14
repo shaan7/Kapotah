@@ -36,6 +36,7 @@ class SearchDialog : public QDialog
 
     private slots:
         void search();
+        void setSharedDir();
 };
 
 #endif // SEARCHDIALOG_H

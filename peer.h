@@ -41,11 +41,12 @@ namespace Kapotah
             QHostAddress ipAddress() const;
             void setIpAddress (const QHostAddress &ipAddress);
 
+            bool operator==(const Peer &peer);
+
         private:
             QString m_name;
             QHostAddress m_ipAddress;
     };
-
 }
 
 #endif // KAPOTAH_PEER_H
