@@ -21,9 +21,11 @@
 #define FILESEARCHERTHREAD_H
 
 #include <QThread>
+#include <QStringList>
 #include "announcer.h"
 #include "peer.h"
 
+class QStringList;
 class QModelIndex;
 class QFileSystemModel;
 
@@ -46,12 +48,9 @@ private:
     QString m_pattern;
     Kapotah::Peer m_peer;
     Kapotah::FileSearcher &m_fileSearcher;
-    bool m_isModelReady;
+    QStringList m_matches;
 
-    void printIndex(QModelIndex index, QString spaces);
-
-private slots:
-    void modelReady(QString path);
+    void traverseModelIndex(QModelIndex index);
 };
 
 #endif // FILESEARCHERTHREAD_H

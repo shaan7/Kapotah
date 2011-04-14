@@ -20,30 +20,37 @@
 #include "filesearcherthread.h"
 
 #include "filesearcher.h"
-#include <QFileSystemModel>
 #include "peer.h"
+#include <QFileSystemModel>
 
 #include <QDebug>
-#include <QTreeView>
 
 FileSearcherThread::FileSearcherThread (QFileSystemModel& model, const QString& pattern,
                                         const Kapotah::Peer& peer, Kapotah::FileSearcher &fileSearcher, QObject* parent)
                                         : m_model(model), m_pattern(pattern), m_peer(peer),
-                                        m_fileSearcher(fileSearcher), m_isModelReady(false), QThread (parent)
+                                        m_fileSearcher(fileSearcher), QThread (parent)
 {
 
 }
 
 void FileSearcherThread::run()
 {
+    traverseModelIndex(m_model.index(m_model.rootPath()));
+
+    qDebug() << "MATCHES " << m_matches;
 }
 
-void FileSearcherThread::modelReady(QString path)
+void FileSearcherThread::traverseModelIndex (QModelIndex index)
 {
-}
-
-void FileSearcherThread::printIndex (QModelIndex index, QString spaces)
-{
+    if (m_model.fileInfo(index).isDir()) {
+        for (int i=0; i<m_model.rowCount(index); i++) {
+            traverseModelIndex(m_model.index(i, 0, index));
+        }
+    } else {
+        if (index.data().toString().contains(m_pattern, Qt::CaseInsensitive)) {
+            m_matches.append(m_model.filePath(index));
+        }
+    }
 }
 
 #include "filesearcherthread.moc"

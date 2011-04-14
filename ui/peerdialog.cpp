@@ -65,8 +65,7 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(0)
     trayIcon->show();
 
     FileSearcher::instance()->setSearchPath("/media/Data/Videos/");
-    //FileSearcher::instance()->addSearch("bleh", Peer("haha", QHostAddress::LocalHost));
-
+    FileSearcher::instance()->addSearch("knut", Peer("haha", QHostAddress::LocalHost));
 }
 
 ChatDialog* PeerDialog::createChatDialog(QModelIndex index)

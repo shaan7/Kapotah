@@ -60,7 +60,6 @@ void FileSearcher::doScheduling()
     if (m_isProcessing)
         return;
 
-
     SearchItem item = m_queue.dequeue();
     m_thread = new FileSearcherThread(m_fsModel, item.pattern, item.peer, *this);
     connect(m_thread, SIGNAL(finished()), SLOT(threadDone()));
@@ -81,25 +80,24 @@ void FileSearcher::threadDone()
 
 void FileSearcher::initFileSystemModel()
 {
-    qDebug() << "INITIALIZING " << m_searchPath;
     m_fsModel.setRootPath(m_searchPath);
 }
 
 void FileSearcher::directoryLoaded (const QString& path)
 {
-    qDebug() << path << " LOADED";
     m_pendingDirs.removeOne(path);
     processIndex(m_fsModel.index(path));
 
     if (m_pendingDirs.length()==0) {
+        qDebug() << "Done Loading " << m_searchPath;
+        m_isProcessing = false;
+        doScheduling();
         emit initDone();
     }
 }
 
 void FileSearcher::processIndex (QModelIndex index)
 {
-    qDebug() << index.data();
-
     if (m_fsModel.hasChildren(index)) {
         if (m_fsModel.rowCount(index) == 0) {     //Not yet fetched
             if (m_fsModel.canFetchMore(index)) {
