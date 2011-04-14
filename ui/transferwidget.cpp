@@ -57,6 +57,7 @@ TransferWidget::TransferWidget (Transfer* transfer, QWidget* parent, Qt::WindowF
     m_verticalLayout->addWidget(m_progressLabel);
 
     setLayout(m_verticalLayout);
+    m_progress->setMaximum(100);
 
     connect(m_startStop, SIGNAL(clicked(bool)), SLOT(startTransfer()));
     connect(m_transfer, SIGNAL(done()), SLOT(transferFinished()));
@@ -91,8 +92,7 @@ void TransferWidget::transferNeedsDestinationDir()
 
 void TransferWidget::updateProgress (quint64 done, quint64 total, quint32 speed)
 {
-    m_progress->setMaximum(total);
-    m_progress->setValue(done);
+    m_progress->setValue(done*100/total);
     m_progressLabel->setText(QString("%1 MiB of %2 MiB done at %3 MiB/s").arg(done/1024/1024)
                                 .arg(total/1024/1024).arg(speed/1024));
 }
