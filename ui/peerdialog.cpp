@@ -39,6 +39,13 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(0)
     ui.multicastButton->setToolTip("To multicast, select users and click on \"multicast\" button");
     ui.peersListView->setModel(PeerManager::instance()->peersModel());
     ui.nameEdit->setText(Kapotah::Announcer::instance()->username());
+    ui.refreshButton->setIcon(QIcon(":/images/refresh.png"));
+    ui.transferButton->setIcon(QIcon(":/images/transfer.png"));
+    ui.searchButton->setIcon(QIcon(":/images/search.png"));
+    ui.multicastButton->setIcon(QIcon(":/images/multicast.png"));
+    ui.refreshButton->setToolTip("Refresh Peers");
+    ui.transferButton->setToolTip("Transfer Log");
+    ui.searchButton->setToolTip("Search");
     connect (ui.refreshButton, SIGNAL(clicked()), this, SLOT(updatePeer()));
     connect (PeerManager::instance()->peersModel(), SIGNAL(rowsInserted(QModelIndex, int, int)), this,
              SLOT(updateSystrayTooltip(QModelIndex, int, int)));
@@ -51,6 +58,7 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(0)
     /*connect (MessageDispatcher::instance(), SIGNAL(gotNewMulticast(QString, QHostAddress)),
              SLOT(createMulticastDialogOnMessage(QString, QHostAddress));*/
     connect (ui.transferButton, SIGNAL(clicked(bool)), SLOT(showTransferDialog(bool)));
+    connect (ui.searchButton, SIGNAL(clicked()), SLOT(showSearchDialog()));
     connect (trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, 
              SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
     connect (ui.nameEdit, SIGNAL(returnPressed()), SLOT(setPeerNameFromUi()));
@@ -99,6 +107,13 @@ MulticastDialog* PeerDialog::createMulticastDialog()
     return multiDlg;
 }
 
+SearchDialog* PeerDialog::showSearchDialog()
+{
+    SearchDialog *srchDlg = new SearchDialog();
+    srchDlg->show();
+    return srchDlg;
+}
+
 /*ChatDialog* PeerDialog::createMulticastDialogOnMessage(QString message, QHostAddress peerAddress)
 {
     if (m_openMulticastDialog.contains(peerAddress.toString())) //Already created
@@ -141,7 +156,7 @@ void PeerDialog::updatePeer()
 
 void PeerDialog::createTrayIcon()
 {
-    trayIcon = new QSystemTrayIcon(QIcon(":/images/knetattach.png"));
+    trayIcon = new QSystemTrayIcon(QIcon(":/images/systrayicon.png"));
     
     trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(minimizeAction);

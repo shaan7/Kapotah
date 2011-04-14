@@ -17,36 +17,24 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MULTICASTDIALOG_H
-#define MULTICASTDIALOG_H
+#ifndef SEARCHDIALOG_H
+#define SEARCHDIALOG_H
 
-#include "ui_multicastdialog.h"
+#include "ui_searchdialog.h"
 
 #include <QDialog>
-#include <QModelIndexList>
 
-class MulticastDialog : public QDialog
+class SearchDialog : public QDialog
 {
         Q_OBJECT
     
     public:
-        explicit MulticastDialog (const QModelIndexList &ipAddressList, QWidget* parent = 0, Qt::WindowFlags f = 0);
+        explicit SearchDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
         
     private:
-        Ui::MulticastDialog ui;
-        QModelIndexList m_ipAddressList;
+        Ui::SearchDialog ui;
     
-    private slots:
-        void sendMessage();
-    
-    protected:
-        bool eventFilter (QObject *obj, QEvent *event);
-        virtual void dragEnterEvent (QDragEnterEvent *event);
-        virtual void dragMoveEvent (QDragMoveEvent *event);
-        virtual void dragLeaveEvent (QDragLeaveEvent*);
-        virtual void dropEvent (QDropEvent *event);
-               
     friend class PeerDialog;
 };
 
-#endif // MULTICASTDIALOG_H
+#endif // SEARCHDIALOG_H

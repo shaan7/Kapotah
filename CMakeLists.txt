@@ -15,6 +15,7 @@ set(Kapotah_SRCS
     filesearcher.cpp
     xml/searchxmlparser.cpp
     ui/multicastdialog.cpp
+    ui/searchdialog.cpp
     xml/transferstatusxmlparser.cpp
     xml/peerstatusxmlparser.cpp
     peerenvironment.cpp
@@ -48,7 +49,7 @@ set(Kapotah_SRCS
     ${kapotah_RCC_SRCS}
 )
 
-SET(Kapotah_FORMS ui/peerdialog.ui ui/chatdialog.ui ui/multicastdialog.ui)
+SET(Kapotah_FORMS ui/peerdialog.ui ui/chatdialog.ui ui/multicastdialog.ui ui/searchdialog.ui)
 
 qt4_automoc(${Kapotah_SRCS})
 QT4_WRAP_UI(Kapotah_FORMS_HEADERS ${Kapotah_FORMS})

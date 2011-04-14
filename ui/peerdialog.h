@@ -25,6 +25,7 @@
 #include "chatdialog.h"
 #include "transferdialog.h"
 #include "multicastdialog.h"
+#include "searchdialog.h"
 
 #include <peermanager.h>
 #include <QDialog>
@@ -43,6 +44,7 @@ class PeerDialog : public QDialog
         QHash<QString, ChatDialog*> m_openChatDialogs;
         TransferDialog *m_transferDialog;
         MulticastDialog *m_openMulticastDialog;
+        SearchDialog *m_openSearchDialog;
 
         void createTrayIcon();
         void createActions();
@@ -65,6 +67,7 @@ class PeerDialog : public QDialog
         ChatDialog* createChatDialogOnMessage (QString message, QHostAddress peerAddress);
         //MultiCastDialog* createMulticastDialogOnMessage ();
         MulticastDialog* createMulticastDialog();
+        SearchDialog* showSearchDialog();
         void showTransferDialog (bool checked);
         void removeKeyFromHash();
         void iconActivated(QSystemTrayIcon::ActivationReason);
