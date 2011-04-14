@@ -38,6 +38,7 @@ namespace Kapotah
             UdpManager();
             virtual ~UdpManager();
             void updateAddresses();
+            bool isLocalHostIp(const QHostAddress &ip);
 
         protected:
             virtual void timerEvent (QTimerEvent*);

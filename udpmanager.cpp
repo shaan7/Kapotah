@@ -105,4 +105,11 @@ void UdpManager::sendDatagram (const QByteArray &datagram, const QHostAddress &h
     m_broadcastSocket.writeDatagram(datagram, address, s_broadcastPort);
 }
 
+bool UdpManager::isLocalHostIp (const QHostAddress& ip)
+{
+    if (m_ipAddresses.contains(ip))
+        return true;
+    return false;
+}
+
 #include "udpmanager.moc"

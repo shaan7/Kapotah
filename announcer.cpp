@@ -108,7 +108,9 @@ void Announcer::processDatagram (const QByteArray& datagram, const QHostAddress&
             } else {
                 SearchXmlData *searchXmlData = static_cast<SearchXmlData*>(searchParser.parseXml(xml));
                 if (searchXmlData->type == SearchXmlData::Search) {
-                    emit gotSearchRequest(searchXmlData->pattern, host);
+                    if (!UdpManager::instance()->isLocalHostIp(host)) {
+                        emit gotSearchRequest(searchXmlData->pattern, host);
+                    }
                 }
             }
         }
