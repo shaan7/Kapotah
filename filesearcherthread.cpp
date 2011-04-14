@@ -40,18 +40,20 @@ void FileSearcherThread::run()
 {
     traverseModelIndex(m_model.index(m_model.rootPath()));
 
-    QList<TransferFile> fileList;
+    if (!m_matches.empty()) {
+        QList<TransferFile> fileList;
 
-    foreach (QString path, m_matches) {
-        TransferFile file;
-        file.path = path;
-        fileList.append(file);
-        qDebug() << "MATCH " << file.path << " SIZE " << file.path;
+        foreach (QString path, m_matches) {
+            TransferFile file;
+            file.path = path;
+            fileList.append(file);
+            qDebug() << "MATCH " << file.path << " SIZE " << file.path;
+        }
+
+        Transfer *transfer = TransferManager::instance()->addTransfer(Transfer::Outgoing,
+                                                                    fileList, 0, 0, 0, "", m_host);
+        transfer->start();
     }
-
-    Transfer *transfer = TransferManager::instance()->addTransfer(Transfer::Outgoing,
-                                                                  fileList, 0, 0, 0, "", m_host);
-    transfer->start();
 }
 
 void FileSearcherThread::traverseModelIndex (QModelIndex index)
