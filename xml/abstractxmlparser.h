@@ -26,7 +26,7 @@ class AbstractXmlData
 {
 
     public:
-        enum Type { Error, Announce, Message, Transfer, PeerStatus, TransferStatus };
+        enum Type { Error, Announce, Message, Transfer, PeerStatus, TransferStatus, Search };
         Type type;
 };
 

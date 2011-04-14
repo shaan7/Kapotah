@@ -63,9 +63,6 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(0)
              SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
     connect (ui.nameEdit, SIGNAL(returnPressed()), SLOT(setPeerNameFromUi()));
     trayIcon->show();
-
-    FileSearcher::instance()->setSearchPath("/media/Data/Videos/");
-    FileSearcher::instance()->addSearch("knut", Peer("haha", QHostAddress::LocalHost));
 }
 
 ChatDialog* PeerDialog::createChatDialog(QModelIndex index)
@@ -108,7 +105,7 @@ MulticastDialog* PeerDialog::createMulticastDialog()
 
 SearchDialog* PeerDialog::showSearchDialog()
 {
-    SearchDialog *srchDlg = new SearchDialog();
+    SearchDialog *srchDlg = new SearchDialog(this);
     srchDlg->show();
     return srchDlg;
 }

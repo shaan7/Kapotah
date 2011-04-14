@@ -19,6 +19,8 @@
 
 #include "searchdialog.h"
 
+#include "announcer.h"
+
 SearchDialog::SearchDialog(QWidget* parent, Qt::WindowFlags f) : QDialog (parent, f)
 {
     ui.setupUi(this);
@@ -27,6 +29,14 @@ SearchDialog::SearchDialog(QWidget* parent, Qt::WindowFlags f) : QDialog (parent
     ui.downloadButton->setIcon(QIcon(":/images/download.png"));
     ui.searchButton->setToolTip("Search");
     ui.downloadButton->setToolTip("Download");
+
+    connect(ui.searchButton, SIGNAL(clicked()), SLOT(search()));
+}
+
+void SearchDialog::search()
+{
+    qDebug() << "Searching for " << ui.searchPatternEdit->text();
+    Kapotah::Announcer::instance()->searchPeersForFile(ui.searchPatternEdit->text());
 }
 
 #include "searchdialog.moc"

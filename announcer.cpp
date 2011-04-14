@@ -23,6 +23,7 @@
 #include <xml/announcexmlparser.h>
 #include <xml/peerstatusxmlparser.h>
 #include <xml/transferstatusxmlparser.h>
+#include <xml/searchxmlparser.h>
 
 #include <QTimerEvent>
 
@@ -84,6 +85,7 @@ void Announcer::processDatagram (const QByteArray& datagram, const QHostAddress&
     AnnounceXmlParser announceParser;
     PeerStatusXmlParser statusParser;
     TransferStatusXmlParser transferStatusParser;
+    SearchXmlParser searchParser;
     QString xml (datagram);
     AnnounceXmlData *announceData = static_cast<AnnounceXmlData*>(announceParser.parseXml(xml));
 
@@ -101,11 +103,25 @@ void Announcer::processDatagram (const QByteArray& datagram, const QHostAddress&
         } else {
             TransferStatusXmlData *transferStatusData = static_cast<TransferStatusXmlData*>(transferStatusParser.parseXml(xml));
             if (transferStatusData->type == TransferStatusXmlData::TransferStatus) {
-                gotProgress(host, transferStatusData->id, transferStatusData->percentDone);
+                emit gotProgress(host, transferStatusData->id, transferStatusData->percentDone);
+                delete transferStatusData;
+            } else {
+                SearchXmlData *searchXmlData = static_cast<SearchXmlData*>(searchParser.parseXml(xml));
+                if (searchXmlData->type == SearchXmlData::Search) {
+                    emit gotSearchRequest(searchXmlData->pattern, host);
+                }
             }
-            delete transferStatusData;
         }
     }
+}
+
+void Announcer::searchPeersForFile (const QString& pattern)
+{
+    SearchXmlData data;
+    data.pattern = pattern;
+    data.type = AbstractXmlData::Search;
+    SearchXmlParser parser;
+    Kapotah::UdpManager::instance()->sendBroadcast(parser.composeXml(&data).toUtf8());
 }
 
 #include "announcer.moc"

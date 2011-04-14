@@ -35,8 +35,7 @@ class FileSearcher : public Singleton<FileSearcher>
     Q_OBJECT
 
 public:
-    void addSearch(const QString &pattern, const Peer &peer);
-    void setSearchPath(const QString &searchPath);
+    void setSearchPath (const QString& searchPath);
     QString searchPath() const;
 
     FileSearcher();
@@ -46,28 +45,31 @@ private:
     class SearchItem
     {
     public:
-        SearchItem(const QString &pattern, const Peer &peer) : pattern(pattern), peer(peer) { }
+        SearchItem (const QString& pattern, const QHostAddress &host) : pattern (pattern), host (host) { }
         QString pattern;
-        Peer peer;
+        QHostAddress host;
     };
 
     QFileSystemModel m_fsModel;
     QQueue<SearchItem> m_queue;
     QString m_searchPath;
-    FileSearcherThread *m_thread;
+    FileSearcherThread* m_thread;
     bool m_isProcessing;
     QStringList m_pendingDirs;
 
-    void processIndex(QModelIndex index);
+    void processIndex (QModelIndex index);
 
 private slots:
     void threadDone();
     void doScheduling();
     void initFileSystemModel();
-    void directoryLoaded(const QString &path);
+    void directoryLoaded (const QString& path);
 
 signals:
     void initDone();
+
+public slots:
+    void addSearch (const QString& pattern, const QHostAddress& host);
 };
 }
 

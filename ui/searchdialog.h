@@ -27,14 +27,16 @@
 class SearchDialog : public QDialog
 {
         Q_OBJECT
-    
+
     public:
         explicit SearchDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
-        
+
     private:
         Ui::SearchDialog ui;
-    
-    friend class PeerDialog;
+
+    private slots:
+        void search();
 };
 
 #endif // SEARCHDIALOG_H
+

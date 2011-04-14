@@ -15,42 +15,21 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <layout class="QVBoxLayout" name="verticalLayout">
+    <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Search For::</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="inputSearchItem"/>
-       </item>
-       <item>
-        <widget class="QToolButton" name="searchButton">
-         <property name="text">
-          <string>&amp;Search</string>
-         </property>
-         <property name="autoRaise">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <widget class="QListView" name="searchResultView">
-       <property name="editTriggers">
-        <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Search For</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="downloadButton">
+      <widget class="QLineEdit" name="searchPatternEdit"/>
+     </item>
+     <item>
+      <widget class="QToolButton" name="searchButton">
        <property name="text">
-        <string>&amp;Download</string>
+        <string>&amp;Search</string>
        </property>
        <property name="autoRaise">
         <bool>true</bool>
@@ -59,8 +38,27 @@
      </item>
     </layout>
    </item>
+   <item row="1" column="0">
+    <widget class="QListWidget" name="resultsList"/>
+   </item>
+   <item row="2" column="0">
+    <widget class="QToolButton" name="downloadButton">
+     <property name="text">
+      <string>&amp;Download</string>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>searchPatternEdit</tabstop>
+  <tabstop>searchButton</tabstop>
+  <tabstop>resultsList</tabstop>
+  <tabstop>downloadButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

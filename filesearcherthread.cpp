@@ -20,14 +20,17 @@
 #include "filesearcherthread.h"
 
 #include "filesearcher.h"
-#include "peer.h"
+#include "transfermanager.h"
 #include <QFileSystemModel>
 
 #include <QDebug>
 
+using namespace Kapotah;
+
 FileSearcherThread::FileSearcherThread (QFileSystemModel& model, const QString& pattern,
-                                        const Kapotah::Peer& peer, Kapotah::FileSearcher &fileSearcher, QObject* parent)
-                                        : m_model(model), m_pattern(pattern), m_peer(peer),
+                                        const QHostAddress &host, FileSearcher &fileSearcher,
+                                        QObject* parent)
+                                        : m_model(model), m_pattern(pattern), m_host(host),
                                         m_fileSearcher(fileSearcher), QThread (parent)
 {
 
@@ -37,7 +40,17 @@ void FileSearcherThread::run()
 {
     traverseModelIndex(m_model.index(m_model.rootPath()));
 
-    qDebug() << "MATCHES " << m_matches;
+    QList<TransferFile> fileList;
+
+    foreach (QString path, m_matches) {
+        TransferFile file;
+        file.path = path;
+        fileList.append(file);
+    }
+
+    Transfer *transfer = TransferManager::instance()->addTransfer(Transfer::Outgoing,
+                                                                  fileList, 0, 0, 0, "", m_host);
+    transfer->start();
 }
 
 void FileSearcherThread::traverseModelIndex (QModelIndex index)

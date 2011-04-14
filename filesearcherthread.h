@@ -38,7 +38,7 @@ class FileSearcherThread : public QThread
 {
     Q_OBJECT
 public:
-    explicit FileSearcherThread ( QFileSystemModel &model, const QString &pattern, const Kapotah::Peer &peer,
+    explicit FileSearcherThread ( QFileSystemModel &model, const QString &pattern, const QHostAddress &host,
                                   Kapotah::FileSearcher &fileSearcher, QObject* parent = 0);
 protected:
     virtual void run();
@@ -46,7 +46,7 @@ protected:
 private:
     QFileSystemModel &m_model;
     QString m_pattern;
-    Kapotah::Peer m_peer;
+    QHostAddress m_host;
     Kapotah::FileSearcher &m_fileSearcher;
     QStringList m_matches;
 

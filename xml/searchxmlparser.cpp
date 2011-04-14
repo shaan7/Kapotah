@@ -44,7 +44,7 @@ AbstractXmlData* SearchXmlParser::parseXml(const QString& xml)
     while (!reader.atEnd()) {
         if (reader.isStartElement()) {
             if (reader.name() == "search") {
-                data->type = AbstractXmlData::Announce;
+                data->type = AbstractXmlData::Search;
                 data->pattern = reader.attributes().value ("pattern").toString();
                 break;
             }

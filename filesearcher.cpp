@@ -20,6 +20,7 @@
 #include "filesearcher.h"
 
 #include "filesearcherthread.h"
+#include "announcer.h"
 
 using namespace Kapotah;
 
@@ -28,6 +29,7 @@ template<> FileSearcher *Kapotah::Singleton<FileSearcher>::m_instance = 0;
 FileSearcher::FileSearcher() : m_isProcessing(true)
 {
     connect(&m_fsModel, SIGNAL(directoryLoaded(QString)), SLOT(directoryLoaded(QString)));
+    connect(Announcer::instance(), SIGNAL(gotSearchRequest(QString,QHostAddress)), SLOT(addSearch(QString,QHostAddress)));
 }
 
 FileSearcher::~FileSearcher()
@@ -35,9 +37,9 @@ FileSearcher::~FileSearcher()
 
 }
 
-void FileSearcher::addSearch (const QString& pattern, const Peer& peer)
+void FileSearcher::addSearch (const QString& pattern, const QHostAddress &host)
 {
-    m_queue.enqueue(SearchItem(pattern, peer));
+    m_queue.enqueue(SearchItem(pattern, host));
     doScheduling();
 }
 
@@ -61,7 +63,7 @@ void FileSearcher::doScheduling()
         return;
 
     SearchItem item = m_queue.dequeue();
-    m_thread = new FileSearcherThread(m_fsModel, item.pattern, item.peer, *this);
+    m_thread = new FileSearcherThread(m_fsModel, item.pattern, item.host, *this);
     connect(m_thread, SIGNAL(finished()), SLOT(threadDone()));
     m_isProcessing = true;
     m_thread->start();
