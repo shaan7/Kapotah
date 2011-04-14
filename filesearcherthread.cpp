@@ -50,7 +50,7 @@ void FileSearcherThread::run()
             qDebug() << "MATCH " << file.path << " SIZE " << file.path;
         }
 
-        m_fileSearcher.sendMatchingFiles(fileList, m_host);
+        m_fileSearcher.setMatchingFiles(fileList, m_host);
     }
 }
 

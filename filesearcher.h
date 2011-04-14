@@ -41,7 +41,7 @@ public:
     void setSearchPath (const QString& searchPath);
     QString searchPath() const;
 
-    void sendMatchingFiles (QList<TransferFile> matches, QHostAddress address);
+    void setMatchingFiles (QList<TransferFile> matches, QHostAddress address);
 
     FileSearcher();
     virtual ~FileSearcher();
@@ -61,6 +61,8 @@ private:
     FileSearcherThread* m_thread;
     bool m_isProcessing;
     QStringList m_pendingDirs;
+    QList<TransferFile> m_matches;
+    QHostAddress m_hostToSendMatches;
 
     void processIndex (QModelIndex index);
 
