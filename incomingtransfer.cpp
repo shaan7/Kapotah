@@ -97,7 +97,9 @@ void IncomingTransfer::reportProgress (quint64 done, quint64 size)
     //Send progress to sender
     TransferStatusXmlData data;
     data.id = m_id;
-    data.percentDone = ((m_sizeDone + done)*100)/m_totalSize;
+    data.bytesDone = m_sizeDone + done;
+    data.total = m_totalSize;
+    data.speed = m_speed;
     data.type = AbstractXmlData::TransferStatus;
     TransferStatusXmlParser parser;
     Kapotah::UdpManager::instance()->sendDatagram(parser.composeXml(&data).toUtf8(), m_peerAddress);

@@ -30,8 +30,8 @@ OutgoingTransfer::OutgoingTransfer (QList< TransferFile > files, QHostAddress pe
 {
     m_state = Stopped;
     m_id = peer.toString() + QString::number(QDateTime::currentMSecsSinceEpoch());
-    connect(Kapotah::Announcer::instance(), SIGNAL(gotProgress(QHostAddress,QString,int)),
-            SLOT(processProgress(QHostAddress,QString,int)));
+    connect(Kapotah::Announcer::instance(), SIGNAL(gotProgress(QHostAddress,QString,quint64,quint64,quint64)),
+            SLOT(processProgress(QHostAddress,QString,quint64,quint64,quint64)));
 }
 
 
@@ -66,13 +66,12 @@ void OutgoingTransfer::onThreadStartSendingList()
     m_state = SendingFileList;
 }
 
-void OutgoingTransfer::processProgress(const QHostAddress& peer, QString id, int percentDone)
+void OutgoingTransfer::processProgress(const QHostAddress& peer, QString id, quint64 bytesDone,
+                                       quint64 total, quint64 speed)
 {
     if (peer == m_peerAddress) {
-        emit progress(percentDone, 100, 1);  //FIXME: Dummy speed
+        emit progress(bytesDone, total, speed);
     }
 }
-
-
 
 #include "outgoingtransfer.moc"

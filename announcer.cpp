@@ -103,7 +103,8 @@ void Announcer::processDatagram (const QByteArray& datagram, const QHostAddress&
         } else {
             TransferStatusXmlData *transferStatusData = static_cast<TransferStatusXmlData*>(transferStatusParser.parseXml(xml));
             if (transferStatusData->type == TransferStatusXmlData::TransferStatus) {
-                emit gotProgress(host, transferStatusData->id, transferStatusData->percentDone);
+                emit gotProgress(host, transferStatusData->id, transferStatusData->bytesDone,
+                                 transferStatusData->total, transferStatusData->speed);
                 delete transferStatusData;
             } else {
                 SearchXmlData *searchXmlData = static_cast<SearchXmlData*>(searchParser.parseXml(xml));

@@ -54,7 +54,7 @@ namespace Kapotah
         signals:
             void gotAnnounce (const Peer &peer);
             void peerTyping (const QHostAddress &peer);
-            void gotProgress (const QHostAddress &peer, QString id, int percentDone);
+            void gotProgress (const QHostAddress &peer, QString id, quint64 bytesDone, quint64 total, quint64 speed);
             void gotSearchRequest (const QString &pattern, const QHostAddress &host);
     };
 
