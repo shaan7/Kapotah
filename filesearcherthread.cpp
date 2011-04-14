@@ -23,15 +23,27 @@
 #include <QFileSystemModel>
 #include "peer.h"
 
+#include <QDebug>
+#include <QTreeView>
+
 FileSearcherThread::FileSearcherThread (QFileSystemModel& model, const QString& pattern,
                                         const Kapotah::Peer& peer, Kapotah::FileSearcher &fileSearcher, QObject* parent)
                                         : m_model(model), m_pattern(pattern), m_peer(peer),
-                                        m_fileSearcher(fileSearcher), QThread (parent)
+                                        m_fileSearcher(fileSearcher), m_isModelReady(false), QThread (parent)
 {
 
 }
 
 void FileSearcherThread::run()
 {
-    m_model.setRootPath(m_fileSearcher.searchPath());
 }
+
+void FileSearcherThread::modelReady(QString path)
+{
+}
+
+void FileSearcherThread::printIndex (QModelIndex index, QString spaces)
+{
+}
+
+#include "filesearcherthread.moc"

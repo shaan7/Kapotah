@@ -24,6 +24,7 @@
 #include "peersmodel.h"
 #include "announcer.h"
 
+#include "filesearcher.h"
 #include <QtGui>
 
 using namespace Kapotah;
@@ -54,6 +55,10 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(0)
              SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
     connect (ui.nameEdit, SIGNAL(returnPressed()), SLOT(setPeerNameFromUi()));
     trayIcon->show();
+
+    FileSearcher::instance()->setSearchPath("/media/Data/Videos/");
+    //FileSearcher::instance()->addSearch("bleh", Peer("haha", QHostAddress::LocalHost));
+
 }
 
 ChatDialog* PeerDialog::createChatDialog(QModelIndex index)

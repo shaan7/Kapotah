@@ -82,7 +82,7 @@ void UdpManager::readBroadcast()
             continue;
         }
         emit gotDatagram(datagram, senderIp, senderPort);
-        qDebug()<< datagram;
+        //qDebug()<< datagram;
     }
 }
 

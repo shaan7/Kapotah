@@ -26,6 +26,8 @@
 #include "peer.h"
 #include <QQueue>
 
+class FileSearcherThread;
+
 namespace Kapotah
 {
 class FileSearcher : public Singleton<FileSearcher>
@@ -52,6 +54,17 @@ private:
     QFileSystemModel m_fsModel;
     QQueue<SearchItem> m_queue;
     QString m_searchPath;
+    FileSearcherThread *m_thread;
+    bool m_isProcessing;
+    QStringList m_pendingDirs;
+
+    void processIndex(QModelIndex index);
+
+private slots:
+    void threadDone();
+    void doScheduling();
+    void initFileSystemModel();
+    void directoryLoaded(const QString &path);
 };
 }
 

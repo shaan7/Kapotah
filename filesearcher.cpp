@@ -19,13 +19,15 @@
 
 #include "filesearcher.h"
 
+#include "filesearcherthread.h"
+
 using namespace Kapotah;
 
 template<> FileSearcher *Kapotah::Singleton<FileSearcher>::m_instance = 0;
 
-FileSearcher::FileSearcher()
+FileSearcher::FileSearcher() : m_isProcessing(true)
 {
-
+    connect(&m_fsModel, SIGNAL(directoryLoaded(QString)), SLOT(directoryLoaded(QString)));
 }
 
 FileSearcher::~FileSearcher()
@@ -36,6 +38,7 @@ FileSearcher::~FileSearcher()
 void FileSearcher::addSearch (const QString& pattern, const Peer& peer)
 {
     m_queue.enqueue(SearchItem(pattern, peer));
+    doScheduling();
 }
 
 QString FileSearcher::searchPath() const
@@ -46,6 +49,69 @@ QString FileSearcher::searchPath() const
 void FileSearcher::setSearchPath (const QString& searchPath)
 {
     m_searchPath = searchPath;
+    initFileSystemModel();
+}
+
+void FileSearcher::doScheduling()
+{
+    if (m_queue.length() == 0)
+        return;
+
+    if (m_isProcessing)
+        return;
+
+
+    SearchItem item = m_queue.dequeue();
+    m_thread = new FileSearcherThread(m_fsModel, item.pattern, item.peer, *this);
+    connect(m_thread, SIGNAL(finished()), SLOT(threadDone()));
+    m_isProcessing = true;
+    m_thread->start();
+}
+
+void FileSearcher::threadDone()
+{
+    m_thread->quit();
+    m_thread->wait();
+    m_isProcessing = false;
+    disconnect(m_thread);
+    delete m_thread;
+
+    doScheduling();
+}
+
+void FileSearcher::initFileSystemModel()
+{
+    qDebug() << "INITIALIZING " << m_searchPath;
+    m_fsModel.setRootPath(m_searchPath);
+}
+
+void FileSearcher::directoryLoaded (const QString& path)
+{
+    qDebug() << path << " LOADED";
+    m_pendingDirs.removeOne(path);
+    processIndex(m_fsModel.index(path));
+
+    if (m_pendingDirs.length()==0) {
+        qDebug() << "EMPTYYYYYYYYYYYY";
+    }
+}
+
+void FileSearcher::processIndex (QModelIndex index)
+{
+    qDebug() << index.data();
+
+    if (m_fsModel.hasChildren(index)) {
+        if (m_fsModel.rowCount(index) == 0) {     //Not yet fetched
+            if (m_fsModel.canFetchMore(index)) {
+                m_pendingDirs.append(index.data().toString());
+                m_fsModel.fetchMore(index);
+            }
+        } else {
+            for (int i=0; i<m_fsModel.rowCount(index); i++) {
+                processIndex(m_fsModel.index(i, 0, index));
+            }
+        }
+    }
 }
 
 #include "filesearcher.moc"

@@ -24,6 +24,7 @@
 #include "announcer.h"
 #include "peer.h"
 
+class QModelIndex;
 class QFileSystemModel;
 
 namespace Kapotah
@@ -33,6 +34,7 @@ namespace Kapotah
 
 class FileSearcherThread : public QThread
 {
+    Q_OBJECT
 public:
     explicit FileSearcherThread ( QFileSystemModel &model, const QString &pattern, const Kapotah::Peer &peer,
                                   Kapotah::FileSearcher &fileSearcher, QObject* parent = 0);
@@ -44,6 +46,12 @@ private:
     QString m_pattern;
     Kapotah::Peer m_peer;
     Kapotah::FileSearcher &m_fileSearcher;
+    bool m_isModelReady;
+
+    void printIndex(QModelIndex index, QString spaces);
+
+private slots:
+    void modelReady(QString path);
 };
 
 #endif // FILESEARCHERTHREAD_H

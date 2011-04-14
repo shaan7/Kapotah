@@ -26,6 +26,7 @@
 #include <ui/peerdialog.h>
 #include <fileserversingleton.h>
 #include <peerenvironment.h>
+#include <filesearcher.h>
 
 static const int s_messageServerPort = 45001;
 static const int s_fileServerPort = 45002;
