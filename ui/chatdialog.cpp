@@ -64,7 +64,7 @@ void ChatDialog::displayPeerStatus(QHostAddress peerAddress)
         m_isTypingTimer.start(2000);
         if(peerAddress.toString() == PeerManager::instance()->peersModel()->data(m_ipAddress, PeersModel::ipAddressRole).toString())
         {
-            ui.peerStatus->setText("is typing....");
+            ui.peerStatus->setText(PeerManager::instance()->peersModel()->data(m_ipAddress).toString() + " is typing....");
         }
 }
 
