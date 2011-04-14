@@ -46,6 +46,7 @@ void FileSearcherThread::run()
         TransferFile file;
         file.path = path;
         fileList.append(file);
+        qDebug() << "MATCH " << file;
     }
 
     Transfer *transfer = TransferManager::instance()->addTransfer(Transfer::Outgoing,
