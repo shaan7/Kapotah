@@ -65,6 +65,9 @@ private slots:
     void doScheduling();
     void initFileSystemModel();
     void directoryLoaded(const QString &path);
+
+signals:
+    void initDone();
 };
 }
 

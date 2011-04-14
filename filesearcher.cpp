@@ -92,7 +92,7 @@ void FileSearcher::directoryLoaded (const QString& path)
     processIndex(m_fsModel.index(path));
 
     if (m_pendingDirs.length()==0) {
-        qDebug() << "EMPTYYYYYYYYYYYY";
+        emit initDone();
     }
 }
 
@@ -103,7 +103,7 @@ void FileSearcher::processIndex (QModelIndex index)
     if (m_fsModel.hasChildren(index)) {
         if (m_fsModel.rowCount(index) == 0) {     //Not yet fetched
             if (m_fsModel.canFetchMore(index)) {
-                m_pendingDirs.append(index.data().toString());
+                m_pendingDirs.append(m_fsModel.filePath(index));
                 m_fsModel.fetchMore(index);
             }
         } else {
