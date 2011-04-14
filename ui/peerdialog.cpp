@@ -29,7 +29,7 @@
 
 using namespace Kapotah;
 
-PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(0)
+PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(new TransferDialog(this))
 {
     QSystemTrayIcon::isSystemTrayAvailable();
     ui.setupUi(this);
@@ -127,10 +127,9 @@ SearchDialog* PeerDialog::showSearchDialog()
 
 void PeerDialog::showTransferDialog (bool checked)
 {
-    if (!m_transferDialog) {
-        m_transferDialog = new TransferDialog(this);
+    if (m_transferDialog) {
+        m_transferDialog->show();
     }
-    m_transferDialog->show();
 }
 
 void PeerDialog::removeKeyFromHash()
