@@ -22,17 +22,24 @@
 #include "transferwidget.h"
 #include "transfer.h"
 #include <QHBoxLayout>
+#include <QScrollArea>
 
 using namespace Kapotah;
 
 TransferDialog::TransferDialog (QWidget* parent, Qt::WindowFlags f) : QDialog (parent, f)
 {
     setWindowTitle ("Transfers");
+
+    m_scrollArea = new QScrollArea(this);
     m_layout = new QVBoxLayout();
-    setLayout (m_layout);
+    m_scrollArea->setLayout(m_layout);
+
+    QHBoxLayout *layout = new QHBoxLayout();
+    layout->addWidget(m_scrollArea);
+    setLayout(layout);
+
     connect (TransferManager::instance(), SIGNAL (newTransferAdded (Transfer*)),
              SLOT (addTransfer (Transfer*)));
-    resize(200, 100);
 }
 
 TransferDialog::~TransferDialog()

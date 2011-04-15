@@ -62,6 +62,7 @@ TransferWidget::TransferWidget (Transfer* transfer, QWidget* parent, Qt::WindowF
     m_verticalLayout->addWidget(m_progress);
     m_verticalLayout->addWidget(m_progressLabel);
 
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
     setLayout(m_verticalLayout);
     m_progress->setMaximum(100);
 

@@ -17,19 +17,25 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Search For</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QLineEdit" name="searchPatternEdit"/>
      </item>
      <item>
       <widget class="QToolButton" name="searchButton">
        <property name="text">
         <string>&amp;Search</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../systray.qrc">
+         <normaloff>:/images/search.png</normaloff>:/images/search.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="toolButtonStyle">
+        <enum>Qt::ToolButtonFollowStyle</enum>
        </property>
        <property name="autoRaise">
         <bool>true</bool>
@@ -45,21 +51,56 @@
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="QToolButton" name="downloadButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
-        <string>&amp;Download</string>
+        <string>&amp;Download Item</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../systray.qrc">
+         <normaloff>:/images/download.png</normaloff>:/images/download.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="toolButtonStyle">
+        <enum>Qt::ToolButtonFollowStyle</enum>
        </property>
        <property name="autoRaise">
         <bool>true</bool>
+       </property>
+       <property name="arrowType">
+        <enum>Qt::NoArrow</enum>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QToolButton" name="settingsButton">
        <property name="text">
-        <string>&amp;Settings</string>
+        <string>S&amp;haring Settings</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../systray.qrc">
+         <normaloff>:/images/folder-development.png</normaloff>:/images/folder-development.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="toolButtonStyle">
+        <enum>Qt::ToolButtonFollowStyle</enum>
        </property>
        <property name="autoRaise">
         <bool>true</bool>
+       </property>
+       <property name="arrowType">
+        <enum>Qt::NoArrow</enum>
        </property>
       </widget>
      </item>
@@ -73,6 +114,8 @@
   <tabstop>resultsList</tabstop>
   <tabstop>downloadButton</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="../systray.qrc"/>
+ </resources>
  <connections/>
 </ui>

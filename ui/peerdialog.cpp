@@ -39,10 +39,6 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(ne
     ui.multicastButton->setToolTip("To multicast, select users and click on \"multicast\" button");
     ui.peersListView->setModel(PeerManager::instance()->peersModel());
     ui.nameEdit->setText(Kapotah::Announcer::instance()->username());
-    ui.refreshButton->setIcon(QIcon(":/images/refresh.png"));
-    ui.transferButton->setIcon(QIcon(":/images/transfer.png"));
-    ui.searchButton->setIcon(QIcon(":/images/search.png"));
-    ui.multicastButton->setIcon(QIcon(":/images/multicast.png"));
     ui.refreshButton->setToolTip("Refresh Peers");
     ui.transferButton->setToolTip("Transfer Log");
     ui.searchButton->setToolTip("Search");
@@ -97,7 +93,7 @@ ChatDialog* PeerDialog::createChatDialogOnMessage(QString message, QHostAddress 
 MulticastDialog* PeerDialog::createMulticastDialog()
 {
     PeersModel *model = PeerManager::instance()->peersModel();
-    MulticastDialog *multiDlg = new MulticastDialog(ui.peersListView->selectionModel()->selectedIndexes());
+    MulticastDialog *multiDlg = new MulticastDialog(this);
     multiDlg->show();
     multiDlg->ui.reply->setEnabled(false);
     return multiDlg;

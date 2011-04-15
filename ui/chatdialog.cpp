@@ -43,7 +43,6 @@ ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent,
 
     ui.messageEdit->setFocus();
     ui.messageEdit->installEventFilter (this);
-    ui.sendMessage->setIcon(QIcon(":/images/send.png"));
     ui.sendMessage->setToolTip("Send Message");
 
     setAcceptDrops (true);
