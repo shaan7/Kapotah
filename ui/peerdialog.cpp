@@ -54,6 +54,8 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(0)
     connect (ui.peersListView, SIGNAL(doubleClicked(QModelIndex)), SLOT(createChatDialog(QModelIndex)));
     connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)),
              SLOT(createChatDialogOnMessage(QString,QHostAddress)));
+    connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString,QHostAddress)),
+             SLOT(notifySysTray(QString, QHostAddress)));
     connect (ui.multicastButton, SIGNAL(clicked()), this, SLOT(createMulticastDialog()));
     /*connect (MessageDispatcher::instance(), SIGNAL(gotNewMulticast(QString, QHostAddress)),
              SLOT(createMulticastDialogOnMessage(QString, QHostAddress));*/
@@ -186,6 +188,25 @@ void PeerDialog::iconActivated(QSystemTrayIcon::ActivationReason reason)
         break;
     default:
         ;
+    }
+}
+
+void PeerDialog::notifySysTray(QString str, QHostAddress addr)
+{
+    QTimer *timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(changeSysTrayIcon()));
+    timer->start(1000);
+}
+
+void PeerDialog::changeSysTrayIcon()
+{
+    if (!m_isGreyScale) {
+        trayIcon->setIcon(QIcon(":/images/systrayicon-greyscale.png"));
+        m_isGreyScale = true;
+    }
+    else {
+        trayIcon->setIcon(QIcon(":/images/systrayicon.png"));
+        m_isGreyScale = false;
     }
 }
 

@@ -8,5 +8,6 @@
         <file>images/download.png</file>
         <file>images/send.png</file>
         <file>images/folder-development.png</file>
+        <file>images/systrayicon-greyscale.png</file>
     </qresource>
 </RCC>
