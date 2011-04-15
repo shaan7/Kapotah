@@ -182,6 +182,7 @@ void PeerDialog::iconActivated(QSystemTrayIcon::ActivationReason reason)
     case QSystemTrayIcon::Trigger:
     case QSystemTrayIcon::DoubleClick:
                 this->showNormal();
+                trayIcon->setIcon(QIcon(":/images/systrayicon.png"));
         break;
     case QSystemTrayIcon::MiddleClick:
         break;
