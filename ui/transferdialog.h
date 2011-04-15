@@ -20,8 +20,11 @@
 #ifndef TRANSFERDIALOG_H
 #define TRANSFERDIALOG_H
 
+#include "ui_transferdialog.h"
+
 #include <QDialog>
 
+class QGroupBox;
 class QScrollArea;
 class QVBoxLayout;
 
@@ -44,8 +47,7 @@ class TransferDialog : public QDialog
         void addTransfer (Transfer *transfer);
 
     private:
-        QVBoxLayout *m_layout;
-        QScrollArea *m_scrollArea;
+        Ui::TransferDialog ui;
 };
 
 #endif // TRANSFERDIALOG_H
