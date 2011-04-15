@@ -28,7 +28,9 @@ QString TransferStatusXmlParser::composeXml(AbstractXmlData* data)
     writer.writeStartDocument();
     writer.writeStartElement ("transferStatus");
     writer.writeAttribute ("id", static_cast<TransferStatusXmlData*>(data)->id);
-    writer.writeAttribute ("percentDone", QString::number(static_cast<TransferStatusXmlData*>(data)->percentDone));
+    writer.writeAttribute ("bytesDone", QString::number(static_cast<TransferStatusXmlData*>(data)->bytesDone));
+    writer.writeAttribute ("total", QString::number(static_cast<TransferStatusXmlData*>(data)->total));
+    writer.writeAttribute ("speed", QString::number(static_cast<TransferStatusXmlData*>(data)->speed));
     writer.writeEndElement();
     writer.writeEndDocument();
     return xml;
@@ -47,7 +49,9 @@ AbstractXmlData* TransferStatusXmlParser::parseXml(const QString& xml)
             if (reader.name() == "transferStatus") {
                 data->type = AbstractXmlData::TransferStatus;
                 data->id = reader.attributes().value ("id").toString();
-                data->percentDone = reader.attributes().value ("percentDone").toString().toInt();
+                data->bytesDone = reader.attributes().value ("bytesDone").toString().toULongLong();
+                data->total = reader.attributes().value ("total").toString().toULongLong();
+                data->speed = reader.attributes().value ("speed").toString().toULongLong();
                 break;
             }
             data->type = AbstractXmlData::Error;

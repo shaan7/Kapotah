@@ -35,15 +35,21 @@ using namespace Kapotah;
 TransferWidget::TransferWidget (Transfer* transfer, QWidget* parent, Qt::WindowFlags f)
     : QWidget (parent, f), m_transfer(transfer)
 {
+    m_peerLabel = new QLabel(this);
+    m_startStop = new QToolButton(this);
     if (transfer->type() == Transfer::Incoming) {
         m_incomingTransfer = qobject_cast<IncomingTransfer*>(transfer);
         connect(m_incomingTransfer, SIGNAL(needDestinationDir()), SLOT(transferNeedsDestinationDir()));
+        m_peerLabel->setText("Receiving from ");
+        m_startStop->setIcon(QIcon(":/images/download.png"));
     } else if (transfer->type() == Transfer::Outgoing) {
         m_outgoingTransfer = qobject_cast<OutgoingTransfer*>(transfer);
+        m_peerLabel->setText("Sending to ");
+        m_startStop->hide();
     }
 
-    m_peerLabel = new QLabel(transfer->peerAddress().toString(), this);
-    m_startStop = new QToolButton(this);
+    m_peerLabel->setText(m_peerLabel->text().append(
+        Kapotah::PeerManager::instance()->peersModel()->peerNameForIp(transfer->peerAddress())));
     m_progress = new QProgressBar(this);
     m_progressLabel = new QLabel("Waiting for transfer to begin");
 
@@ -57,6 +63,7 @@ TransferWidget::TransferWidget (Transfer* transfer, QWidget* parent, Qt::WindowF
     m_verticalLayout->addWidget(m_progressLabel);
 
     setLayout(m_verticalLayout);
+    m_progress->setMaximum(100);
 
     connect(m_startStop, SIGNAL(clicked(bool)), SLOT(startTransfer()));
     connect(m_transfer, SIGNAL(done()), SLOT(transferFinished()));
@@ -85,14 +92,14 @@ void TransferWidget::transferNeedsDestinationDir()
     QString dirname = QFileDialog::getExistingDirectory(this, "Select a dir");
     if (dirname.isEmpty())
         return;
+    m_startStop->hide();
     m_incomingTransfer->setDestinationDir(dirname);
     m_transfer->start();
 }
 
 void TransferWidget::updateProgress (quint64 done, quint64 total, quint32 speed)
 {
-    m_progress->setMaximum(total);
-    m_progress->setValue(done);
+    m_progress->setValue(done*100/total);
     m_progressLabel->setText(QString("%1 MiB of %2 MiB done at %3 MiB/s").arg(done/1024/1024)
                                 .arg(total/1024/1024).arg(speed/1024));
 }

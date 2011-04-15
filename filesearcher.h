@@ -30,6 +30,9 @@ class FileSearcherThread;
 
 namespace Kapotah
 {
+
+struct TransferFile;
+
 class FileSearcher : public Singleton<FileSearcher>
 {
     Q_OBJECT
@@ -37,6 +40,8 @@ class FileSearcher : public Singleton<FileSearcher>
 public:
     void setSearchPath (const QString& searchPath);
     QString searchPath() const;
+
+    void setMatchingFiles (QList<TransferFile> matches, QHostAddress address);
 
     FileSearcher();
     virtual ~FileSearcher();
@@ -56,6 +61,8 @@ private:
     FileSearcherThread* m_thread;
     bool m_isProcessing;
     QStringList m_pendingDirs;
+    QList<TransferFile> m_matches;
+    QHostAddress m_hostToSendMatches;
 
     void processIndex (QModelIndex index);
 
@@ -70,6 +77,7 @@ signals:
 
 public slots:
     void addSearch (const QString& pattern, const QHostAddress& host);
+
 };
 }
 

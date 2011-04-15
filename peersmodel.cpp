@@ -108,4 +108,9 @@ void PeersModel::timerEvent(QTimerEvent* event)
     checkStatus();
 }
 
+QString PeersModel::peerNameForIp(const QHostAddress& address)
+{
+    return m_peers[address].name();
+}
+
 #include "peersmodel.moc"

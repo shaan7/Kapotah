@@ -35,6 +35,7 @@ namespace Kapotah
             enum Roles { ipAddressRole = Qt::UserRole };
             virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
             virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
+            QString peerNameForIp(const QHostAddress &address);
             PeersModel (QObject* parent = 0);
             virtual ~PeersModel();
 

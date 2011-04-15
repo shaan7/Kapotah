@@ -28,7 +28,9 @@ class TransferStatusXmlData : public AbstractXmlData
 {
 public:
     QString id;
-    int percentDone;
+    quint64 bytesDone;
+    quint64 total;
+    quint64 speed;
 };
 
 class TransferStatusXmlParser : public AbstractXmlParser
