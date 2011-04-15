@@ -61,7 +61,7 @@ SET(Kapotah_FORMS
 qt4_automoc(${Kapotah_SRCS})
 QT4_WRAP_UI(Kapotah_FORMS_HEADERS ${Kapotah_FORMS})
 
-add_executable(Kapotah ${Kapotah_SRCS} ${Kapotah_FORMS_HEADERS})
+add_executable(Kapotah WIN32 ${Kapotah_SRCS} ${Kapotah_FORMS_HEADERS})
 target_link_libraries(Kapotah ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY}
                                 ${QT_QTXML_LIBRARY} ${QT_QT_LIBRARY})
 
