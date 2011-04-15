@@ -22,6 +22,7 @@
 
 #include <QDialog>
 
+class QScrollArea;
 class QVBoxLayout;
 
 namespace Kapotah
@@ -44,6 +45,7 @@ class TransferDialog : public QDialog
 
     private:
         QVBoxLayout *m_layout;
+        QScrollArea *m_scrollArea;
 };
 
 #endif // TRANSFERDIALOG_H

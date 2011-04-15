@@ -27,9 +27,6 @@ SearchDialog::SearchDialog(QWidget* parent, Qt::WindowFlags f) : QDialog (parent
 {
     ui.setupUi(this);
     setWindowTitle("Search");
-    ui.searchButton->setIcon(QIcon(":/images/search.png"));
-    ui.downloadButton->setIcon(QIcon(":/images/download.png"));
-    ui.settingsButton->setIcon(QIcon(":/images/folder-development.png"));
     ui.searchButton->setToolTip("Search");
     ui.downloadButton->setToolTip("Download");
 

@@ -23,18 +23,16 @@
 #include "ui_multicastdialog.h"
 
 #include <QDialog>
-#include <QModelIndexList>
 
 class MulticastDialog : public QDialog
 {
         Q_OBJECT
     
     public:
-        explicit MulticastDialog (const QModelIndexList &ipAddressList, QWidget* parent = 0, Qt::WindowFlags f = 0);
+        explicit MulticastDialog (QWidget* parent = 0, Qt::WindowFlags f = 0);
         
     private:
         Ui::MulticastDialog ui;
-        QModelIndexList m_ipAddressList;
     
     private slots:
         void sendMessage();

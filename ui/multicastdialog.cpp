@@ -22,24 +22,25 @@
 #include "transfermanager.h"
 #include "messagedispatcher.h"
 #include <QUrl>
+#include <QModelIndex>
 
 using namespace Kapotah;
 
-MulticastDialog::MulticastDialog(const QModelIndexList &ipAddressList, QWidget* parent, Qt::WindowFlags f) : QDialog (parent, f)
+MulticastDialog::MulticastDialog(QWidget* parent, Qt::WindowFlags f) : QDialog (parent, f)
 {
     ui.setupUi(this);
     setWindowTitle("Multicast");
-    m_ipAddressList=ipAddressList;
     connect (ui.sendMessage, SIGNAL(pressed()), this, SLOT(sendMessage()));
     ui.sendMessage->setIcon(QIcon(":/images/send.png"));
     ui.sendMessage->setToolTip("Send Message");
-    
+    ui.peersList->setModel(PeerManager::instance()->peersModel());
+
     setAcceptDrops (true);
 }
 
 void MulticastDialog::sendMessage()
 {
-    foreach (QModelIndex index, m_ipAddressList) {
+    foreach (QModelIndex index, ui.peersList->selectionModel()->selectedIndexes()) {
         QHostAddress address (PeerManager::instance()->peersModel()->data (index, PeersModel::ipAddressRole).toString());
         MessageDispatcher::instance()->sendNewMessage (ui.messageEdit->toPlainText(), address);
     }
@@ -91,7 +92,7 @@ void MulticastDialog::dropEvent (QDropEvent* event)
             files.append (file);
         }
         
-     foreach (QModelIndex index, m_ipAddressList) {
+     foreach (QModelIndex index, ui.peersList->selectionModel()->selectedIndexes()) {
         QHostAddress address (PeerManager::instance()->peersModel()->data (index, PeersModel::ipAddressRole).toString());
         Transfer *transfer = TransferManager::instance()->addTransfer (Transfer::Outgoing, files, 0, 0, 0, "", address);
         qDebug()<<transfer;
