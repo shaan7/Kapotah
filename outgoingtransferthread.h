@@ -29,7 +29,7 @@ class OutgoingTransferThread : public TransferThread
 
     public:
         explicit OutgoingTransferThread (QHostAddress ip, QList<Kapotah::TransferFile> files, QString parentId,
-                                         QObject* parent = 0);
+                                         bool isSearchResponse, QObject* parent = 0);
         virtual ~OutgoingTransferThread();
 
     protected:
@@ -47,6 +47,7 @@ class OutgoingTransferThread : public TransferThread
         quint64 m_totalFileCount;
         quint64 m_totalDirCount;
         QString m_parentId;
+        bool m_isSearchResponse;
 
         void addFilesInDir (QString path);
         void addFileToList (QString fullPath, QString relativePath);

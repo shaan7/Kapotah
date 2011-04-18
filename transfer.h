@@ -46,6 +46,8 @@ namespace Kapotah
             virtual void start() = 0;
             virtual TransferType type() = 0;
             QHostAddress peerAddress();
+            bool isSearchResponse() const;
+            void setIsSearchResponse(bool isSearchResponse);
 
         protected:
             //Details about the transfer
@@ -57,6 +59,7 @@ namespace Kapotah
             quint64 m_numDirs;
             quint64 m_sizeDone;
             quint64 m_filesDone;
+            bool m_isSearchResponse;
             QList<TransferFile> m_files;
             TransferFile m_currentFile;
             TransferThread *m_thread;

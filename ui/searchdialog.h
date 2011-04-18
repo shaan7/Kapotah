@@ -24,6 +24,13 @@
 
 #include <QDialog>
 
+namespace Kapotah
+{
+    class Transfer;
+}
+
+using namespace Kapotah;
+
 class SearchDialog : public QDialog
 {
         Q_OBJECT
@@ -37,6 +44,7 @@ class SearchDialog : public QDialog
     private slots:
         void search();
         void setSharedDir();
+        void addTransfer(Transfer *transfer);
 };
 
 #endif // SEARCHDIALOG_H

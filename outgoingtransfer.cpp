@@ -42,7 +42,7 @@ OutgoingTransfer::~OutgoingTransfer()
 
 void OutgoingTransfer::start()
 {
-    m_thread = new OutgoingTransferThread (m_peerAddress, m_files, m_id, this);
+    m_thread = new OutgoingTransferThread (m_peerAddress, m_files, m_id, m_isSearchResponse, this);
     m_thread->start();
 }
 

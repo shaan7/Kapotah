@@ -21,23 +21,13 @@
 #include <transfermanager.h>
 #include "transferwidget.h"
 #include "transfer.h"
-#include <QHBoxLayout>
-#include <QScrollArea>
 
 using namespace Kapotah;
 
-TransferDialog::TransferDialog (QWidget* parent, Qt::WindowFlags f) : QDialog (parent, f)
+TransferDialog::TransferDialog (QWidget* parent, Qt::WindowFlags f)
+    : QDialog (parent, f)
 {
-    setWindowTitle ("Transfers");
-
-    m_scrollArea = new QScrollArea(this);
-    m_layout = new QVBoxLayout();
-    m_scrollArea->setLayout(m_layout);
-
-    QHBoxLayout *layout = new QHBoxLayout();
-    layout->addWidget(m_scrollArea);
-    setLayout(layout);
-
+    ui.setupUi(this);
     connect (TransferManager::instance(), SIGNAL (newTransferAdded (Transfer*)),
              SLOT (addTransfer (Transfer*)));
 }
@@ -49,8 +39,15 @@ TransferDialog::~TransferDialog()
 
 void TransferDialog::addTransfer (Transfer* transfer)
 {
+    if (transfer->isSearchResponse())
+        return;
+    //Remove the spacer
+    ui.scrollAreaWidgetContents->layout()->takeAt(ui.scrollAreaWidgetContents->layout()->count()-1);
+    //Add the transfer widget
     TransferWidget *widget = new TransferWidget (transfer, this);
-    m_layout->addWidget (widget);
+    ui.scrollAreaWidgetContents->layout()->addWidget(widget);
+    //Add a new spacer
+    dynamic_cast<QVBoxLayout*>(ui.scrollAreaWidgetContents->layout())->addStretch();
 }
 
 #include "transferdialog.moc"

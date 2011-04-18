@@ -74,7 +74,7 @@
         </size>
        </property>
        <property name="toolButtonStyle">
-        <enum>Qt::ToolButtonFollowStyle</enum>
+        <enum>Qt::ToolButtonTextBesideIcon</enum>
        </property>
        <property name="autoRaise">
         <bool>true</bool>
