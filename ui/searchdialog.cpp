@@ -21,7 +21,11 @@
 
 #include "announcer.h"
 #include "filesearcher.h"
+#include "transfermanager.h"
+#include "transfer.h"
 #include <QFileDialog>
+
+using namespace Kapotah;
 
 SearchDialog::SearchDialog(QWidget* parent, Qt::WindowFlags f) : QDialog (parent, f)
 {
@@ -32,6 +36,8 @@ SearchDialog::SearchDialog(QWidget* parent, Qt::WindowFlags f) : QDialog (parent
 
     connect(ui.searchButton, SIGNAL(clicked()), SLOT(search()));
     connect(ui.settingsButton, SIGNAL(clicked()), SLOT(setSharedDir()));
+    connect (TransferManager::instance(), SIGNAL (newTransferAdded (Transfer*)),
+             SLOT (addTransfer (Transfer*)));
 }
 
 void SearchDialog::search()
@@ -46,6 +52,13 @@ void SearchDialog::setSharedDir()
     if (dirname.isEmpty())
         return;
     Kapotah::FileSearcher::instance()->setSearchPath(dirname);
+}
+
+void SearchDialog::addTransfer (Transfer* transfer)
+{
+    if (!transfer->isSearchResponse())
+        return;
+    ui.resultsList->addItem(transfer->peerAddress().toString());
 }
 
 #include "searchdialog.moc"

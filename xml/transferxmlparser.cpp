@@ -20,6 +20,9 @@
 #include "transferxmlparser.h"
 #include <QXmlStreamReader>
 
+static const char *s_true = "true";
+static const char *s_false = "false";
+
 QString TransferXmlParser::composeXml (AbstractXmlData* data)
 {
     TransferXmlData *tdata = static_cast<TransferXmlData*> (data);
@@ -31,6 +34,7 @@ QString TransferXmlParser::composeXml (AbstractXmlData* data)
     writer.writeAttribute("size", QString::number(tdata->totalSize));
     writer.writeAttribute("files", QString::number(tdata->totalNumFiles));
     writer.writeAttribute("dirs", QString::number(tdata->totalNumDirs));
+    writer.writeAttribute("isSearchResponse", tdata->isSearchResponse ? s_true : s_false);
     writer.writeAttribute("id", tdata->id);
 
     foreach (Kapotah::TransferFile file, tdata->files) {
@@ -62,6 +66,8 @@ AbstractXmlData* TransferXmlParser::parseXml (const QString& xml)
                 data->totalSize = reader.attributes().value ("size").toString().toULongLong();
                 data->totalNumFiles = reader.attributes().value ("files").toString().toULongLong();
                 data->totalNumDirs = reader.attributes().value ("dirs").toString().toULongLong();
+                data->isSearchResponse =
+                    reader.attributes().value("isSearchResponse").toString() == s_true ? true : false;
                 data->id = reader.attributes().value("id").toString();
                 reader.readNext();
 

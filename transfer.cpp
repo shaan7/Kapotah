@@ -41,4 +41,14 @@ QHostAddress Transfer::peerAddress()
     return m_peerAddress;
 }
 
+bool Transfer::isSearchResponse() const
+{
+    return m_isSearchResponse;
+}
+
+void Transfer::setIsSearchResponse (bool isSearchResponse)
+{
+    m_isSearchResponse = isSearchResponse;
+}
+
 #include "transfer.moc"

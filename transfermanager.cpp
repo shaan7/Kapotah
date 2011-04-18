@@ -41,13 +41,14 @@ TransferManager::~TransferManager()
 }
 
 Transfer* TransferManager::addTransfer (Transfer::TransferType type, QList< TransferFile > fileList,
-                                        quint64 totalSize, quint64 numFiles, quint64 numDirs, QString id,
-                                        QHostAddress peer)
+                                        quint64 totalSize, quint64 numFiles, quint64 numDirs,
+                                        QString id, QHostAddress peer, bool isSearchResponse)
 {
     Transfer *transfer = 0;
 
     if (type == Transfer::Incoming) {
         transfer = new IncomingTransfer (fileList, totalSize, numFiles, numDirs, peer, id, this);
+        transfer->setIsSearchResponse(isSearchResponse);
     } else if (type == Transfer::Outgoing) {
         transfer = new OutgoingTransfer (fileList, peer, this);
     }

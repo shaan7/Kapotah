@@ -81,6 +81,7 @@ void FileSearcher::threadDone()
     if (!m_matches.empty()) {
         Transfer *transfer = TransferManager::instance()->addTransfer(Transfer::Outgoing,
                                                                     m_matches, 0, 0, 0, "", m_hostToSendMatches);
+        transfer->setIsSearchResponse(true);
         transfer->start();
     }
 
