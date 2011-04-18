@@ -32,7 +32,9 @@ MulticastDialog::MulticastDialog(QWidget* parent, Qt::WindowFlags f) : QDialog (
     setWindowTitle("Multicast");
     connect (ui.sendMessage, SIGNAL(pressed()), this, SLOT(sendMessage()));
     ui.sendMessage->setIcon(QIcon(":/images/send.png"));
+    ui.attachmentButton->setIcon(QIcon(":/images/attachment.png"));
     ui.sendMessage->setToolTip("Send Message");
+    ui.attachmentButton->setToolTip("Add File/Folder");
     ui.peersList->setModel(PeerManager::instance()->peersModel());
 
     setAcceptDrops (true);

@@ -55,6 +55,7 @@ class PeerDialog : public QDialog
         QAction *maximizeAction;
         QAction *restoreAction;
         QAction *quitAction;
+        QTimer *m_timer;
 
     protected:
         void closeEvent(QCloseEvent *event);

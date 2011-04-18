@@ -176,9 +176,10 @@ void PeerDialog::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
     switch (reason) {
     case QSystemTrayIcon::Trigger:
+        showNormal();
+        m_timer->stop();
+        break;
     case QSystemTrayIcon::DoubleClick:
-                this->showNormal();
-                trayIcon->setIcon(QIcon(":/images/systrayicon.png"));
         break;
     case QSystemTrayIcon::MiddleClick:
         break;
@@ -189,9 +190,11 @@ void PeerDialog::iconActivated(QSystemTrayIcon::ActivationReason reason)
 
 void PeerDialog::notifySysTray(QString str, QHostAddress addr)
 {
-    QTimer *timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(changeSysTrayIcon()));
-    timer->start(1000);
+    if(!m_timer){
+        m_timer = new QTimer(this);
+        connect(m_timer, SIGNAL(timeout()), this, SLOT(changeSysTrayIcon()));
+        m_timer->start(500);
+    }
 }
 
 void PeerDialog::changeSysTrayIcon()

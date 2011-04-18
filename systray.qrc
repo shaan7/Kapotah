@@ -7,7 +7,8 @@
         <file>images/search.png</file>
         <file>images/download.png</file>
         <file>images/send.png</file>
-        <file>images/folder-development.png</file>
+        <file>images/share-settings.png</file>
         <file>images/systrayicon-greyscale.png</file>
+        <file>images/attachment.png</file>
     </qresource>
 </RCC>
