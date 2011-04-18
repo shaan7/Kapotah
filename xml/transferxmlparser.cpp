@@ -69,6 +69,7 @@ AbstractXmlData* TransferXmlParser::parseXml (const QString& xml)
                 data->isSearchResponse =
                     reader.attributes().value("isSearchResponse").toString() == s_true ? true : false;
                 data->id = reader.attributes().value("id").toString();
+                qDebug() << "VALUEEEEEEEE " << reader.attributes().value("isSearchResponse").toString();
                 reader.readNext();
 
                 while (!reader.atEnd()) {

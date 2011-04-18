@@ -38,8 +38,7 @@ namespace Kapotah
             TransferManager();
             virtual ~TransferManager();
             Transfer *addTransfer (Transfer::TransferType type, QList<TransferFile> fileList, quint64 totalSize,
-                                   quint64 numFiles, quint64 numDirs, QString id, QHostAddress peer,
-                                   bool isSearchResponse = false);
+                                   quint64 numFiles, quint64 numDirs, QString id, QHostAddress peer);
             QString newId (QString path);
             QString pathForId (QString id);
 

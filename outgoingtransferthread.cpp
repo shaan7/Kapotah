@@ -28,9 +28,10 @@
 #include <QFileInfo>
 #include <QDir>
 
-OutgoingTransferThread::OutgoingTransferThread (QHostAddress ip, QList< Kapotah::TransferFile > files, QString parentId,
-        QObject* parent) : TransferThread (ip, parent), m_initialList (files), doQuit (false), m_totalSize(0),
-        m_totalFileCount(0), m_totalDirCount(0), m_parentId(parentId)
+OutgoingTransferThread::OutgoingTransferThread (QHostAddress ip, QList< Kapotah::TransferFile > files,
+                                                QString parentId, bool isSearchResponse, QObject* parent)
+                : TransferThread (ip, parent), m_initialList (files), doQuit (false), m_totalSize(0),
+                    m_totalFileCount(0), m_totalDirCount(0), m_parentId(parentId), m_isSearchResponse(isSearchResponse)
 {
 
 }
@@ -69,6 +70,7 @@ void OutgoingTransferThread::run()
     data.totalNumDirs = m_totalDirCount;
     data.totalNumFiles = m_totalFileCount;
     data.totalSize = m_totalSize;
+    data.isSearchResponse = m_isSearchResponse;
     data.id = m_parentId;
     MessageSenderThread *thread = new MessageSenderThread (parser.composeXml(&data), m_ip);
     thread->start();
