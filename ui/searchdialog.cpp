@@ -36,8 +36,8 @@ SearchDialog::SearchDialog(QWidget* parent, Qt::WindowFlags f) : QDialog (parent
 
     connect(ui.searchButton, SIGNAL(clicked()), SLOT(search()));
     connect(ui.settingsButton, SIGNAL(clicked()), SLOT(setSharedDir()));
-    connect (TransferManager::instance(), SIGNAL (newTransferAdded (Kapotah::Transfer*)),
-             SLOT (addTransfer (Kapotah::Transfer*)));
+    connect (TransferManager::instance(), SIGNAL (newTransferAdded (Transfer*)),
+             SLOT (addTransfer (Transfer*)));
 }
 
 void SearchDialog::search()

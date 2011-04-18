@@ -42,12 +42,13 @@ TransferManager::~TransferManager()
 
 Transfer* TransferManager::addTransfer (Transfer::TransferType type, QList< TransferFile > fileList,
                                         quint64 totalSize, quint64 numFiles, quint64 numDirs,
-                                        QString id, QHostAddress peer)
+                                        QString id, QHostAddress peer, bool isSearchResponse)
 {
     Transfer *transfer = 0;
 
     if (type == Transfer::Incoming) {
         transfer = new IncomingTransfer (fileList, totalSize, numFiles, numDirs, peer, id, this);
+        transfer->setIsSearchResponse(isSearchResponse);
     } else if (type == Transfer::Outgoing) {
         transfer = new OutgoingTransfer (fileList, peer, this);
     }
@@ -82,8 +83,7 @@ void TransferManager::handleIncomingTransfer (QString transfer, QHostAddress pee
     TransferXmlParser parser;
     TransferXmlData *data = static_cast<TransferXmlData*>(parser.parseXml(transfer));
     Transfer *newTransfer = addTransfer (Transfer::Incoming, data->files, data->totalSize, data->totalNumFiles,
-                                      data->totalNumDirs, data->id, peer);
-    newTransfer->setIsSearchResponse(data->isSearchResponse);
+                                      data->totalNumDirs, data->id, peer, data->isSearchResponse);
     delete data;
 }
 
