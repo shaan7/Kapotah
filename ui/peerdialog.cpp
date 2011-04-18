@@ -29,7 +29,7 @@
 
 using namespace Kapotah;
 
-PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(new TransferDialog(this))
+PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(new TransferDialog(this)), m_timer(0)
 {
     QSystemTrayIcon::isSystemTrayAvailable();
     ui.setupUi(this);
@@ -176,10 +176,10 @@ void PeerDialog::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
     switch (reason) {
     case QSystemTrayIcon::Trigger:
-        showNormal();
-        m_timer->stop();
-        break;
     case QSystemTrayIcon::DoubleClick:
+        showNormal();
+        if (m_timer)
+            m_timer->stop();
         break;
     case QSystemTrayIcon::MiddleClick:
         break;

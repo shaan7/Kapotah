@@ -33,16 +33,16 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QToolButton" name="reply">
+        <widget class="QToolButton" name="attachButton">
          <property name="enabled">
           <bool>false</bool>
          </property>
          <property name="text">
-          <string>&amp;Reply</string>
+          <string>&amp;Attach</string>
          </property>
          <property name="icon">
           <iconset resource="../systray.qrc">
-           <normaloff>:/images/refresh.png</normaloff>:/images/refresh.png</iconset>
+           <normaloff>:/images/attachment.png</normaloff>:/images/attachment.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -104,7 +104,7 @@
          </property>
         </widget>
        </item>
-     </layout>
+      </layout>
      </item>
     </layout>
    </item>

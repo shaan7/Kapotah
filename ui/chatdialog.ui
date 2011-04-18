@@ -6,80 +6,107 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>476</width>
-    <height>313</height>
+    <width>498</width>
+    <height>331</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
-    <widget class="QPlainTextEdit" name="messageDisplay">
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPlainTextEdit" name="messageEdit">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="baseSize">
-      <size>
-       <width>0</width>
-       <height>0</height>
-      </size>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QLabel" name="peerStatus">
-       <property name="toolTip">
-        <string extracomment="Status of the user on opposite side"/>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="wordWrap">
+      <widget class="QPlainTextEdit" name="messageDisplay">
+       <property name="readOnly">
         <bool>true</bool>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="sendMessage">
-       <property name="minimumSize">
+      <widget class="QPlainTextEdit" name="messageEdit">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="baseSize">
         <size>
-         <width>32</width>
-         <height>32</height>
+         <width>0</width>
+         <height>0</height>
         </size>
-       </property>
-       <property name="text">
-        <string>&amp;Send</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../systray.qrc">
-         <normaloff>:/images/send.png</normaloff>:/images/send.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>32</width>
-         <height>32</height>
-        </size>
-       </property>
-       <property name="toolButtonStyle">
-        <enum>Qt::ToolButtonTextBesideIcon</enum>
-       </property>
-       <property name="autoRaise">
-        <bool>true</bool>
        </property>
       </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLabel" name="peerStatus">
+         <property name="toolTip">
+          <string extracomment="Status of the user on opposite side"/>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="attachmentButton">
+         <property name="text">
+          <string>&amp;Attach</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../systray.qrc">
+           <normaloff>:/images/attachment.png</normaloff>:/images/attachment.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>32</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="toolButtonStyle">
+          <enum>Qt::ToolButtonTextBesideIcon</enum>
+         </property>
+         <property name="autoRaise">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="sendMessage">
+         <property name="minimumSize">
+          <size>
+           <width>32</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>&amp;Send</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../systray.qrc">
+           <normaloff>:/images/send.png</normaloff>:/images/send.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>32</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="toolButtonStyle">
+          <enum>Qt::ToolButtonTextBesideIcon</enum>
+         </property>
+         <property name="autoRaise">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </item>
