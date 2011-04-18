@@ -25,8 +25,8 @@
 
 using namespace Kapotah;
 
-OutgoingTransfer::OutgoingTransfer (QList< TransferFile > files, QHostAddress peer, QObject* parent)
-                                        : Transfer (files, 0, 0, 0, peer, parent)
+OutgoingTransfer::OutgoingTransfer (QList< TransferFile > files, QHostAddress peer, bool isSearchResponse,
+                                    QObject* parent) : Transfer (files, 0, 0, 0, peer, isSearchResponse, parent)
 {
     m_state = Stopped;
     m_id = peer.toString() + QString::number(QDateTime::currentMSecsSinceEpoch());

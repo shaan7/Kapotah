@@ -45,11 +45,14 @@ OutgoingTransferThread::~OutgoingTransferThread()
 void OutgoingTransferThread::run()
 {
     emit startPreparingList();
+
+    TransferXmlData data;
     foreach (Kapotah::TransferFile file, m_initialList) {
         if (doQuit) {
             break;
         }
         QFileInfo info (file.path);
+        data.items.append(info.fileName());
 
         if (info.isDir()) {
             QDir parentDir(file.path);
@@ -63,7 +66,6 @@ void OutgoingTransferThread::run()
     emit donePreparingList();
 
     emit startSendingList();
-    TransferXmlData data;
     TransferXmlParser parser;
     data.type = AbstractXmlData::Transfer;
     data.files = m_files;
@@ -119,9 +121,9 @@ void OutgoingTransferThread::addFileToList (QString fullPath, QString relativePa
     m_totalSize += info.size();
     m_totalFileCount++;
     m_files.append(relativeFile);
-    qDebug() << "Adding " << fullPath;
+    /*qDebug() << "Adding " << fullPath;
     qDebug() << QString("Total %1 bytes %2 MiB from %3 files and %4 directories")
-                    .arg(m_totalSize).arg(m_totalSize/1024/1024).arg(m_totalFileCount).arg(m_totalDirCount);
+                    .arg(m_totalSize).arg(m_totalSize/1024/1024).arg(m_totalFileCount).arg(m_totalDirCount);*/
 }
 
 #include "outgoingtransferthread.moc"

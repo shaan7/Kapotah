@@ -24,9 +24,10 @@
 using namespace Kapotah;
 
 Transfer::Transfer (QList< TransferFile > files, quint64 totalSize, quint64 numFiles, quint64 numDirs,
-                    QHostAddress peer, QObject* parent) : QObject (parent), m_totalSize(totalSize),
-                    m_numFiles(numFiles), m_numDirs(numDirs), m_sizeDone (0), m_filesDone (0),
-                    m_files (files), m_peerAddress (peer), m_thread (0), m_state (Waiting)
+                    QHostAddress peer, bool isSearchResponse, QObject* parent) : QObject (parent),
+                    m_totalSize(totalSize), m_numFiles(numFiles), m_numDirs(numDirs), m_sizeDone (0),
+                    m_filesDone (0), m_isSearchResponse(isSearchResponse), m_files (files), m_peerAddress (peer),
+                    m_thread (0), m_state (Waiting)
 {
 
 }
@@ -46,9 +47,14 @@ bool Transfer::isSearchResponse() const
     return m_isSearchResponse;
 }
 
-void Transfer::setIsSearchResponse (bool isSearchResponse)
+QStringList Transfer::itemNames() const
 {
-    m_isSearchResponse = isSearchResponse;
+    return m_items;
+}
+
+void Transfer::setItemNames (const QStringList& list)
+{
+    m_items = list;
 }
 
 #include "transfer.moc"

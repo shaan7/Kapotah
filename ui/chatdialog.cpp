@@ -22,8 +22,9 @@
 #include <peermanager.h>
 #include <transfermanager.h>
 #include <transfer.h>
-#include <QUrl>
 #include <announcer.h>
+#include <xml/transferxmlparser.h>
+#include <QUrl>
 
 using namespace Kapotah;
 
@@ -136,7 +137,8 @@ void ChatDialog::dropEvent (QDropEvent* event)
         }
 
         QHostAddress address (PeerManager::instance()->peersModel()->data (m_ipAddress, PeersModel::ipAddressRole).toString());
-        Transfer *transfer = TransferManager::instance()->addTransfer (Transfer::Outgoing, files, 0, 0, 0, "", address);
+
+        Transfer *transfer = TransferManager::instance()->addTransfer (Transfer::Outgoing, files, address, false);
         transfer->start();
     }
 }

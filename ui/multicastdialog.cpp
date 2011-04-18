@@ -21,6 +21,7 @@
 #include "peermanager.h"
 #include "transfermanager.h"
 #include "messagedispatcher.h"
+#include <xml/transferxmlparser.h>
 #include <QUrl>
 #include <QModelIndex>
 
@@ -91,10 +92,10 @@ void MulticastDialog::dropEvent (QDropEvent* event)
             file.path = url.toLocalFile();
             files.append (file);
         }
-        
+
      foreach (QModelIndex index, ui.peersList->selectionModel()->selectedIndexes()) {
         QHostAddress address (PeerManager::instance()->peersModel()->data (index, PeersModel::ipAddressRole).toString());
-        Transfer *transfer = TransferManager::instance()->addTransfer (Transfer::Outgoing, files, 0, 0, 0, "", address);
+        Transfer *transfer = TransferManager::instance()->addTransfer (Transfer::Outgoing, files, address, false);
         qDebug()<<transfer;
         transfer->start();
         }

@@ -37,6 +37,12 @@ QString TransferXmlParser::composeXml (AbstractXmlData* data)
     writer.writeAttribute("isSearchResponse", tdata->isSearchResponse ? s_true : s_false);
     writer.writeAttribute("id", tdata->id);
 
+    foreach (QString itemName, tdata->items) {
+        writer.writeStartElement ("item");
+        writer.writeAttribute ("name", itemName);
+        writer.writeEndElement();
+    }
+
     foreach (Kapotah::TransferFile file, tdata->files) {
         writer.writeStartElement ("file");
         writer.writeAttribute ("id", file.id);
@@ -79,6 +85,9 @@ AbstractXmlData* TransferXmlParser::parseXml (const QString& xml)
                                                            reader.attributes().value ("size").toString().toULongLong()
                                                          };
                             data->files.append (file);
+                        } else if (reader.name() == "item") {
+                            QString itemName = reader.attributes().value("name").toString();
+                            data->items.append(itemName);
                         }
                     } else {
                         if (reader.name() == "transfer") {

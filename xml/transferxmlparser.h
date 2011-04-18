@@ -27,7 +27,10 @@
 class TransferXmlData : public AbstractXmlData
 {
     public:
+        TransferXmlData() : AbstractXmlData(), totalSize(0), totalNumFiles(0), totalNumDirs(0),
+                            isSearchResponse(false) { }
         QList<Kapotah::TransferFile> files;
+        QStringList items;
         quint64 totalSize;
         quint64 totalNumFiles;
         quint64 totalNumDirs;

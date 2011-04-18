@@ -42,7 +42,6 @@ SearchDialog::SearchDialog(QWidget* parent, Qt::WindowFlags f) : QDialog (parent
 
 void SearchDialog::search()
 {
-    qDebug() << "Searching for " << ui.searchPatternEdit->text();
     Kapotah::Announcer::instance()->searchPeersForFile(ui.searchPatternEdit->text());
 }
 

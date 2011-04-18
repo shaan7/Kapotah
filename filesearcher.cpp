@@ -22,6 +22,7 @@
 #include "filesearcherthread.h"
 #include "announcer.h"
 #include "transfermanager.h"
+#include "xml/transferxmlparser.h"
 
 using namespace Kapotah;
 
@@ -79,9 +80,8 @@ void FileSearcher::threadDone()
     delete m_thread;
 
     if (!m_matches.empty()) {
-        Transfer *transfer = TransferManager::instance()->addTransfer(Transfer::Outgoing,
-                                                                    m_matches, 0, 0, 0, "", m_hostToSendMatches);
-        transfer->setIsSearchResponse(true);
+        Transfer *transfer = TransferManager::instance()->addTransfer(Transfer::Outgoing, m_matches,
+                                                                      m_hostToSendMatches, true);
         transfer->start();
     }
 

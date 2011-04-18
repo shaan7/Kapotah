@@ -31,7 +31,8 @@ namespace Kapotah
 
         public:
             enum State { Stopped, GeneratingFileList, SendingFileList, FileListSent, Sending, Done };
-            explicit OutgoingTransfer (QList< TransferFile > files, QHostAddress peer, QObject* parent = 0);
+            explicit OutgoingTransfer (QList< TransferFile > files, QHostAddress peer, bool isSearchResponse,
+                                       QObject* parent = 0);
             virtual ~OutgoingTransfer();
             virtual void start();
             virtual TransferType type();

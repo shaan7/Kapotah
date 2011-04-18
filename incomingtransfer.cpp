@@ -29,8 +29,9 @@
 using namespace Kapotah;
 
 IncomingTransfer::IncomingTransfer (QList< TransferFile > files, quint64 totalSize, quint64 numFiles,
-                                    quint64 numDirs, QHostAddress peer, QString id, QObject* parent)
-                                        : Transfer (files, totalSize, numFiles, numDirs, peer, parent)
+                                    quint64 numDirs, QHostAddress peer, QString id, bool isSearchResponse,
+                                    QObject* parent) : Transfer (files, totalSize, numFiles, numDirs, peer,
+                                                                 isSearchResponse, parent)
 {
     m_doneSinceLastSpeedEstimate = 0;
     m_prevTime = QDateTime::currentMSecsSinceEpoch()/1000;  //secs

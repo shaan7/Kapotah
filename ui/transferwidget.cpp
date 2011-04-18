@@ -66,6 +66,13 @@ TransferWidget::TransferWidget (Transfer* transfer, QWidget* parent, Qt::WindowF
     setLayout(m_verticalLayout);
     m_progress->setMaximum(100);
 
+    QString itemsList;
+    foreach (QString itemName, transfer->itemNames()) {
+        itemsList.append("\n");
+        itemsList.append(itemName);
+    }
+    setToolTip(itemsList);
+
     connect(m_startStop, SIGNAL(clicked(bool)), SLOT(startTransfer()));
     connect(m_transfer, SIGNAL(done()), SLOT(transferFinished()));
     connect(m_transfer, SIGNAL(progress(quint64,quint64,quint32)), SLOT(updateProgress(quint64,quint64,quint32)));
@@ -79,7 +86,6 @@ TransferWidget::~TransferWidget()
 void TransferWidget::startTransfer()
 {
     m_transfer->start();
-    qDebug() << m_transfer->type();
 }
 
 void TransferWidget::transferFinished()
