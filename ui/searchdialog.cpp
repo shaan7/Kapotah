@@ -45,6 +45,8 @@ SearchDialog::SearchDialog(QWidget* parent, Qt::WindowFlags f) : QDialog (parent
 
 void SearchDialog::search()
 {
+    ui.resultsList->clear();
+    m_transfers.clear();
     Kapotah::Announcer::instance()->searchPeersForFile(ui.searchPatternEdit->text());
 }
 
