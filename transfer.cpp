@@ -57,4 +57,9 @@ void Transfer::setItemNames (const QStringList& list)
     m_items = list;
 }
 
+void Transfer::setIsSearchResponse (bool isSearchResponse)
+{
+    m_isSearchResponse = isSearchResponse;
+}
+
 #include "transfer.moc"

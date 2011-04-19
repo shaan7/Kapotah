@@ -68,8 +68,8 @@ TransferWidget::TransferWidget (Transfer* transfer, QWidget* parent, Qt::WindowF
 
     QString itemsList;
     foreach (QString itemName, transfer->itemNames()) {
-        itemsList.append("\n");
         itemsList.append(itemName);
+        itemsList.append("\n");
     }
     setToolTip(itemsList);
 

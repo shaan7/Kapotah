@@ -39,7 +39,7 @@ TransferDialog::~TransferDialog()
 
 void TransferDialog::addTransfer (Transfer* transfer)
 {
-    if (transfer->isSearchResponse()) {
+    if (transfer->isSearchResponse() && transfer->type() == Transfer::Incoming) {
         qDebug() << "IGNORING SEARCH RESPONSE";
         return;
     }

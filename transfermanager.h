@@ -45,6 +45,7 @@ namespace Kapotah
                 bool isSearchResponse);
             QString newId (QString path);
             QString pathForId (QString id);
+            void emitNewTransferAdded(Transfer *transfer);
 
         private:
             QList<Transfer*> m_transfersList;

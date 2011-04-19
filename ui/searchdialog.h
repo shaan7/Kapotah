@@ -40,11 +40,13 @@ class SearchDialog : public QDialog
 
     private:
         Ui::SearchDialog ui;
+        QList<Kapotah::Transfer*> m_transfers;
 
     private slots:
         void search();
         void setSharedDir();
         void addTransfer(Transfer *transfer);
+        void startTransfer();
 };
 
 #endif // SEARCHDIALOG_H

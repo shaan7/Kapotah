@@ -99,4 +99,10 @@ void TransferManager::onTransferFinished()
     emit transferFinished(qobject_cast<Transfer*>(sender()));
 }
 
+void TransferManager::emitNewTransferAdded (Transfer* transfer)
+{
+    qDebug() << "EMITTING " << transfer->itemNames();
+    emit newTransferAdded(transfer);
+}
+
 #include "transfermanager.moc"

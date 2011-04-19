@@ -52,7 +52,7 @@
      <item>
       <widget class="QToolButton" name="downloadButton">
        <property name="enabled">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>&amp;Download Item</string>

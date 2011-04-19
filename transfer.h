@@ -48,6 +48,7 @@ namespace Kapotah
             virtual TransferType type() = 0;
             QHostAddress peerAddress();
             bool isSearchResponse() const;
+            void setIsSearchResponse(bool isSearchResponse);
             QStringList itemNames() const;
             void setItemNames(const QStringList &list);
 
