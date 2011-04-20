@@ -63,6 +63,8 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(ne
     connect (trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, 
              SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
     connect (ui.nameEdit, SIGNAL(returnPressed()), SLOT(setPeerNameFromUi()));
+    connect (ui.notificationsButton, SIGNAL(clicked(bool)),
+             Notifications::instance(), SLOT(toggleNotificationsDialog()));
     trayIcon->show();
 }
 
@@ -182,8 +184,12 @@ void PeerDialog::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
     switch (reason) {
     case QSystemTrayIcon::Trigger:
-    case QSystemTrayIcon::DoubleClick:
-                this->showNormal();
+        if (isVisible())
+            hide();
+        else
+            show();
+        break;
+     case QSystemTrayIcon::DoubleClick:
         break;
     case QSystemTrayIcon::MiddleClick:
         break;

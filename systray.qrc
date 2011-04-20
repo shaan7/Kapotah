@@ -10,5 +10,6 @@
         <file>images/folder-development.png</file>
         <file>images/edit-clear.png</file>
         <file>images/dialog-close.png</file>
+        <file>images/preferences-desktop-notification.png</file>
     </qresource>
 </RCC>

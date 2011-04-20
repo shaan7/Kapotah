@@ -44,5 +44,22 @@ void Notifications::updatePosition()
     m_dialog->move(screenRect.right() - m_dialog->width(), screenRect.bottom() - m_dialog->height());
 }
 
+void Notifications::hideNotificationsDialog()
+{
+    m_dialog->hide();
+}
+
+void Notifications::showNotificationsDialog()
+{
+    m_dialog->show();
+}
+
+void Notifications::toggleNotificationsDialog()
+{
+    if (m_dialog->isVisible())
+        hideNotificationsDialog();
+    else
+        showNotificationsDialog();
+}
 
 #include "notifications.moc"
