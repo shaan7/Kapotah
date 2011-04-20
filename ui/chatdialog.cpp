@@ -56,8 +56,11 @@ void ChatDialog::displayRecievedMessage(QString message, QHostAddress peerAddres
 {
     if (peerAddress.toString() == PeerManager::instance()->peersModel()->data (m_ipAddress, PeersModel::ipAddressRole).toString()) {
         QString peerName = PeerManager::instance()->peersModel()->peerNameForIp(peerAddress);
-        NotificationData data = {peerName + " says" , message, QIcon(":/images/download.png"), this };
-        Notifications::instance()->notify(data);
+
+        if (QApplication::activeWindow() != this) {
+            NotificationData data = {peerName + " says" , message, QIcon(":/images/download.png"), this };
+            Notifications::instance()->notify(data);
+        }
 
         ui.messageDisplay->appendPlainText (PeerManager::instance()->peersModel()->data (m_ipAddress, Qt::DisplayRole).toString()
                                             + "::" + message);

@@ -54,12 +54,10 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(ne
              SLOT(updateSystrayTooltip(QModelIndex, int, int)));
     connect (PeerManager::instance()->peersModel(), SIGNAL(rowsRemoved(QModelIndex, int, int)), this,
              SLOT(updateSystrayTooltip(QModelIndex, int, int)));
-    connect (ui.peersListView, SIGNAL(doubleClicked(QModelIndex)), SLOT(createChatDialog(QModelIndex)));
+    connect (ui.peersListView, SIGNAL(doubleClicked(QModelIndex)), SLOT(showChatDialogOnUserRequest(QModelIndex)));
     connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)),
-             SLOT(createChatDialogOnMessage(QString,QHostAddress)));
+             SLOT(showChatDialogOnIncomingMessage(QString,QHostAddress)));
     connect (ui.multicastButton, SIGNAL(clicked()), this, SLOT(createMulticastDialog()));
-    /*connect (MessageDispatcher::instance(), SIGNAL(gotNewMulticast(QString, QHostAddress)),
-             SLOT(createMulticastDialogOnMessage(QString, QHostAddress));*/
     connect (ui.transferButton, SIGNAL(clicked(bool)), SLOT(showTransferDialog(bool)));
     connect (ui.searchButton, SIGNAL(clicked()), SLOT(showSearchDialog()));
     connect (trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, 
@@ -68,35 +66,36 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(ne
     trayIcon->show();
 }
 
-ChatDialog* PeerDialog::createChatDialog(QModelIndex index)
+ChatDialog* PeerDialog::createChatDialog (QModelIndex index)
 {
     PeersModel *model = PeerManager::instance()->peersModel();
-    if(!m_openChatDialogs.contains(model->data(index, PeersModel::ipAddressRole).toString()))
-    {
-        setFocus();
-        ChatDialog *chatDlg = new ChatDialog(index);
-        chatDlg->show();
-        m_openChatDialogs.insert(model->data(index, PeersModel::ipAddressRole).toString(), chatDlg);
-        connect (chatDlg, SIGNAL(rejected()), this, SLOT(removeKeyFromHash()));
-        return chatDlg;
+    if (m_openChatDialogs.contains(model->data(index, PeersModel::ipAddressRole).toString())) {
+        return m_openChatDialogs[model->data(index, PeersModel::ipAddressRole).toString()];
     } else {
-        m_openChatDialogs[model->data(index, PeersModel::ipAddressRole).toString()]->show();
+        ChatDialog *chatDlg = new ChatDialog(index);
+        m_openChatDialogs.insert(model->data(index, PeersModel::ipAddressRole).toString(), chatDlg);
+        return chatDlg;
     }
 }
 
-ChatDialog* PeerDialog::createChatDialogOnMessage(QString message, QHostAddress peerAddress)
+void PeerDialog::showChatDialogOnIncomingMessage (QString message, QHostAddress peerAddress)
 {
-    if (m_openChatDialogs.contains(peerAddress.toString())) //Already created
-        return m_openChatDialogs[peerAddress.toString()];
-
     PeersModel *model = PeerManager::instance()->peersModel();
-    QModelIndexList list = model->match(model->index(0), PeersModel::ipAddressRole, peerAddress.toString());
 
-    if (list.count() == 0) {
-        qDebug() << "NOOOO! someone sent message after being offline, huh?";
-    } else {
-        createChatDialog(list.at(0))->displayRecievedMessage(message, peerAddress);
+    if (!m_openChatDialogs.contains(peerAddress.toString())) {
+        QModelIndexList list = model->match(model->index(0), PeersModel::ipAddressRole, peerAddress.toString());
+
+        if (list.count() == 0) {
+            qDebug() << "NOOOO! someone sent message after being offline, huh?";
+        } else {
+            createChatDialog(list.at(0))->displayRecievedMessage(message, peerAddress);
+        }
     }
+}
+
+void PeerDialog::showChatDialogOnUserRequest (QModelIndex index)
+{
+    createChatDialog(index)->show();
 }
 
 MulticastDialog* PeerDialog::createMulticastDialog()
@@ -137,11 +136,11 @@ void PeerDialog::showTransferDialog (bool checked)
     }
 }
 
-void PeerDialog::removeKeyFromHash()
+/*void PeerDialog::removeKeyFromHash()  //NOT NEEDED NOW
 {
     ChatDialog* dlg = qobject_cast<ChatDialog*> (sender());
     m_openChatDialogs.remove(m_openChatDialogs.key(dlg));
-}
+}*/
 
 void PeerDialog::updatePeer()
 {
