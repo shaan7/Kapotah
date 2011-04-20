@@ -29,7 +29,8 @@
 
 using namespace Kapotah;
 
-ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent, Qt::WindowFlags f) : QDialog (parent, f)
+ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent, Qt::WindowFlags f)
+    : QDialog (parent, f)
 {
     ui.setupUi(this);
     m_ipAddress=ipAddress;
@@ -150,7 +151,14 @@ void ChatDialog::dropEvent (QDropEvent* event)
 
 void ChatDialog::notificationActivated()
 {
-    qDebug() << "ACTIVATED";
+    show();
+    activateWindow();
+}
+
+void ChatDialog::closeEvent(QCloseEvent* event)
+{
+    hide();
+    event->ignore();
 }
 
 #include "chatdialog.moc"

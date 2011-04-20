@@ -27,9 +27,11 @@
 
 static const int s_tabSwitchDelay = 1000;
 
-NotificationsDialog::NotificationsDialog (QWidget* parent, Qt::WindowFlags f) : QDialog (parent, f | Qt::FramelessWindowHint)
+NotificationsDialog::NotificationsDialog (QWidget* parent, Qt::WindowFlags f)
+    : QDialog (parent,f | Qt::FramelessWindowHint)
 {
     ui.setupUi(this);
+    setFocusPolicy(Qt::NoFocus);
     m_timerId = startTimer(s_tabSwitchDelay);
     connect(ui.tabWidget, SIGNAL(tabCloseRequested(int)), SLOT(removeNotification(int)));
     connect(ui.clearButton, SIGNAL(clicked()), SLOT(clearNotificationsAndClose()));

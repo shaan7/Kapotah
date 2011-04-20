@@ -45,6 +45,9 @@ public:
 private:
     QList<NotificationData> m_notificationData;
     NotificationsDialog *m_dialog;
+
+public slots:
+    void updatePosition();
 };
 
 

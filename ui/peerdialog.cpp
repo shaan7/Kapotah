@@ -79,6 +79,8 @@ ChatDialog* PeerDialog::createChatDialog(QModelIndex index)
         m_openChatDialogs.insert(model->data(index, PeersModel::ipAddressRole).toString(), chatDlg);
         connect (chatDlg, SIGNAL(rejected()), this, SLOT(removeKeyFromHash()));
         return chatDlg;
+    } else {
+        m_openChatDialogs[model->data(index, PeersModel::ipAddressRole).toString()]->show();
     }
 }
 
