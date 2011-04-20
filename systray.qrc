@@ -8,5 +8,7 @@
         <file>images/download.png</file>
         <file>images/send.png</file>
         <file>images/folder-development.png</file>
+        <file>images/edit-clear.png</file>
+        <file>images/dialog-close.png</file>
     </qresource>
 </RCC>

@@ -17,35 +17,34 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef NOTIFICATIONS_H
-#define NOTIFICATIONS_H
+#ifndef NOTIFICATIONSDIALOG_H
+#define NOTIFICATIONSDIALOG_H
 
-#include "singleton.h"
+#include "ui_notificationsdialog.h"
 
-#include <QIcon>
+#include <QDialog>
 
-class NotificationsDialog;
+struct NotificationData;
 
-struct NotificationData
-{
-    QString title;
-    QString message;
-    QIcon icon;
-    QObject* handler;
-};
-
-class Notifications : public Kapotah::Singleton<Notifications>
+class NotificationsDialog : public QDialog
 {
     Q_OBJECT
-
 public:
-    explicit Notifications();
-    void notify (NotificationData data);
+    explicit NotificationsDialog (QWidget* parent = 0, Qt::WindowFlags f = 0);
+    void notify(NotificationData data);
+
+protected:
+    virtual void timerEvent (QTimerEvent* event);
+    virtual void enterEvent (QEvent* event);
+    virtual void leaveEvent (QEvent* event);
 
 private:
-    QList<NotificationData> m_notificationData;
-    NotificationsDialog *m_dialog;
+    Ui::NotificationsDialog ui;
+    int m_timerId;
+
+public slots:
+    void removeNotification(int index);
+    void clearNotificationsAndClose();
 };
 
-
-#endif // NOTIFICATIONS_H
+#endif // NOTIFICATIONSDIALOG_H

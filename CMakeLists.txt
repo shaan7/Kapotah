@@ -11,7 +11,9 @@ set (kapotah_RCCS systray.qrc)
 qt4_add_resources(kapotah_RCC_SRCS ${kapotah_RCCS})
 
 set(Kapotah_SRCS
-    notifications/ui/notifications.cpp
+    ui/notifications/notificationsdialog.cpp
+    ui/notifications/notificationitemwidget.cpp
+    ui/notifications/notifications.cpp
     ui/transferdialog.ui
     filesearcherthread.cpp
     filesearcher.cpp
@@ -57,6 +59,8 @@ SET(Kapotah_FORMS
     ui/multicastdialog.ui
     ui/searchdialog.ui
     ui/transferdialog.ui
+    ui/notifications/notificationitemwidget.ui
+    ui/notifications/notificationsdialog.ui
 )
 
 qt4_automoc(${Kapotah_SRCS})

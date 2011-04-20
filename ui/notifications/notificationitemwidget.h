@@ -17,35 +17,32 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef NOTIFICATIONS_H
-#define NOTIFICATIONS_H
+#ifndef NOTIFICATIONITEMWIDGET_H
+#define NOTIFICATIONITEMWIDGET_H
 
-#include "singleton.h"
+#include "ui_notificationitemwidget.h"
 
-#include <QIcon>
+#include <QWidget>
 
-class NotificationsDialog;
+class NotificationData;
+class QToolButton;
 
-struct NotificationData
+namespace Ui {
+    class NotificationItemWidget;
+}
+
+class NotificationItemWidget : public QWidget
 {
-    QString title;
-    QString message;
-    QIcon icon;
-    QObject* handler;
-};
-
-class Notifications : public Kapotah::Singleton<Notifications>
-{
-    Q_OBJECT
 
 public:
-    explicit Notifications();
-    void notify (NotificationData data);
+    explicit NotificationItemWidget (const NotificationData &notificationData, QWidget* parent = 0,
+                                     Qt::WindowFlags f = 0);
+    virtual ~NotificationItemWidget();
+    QToolButton *activateButton();
 
 private:
-    QList<NotificationData> m_notificationData;
-    NotificationsDialog *m_dialog;
+    Ui::NotificationItemWidget ui;
+    const NotificationData &m_data;
 };
 
-
-#endif // NOTIFICATIONS_H
+#endif // NOTIFICATIONITEMWIDGET_H

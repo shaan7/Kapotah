@@ -18,21 +18,24 @@
 */
 
 #include "notifications.h"
+
+#include "notificationsdialog.h"
+#include "notificationitemwidget.h"
+
 #include <QApplication>
 #include <QDesktopWidget>
 
-using namespace Kapotah;
-
 template<> Notifications *Kapotah::Singleton<Notifications>::m_instance = 0;
 
-Notifications::Notifications()
+Notifications::Notifications() : m_dialog(new NotificationsDialog())
 {
-
+    QRect screenRect = QApplication::desktop()->availableGeometry();
+    m_dialog->move(screenRect.right() - m_dialog->width(), screenRect.bottom() - m_dialog->height());
 }
 
-void Notifications::notify (const NotificationData& data)
+void Notifications::notify (NotificationData data)
 {
-    m_notificationData.append(data);
+    m_dialog->notify(data);
 }
 
 #include "notifications.moc"

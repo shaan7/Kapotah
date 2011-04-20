@@ -49,6 +49,9 @@ class ChatDialog : public QDialog
         void displayPeerStatus(QHostAddress);
         void clearStatus();
 
+    public slots:
+        void notificationActivated();
+
     protected:
         bool eventFilter (QObject *obj, QEvent *event);
         virtual void dragEnterEvent (QDragEnterEvent *event);

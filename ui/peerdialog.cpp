@@ -23,6 +23,12 @@
 #include "udpmanager.h"
 #include "peersmodel.h"
 #include "announcer.h"
+#include "notifications/notifications.h"
+
+#include "chatdialog.h"
+#include "transferdialog.h"
+#include "multicastdialog.h"
+#include "searchdialog.h"
 
 #include "filesearcher.h"
 #include <QtGui>
@@ -36,6 +42,7 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(ne
     setWindowTitle("Kapotah");
     createActions();
     createTrayIcon();
+    Notifications::instance();
     ui.multicastButton->setToolTip("To multicast, select users and click on \"multicast\" button");
     ui.peersListView->setModel(PeerManager::instance()->peersModel());
     ui.nameEdit->setText(Kapotah::Announcer::instance()->username());

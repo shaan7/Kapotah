@@ -24,6 +24,7 @@
 #include <transfer.h>
 #include <announcer.h>
 #include <xml/transferxmlparser.h>
+#include "notifications/notifications.h"
 #include <QUrl>
 
 using namespace Kapotah;
@@ -53,6 +54,10 @@ ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent,
 void ChatDialog::displayRecievedMessage(QString message, QHostAddress peerAddress)
 {
     if (peerAddress.toString() == PeerManager::instance()->peersModel()->data (m_ipAddress, PeersModel::ipAddressRole).toString()) {
+        QString peerName = PeerManager::instance()->peersModel()->peerNameForIp(peerAddress);
+        NotificationData data = {peerName + " says" , message, QIcon(":/images/download.png"), this };
+        Notifications::instance()->notify(data);
+
         ui.messageDisplay->appendPlainText (PeerManager::instance()->peersModel()->data (m_ipAddress, Qt::DisplayRole).toString()
                                             + "::" + message);
     }
@@ -141,6 +146,11 @@ void ChatDialog::dropEvent (QDropEvent* event)
         Transfer *transfer = TransferManager::instance()->addTransfer (Transfer::Outgoing, files, address, false);
         transfer->start();
     }
+}
+
+void ChatDialog::notificationActivated()
+{
+    qDebug() << "ACTIVATED";
 }
 
 #include "chatdialog.moc"
