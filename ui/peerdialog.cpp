@@ -55,14 +55,10 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(ne
     connect (PeerManager::instance()->peersModel(), SIGNAL(rowsRemoved(QModelIndex, int, int)), this,
              SLOT(updateSystrayTooltip(QModelIndex, int, int)));
     connect (ui.peersListView, SIGNAL(doubleClicked(QModelIndex)), SLOT(showChatDialogOnUserRequest(QModelIndex)));
-    connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)),
-<<<<<<< HEAD
-             SLOT(createChatDialogOnMessage(QString,QHostAddress)));
     connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString,QHostAddress)),
              SLOT(notifySysTray(QString, QHostAddress)));
-=======
+    connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)),
              SLOT(showChatDialogOnIncomingMessage(QString,QHostAddress)));
->>>>>>> c71dafdad7b5ef24d92f2e1befaad7d9f1a78bc9
     connect (ui.multicastButton, SIGNAL(clicked()), this, SLOT(createMulticastDialog()));
     connect (ui.transferButton, SIGNAL(clicked(bool)), SLOT(showTransferDialog(bool)));
     connect (ui.searchButton, SIGNAL(clicked()), SLOT(showSearchDialog()));
@@ -189,21 +185,16 @@ void PeerDialog::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
     switch (reason) {
     case QSystemTrayIcon::Trigger:
-<<<<<<< HEAD
     case QSystemTrayIcon::DoubleClick:
         showNormal();
         if (m_timer){
             m_timer->stop();
             trayIcon->setIcon(QIcon(":/images/systrayicon.png"));
         }
-=======
         if (isVisible())
             hide();
         else
             show();
-        break;
-     case QSystemTrayIcon::DoubleClick:
->>>>>>> c71dafdad7b5ef24d92f2e1befaad7d9f1a78bc9
         break;
     case QSystemTrayIcon::MiddleClick:
         break;
