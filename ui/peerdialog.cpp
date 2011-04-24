@@ -97,7 +97,6 @@ MulticastDialog* PeerDialog::createMulticastDialog()
     PeersModel *model = PeerManager::instance()->peersModel();
     MulticastDialog *multiDlg = new MulticastDialog(this);
     multiDlg->show();
-    multiDlg->ui.reply->setEnabled(false);
     return multiDlg;
 }
 
@@ -178,8 +177,10 @@ void PeerDialog::iconActivated(QSystemTrayIcon::ActivationReason reason)
     case QSystemTrayIcon::Trigger:
     case QSystemTrayIcon::DoubleClick:
         showNormal();
-        if (m_timer)
+        if (m_timer){
             m_timer->stop();
+            trayIcon->setIcon(QIcon(":/images/systrayicon.png"));
+        }
         break;
     case QSystemTrayIcon::MiddleClick:
         break;
@@ -188,7 +189,7 @@ void PeerDialog::iconActivated(QSystemTrayIcon::ActivationReason reason)
     }
 }
 
-void PeerDialog::notifySysTray(QString str, QHostAddress addr)
+void PeerDialog::notifySysTray(QString str, QHostAddress peerAddress)
 {
     if(!m_timer){
         m_timer = new QTimer(this);

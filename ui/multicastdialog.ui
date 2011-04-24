@@ -35,7 +35,7 @@
        <item>
         <widget class="QToolButton" name="attachButton">
          <property name="enabled">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <property name="text">
           <string>&amp;Attach</string>
@@ -52,16 +52,6 @@
          </property>
          <property name="toolButtonStyle">
           <enum>Qt::ToolButtonFollowStyle</enum>
-         </property>
-         <property name="autoRaise">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="attachmentButton">
-         <property name="text">
-          <string>...</string>
          </property>
          <property name="autoRaise">
           <bool>true</bool>
