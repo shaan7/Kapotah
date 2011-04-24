@@ -27,6 +27,8 @@
 #include <QHash>
 #include <QHostAddress>
 
+class TransferXmlData;
+
 namespace Kapotah
 {
 
@@ -37,11 +39,13 @@ namespace Kapotah
         public:
             TransferManager();
             virtual ~TransferManager();
-            Transfer *addTransfer (Transfer::TransferType type, QList<TransferFile> fileList, quint64 totalSize,
-                                   quint64 numFiles, quint64 numDirs, QString id, QHostAddress peer,
-                                   bool isSearchResponse = false);
+            Transfer *addTransfer (Transfer::TransferType type, TransferXmlData data, QHostAddress peer,
+                bool isSearchResponse);
+            Transfer *addTransfer (Transfer::TransferType type, QList<TransferFile> files, QHostAddress peer,
+                bool isSearchResponse);
             QString newId (QString path);
             QString pathForId (QString id);
+            void emitNewTransferAdded(Transfer *transfer);
 
         private:
             QList<Transfer*> m_transfersList;

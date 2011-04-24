@@ -39,8 +39,10 @@ TransferDialog::~TransferDialog()
 
 void TransferDialog::addTransfer (Transfer* transfer)
 {
-    if (transfer->isSearchResponse())
+    if (transfer->isSearchResponse() && transfer->type() == Transfer::Incoming) {
+        qDebug() << "IGNORING SEARCH RESPONSE";
         return;
+    }
     //Remove the spacer
     ui.scrollAreaWidgetContents->layout()->takeAt(ui.scrollAreaWidgetContents->layout()->count()-1);
     //Add the transfer widget

@@ -33,7 +33,8 @@ namespace Kapotah
 
         public:
             explicit IncomingTransfer (QList< TransferFile > files, quint64 totalSize, quint64 numFiles,
-                                       quint64 numDirs, QHostAddress peer, QString id, QObject* parent = 0);
+                                       quint64 numDirs, QHostAddress peer, QString id, bool isSearchResponse,
+                                       QObject* parent = 0);
             virtual ~IncomingTransfer();
             virtual void start();
             virtual TransferType type();

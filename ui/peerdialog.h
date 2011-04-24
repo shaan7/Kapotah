@@ -22,14 +22,16 @@
 #define PEERDIALOG_H
 
 #include "ui_peerdialog.h"
-#include "chatdialog.h"
-#include "transferdialog.h"
-#include "multicastdialog.h"
-#include "searchdialog.h"
+
 
 #include <peermanager.h>
 #include <QDialog>
 #include <QtGui>
+
+class ChatDialog;
+class SearchDialog;
+class MulticastDialog;
+class TransferDialog;
 
 class PeerDialog : public QDialog
 {
@@ -66,12 +68,12 @@ class PeerDialog : public QDialog
 
     private slots:
         ChatDialog* createChatDialog (QModelIndex index);
-        ChatDialog* createChatDialogOnMessage (QString message, QHostAddress peerAddress);
+        void showChatDialogOnUserRequest(QModelIndex index);
+        void showChatDialogOnIncomingMessage (QString message, QHostAddress peerAddress);
         //MultiCastDialog* createMulticastDialogOnMessage ();
         MulticastDialog* createMulticastDialog();
         SearchDialog* showSearchDialog();
         void showTransferDialog (bool checked);
-        void removeKeyFromHash();
         void iconActivated(QSystemTrayIcon::ActivationReason);
         void quitApplication();
         void updatePeer();

@@ -57,9 +57,7 @@ void IncomingTransferThread::run()
     QTcpSocket socket;
 
     socket.connectToHost (m_ip, 45002);  //FIXME: hardcoded port
-    qDebug() << "Connecting to " << m_ip;
     socket.waitForConnected();
-    qDebug() << "Connected to " << m_ip;
 
     socket.write (m_id.toUtf8()); //ID
     socket.waitForBytesWritten();
@@ -74,7 +72,6 @@ void IncomingTransferThread::run()
             bytesCopied = file.pos();
 
             emit progress (bytesCopied, m_size);
-            //qDebug() << "Copied " << bytesCopied << " of " << m_size;
 
             if (bytesCopied >= m_size) {
                 emit done ();

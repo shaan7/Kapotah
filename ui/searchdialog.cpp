@@ -23,7 +23,9 @@
 #include "filesearcher.h"
 #include "transfermanager.h"
 #include "transfer.h"
+#include "peermanager.h"
 #include <QFileDialog>
+#include <incomingtransfer.h>
 
 using namespace Kapotah;
 
@@ -38,11 +40,13 @@ SearchDialog::SearchDialog(QWidget* parent, Qt::WindowFlags f) : QDialog (parent
     connect(ui.settingsButton, SIGNAL(clicked()), SLOT(setSharedDir()));
     connect (TransferManager::instance(), SIGNAL (newTransferAdded (Transfer*)),
              SLOT (addTransfer (Transfer*)));
+    connect(ui.downloadButton, SIGNAL(clicked()), SLOT(startTransfer()));
 }
 
 void SearchDialog::search()
 {
-    qDebug() << "Searching for " << ui.searchPatternEdit->text();
+    ui.resultsList->clear();
+    m_transfers.clear();
     Kapotah::Announcer::instance()->searchPeersForFile(ui.searchPatternEdit->text());
 }
 
@@ -58,7 +62,17 @@ void SearchDialog::addTransfer (Transfer* transfer)
 {
     if (!transfer->isSearchResponse())
         return;
-    ui.resultsList->addItem(transfer->peerAddress().toString());
+    ui.resultsList->addItem(PeerManager::instance()->peersModel()->peerNameForIp(transfer->peerAddress()));
+    m_transfers.append(transfer);
+}
+
+void SearchDialog::startTransfer()
+{
+    if (ui.resultsList->selectedItems().count() == 0)
+        return;
+    Transfer *transfer = m_transfers.at(ui.resultsList->selectionModel()->currentIndex().row());
+    transfer->setIsSearchResponse(false);
+    emit TransferManager::instance()->emitNewTransferAdded(transfer);
 }
 
 #include "searchdialog.moc"

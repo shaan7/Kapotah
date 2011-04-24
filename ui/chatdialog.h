@@ -49,12 +49,16 @@ class ChatDialog : public QDialog
         void displayPeerStatus(QHostAddress);
         void clearStatus();
 
+    public slots:
+        void notificationActivated();
+
     protected:
         bool eventFilter (QObject *obj, QEvent *event);
         virtual void dragEnterEvent (QDragEnterEvent *event);
         virtual void dragMoveEvent (QDragMoveEvent *event);
         virtual void dragLeaveEvent (QDragLeaveEvent*);
         virtual void dropEvent (QDropEvent *event);
+        virtual void closeEvent (QCloseEvent* event);
 
         friend class PeerDialog;
 };

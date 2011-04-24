@@ -11,6 +11,9 @@ set (kapotah_RCCS systray.qrc)
 qt4_add_resources(kapotah_RCC_SRCS ${kapotah_RCCS})
 
 set(Kapotah_SRCS
+    ui/notifications/notificationsdialog.cpp
+    ui/notifications/notificationitemwidget.cpp
+    ui/notifications/notifications.cpp
     ui/transferdialog.ui
     filesearcherthread.cpp
     filesearcher.cpp
@@ -56,6 +59,8 @@ SET(Kapotah_FORMS
     ui/multicastdialog.ui
     ui/searchdialog.ui
     ui/transferdialog.ui
+    ui/notifications/notificationitemwidget.ui
+    ui/notifications/notificationsdialog.ui
 )
 
 qt4_automoc(${Kapotah_SRCS})
@@ -64,4 +69,3 @@ QT4_WRAP_UI(Kapotah_FORMS_HEADERS ${Kapotah_FORMS})
 add_executable(Kapotah WIN32 ${Kapotah_SRCS} ${Kapotah_FORMS_HEADERS})
 target_link_libraries(Kapotah ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY}
                                 ${QT_QTXML_LIBRARY} ${QT_QT_LIBRARY})
-

@@ -17,33 +17,29 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TRANSFERXMLPARSER_H
-#define TRANSFERXMLPARSER_H
+#include "notificationitemwidget.h"
 
-#include "abstractxmlparser.h"
-#include <transfer.h>
-#include <QList>
+#include "ui_notificationitemwidget.h"
+#include "notifications.h"
 
-class TransferXmlData : public AbstractXmlData
+NotificationItemWidget::NotificationItemWidget (const NotificationData& notificationData,
+                                                QWidget* parent, Qt::WindowFlags f) : QWidget (parent, f),
+                                                m_data(notificationData)
 {
-    public:
-        TransferXmlData() : AbstractXmlData(), totalSize(0), totalNumFiles(0), totalNumDirs(0),
-                            isSearchResponse(false) { }
-        QList<Kapotah::TransferFile> files;
-        QStringList items;
-        quint64 totalSize;
-        quint64 totalNumFiles;
-        quint64 totalNumDirs;
-        bool isSearchResponse;
-        QString id;
-};
+    ui.setupUi(this);
+    ui.notificationMessage->setText(m_data.message);
+    ui.notificationMessage->setIcon(m_data.icon);
 
-class TransferXmlParser : public AbstractXmlParser
+    connect(ui.notificationMessage, SIGNAL(clicked()), m_data.handler, SLOT(notificationActivated()));
+}
+
+NotificationItemWidget::~NotificationItemWidget()
 {
 
-    public:
-        virtual QString composeXml (AbstractXmlData* data);
-        virtual AbstractXmlData* parseXml (const QString& xml);
-};
+}
 
-#endif // TRANSFERXMLPARSER_H
+QToolButton* NotificationItemWidget::activateButton()
+{
+    return ui.notificationMessage;
+}
+

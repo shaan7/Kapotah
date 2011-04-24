@@ -22,12 +22,15 @@
 #include <peermanager.h>
 #include <transfermanager.h>
 #include <transfer.h>
-#include <QUrl>
 #include <announcer.h>
+#include <xml/transferxmlparser.h>
+#include "notifications/notifications.h"
+#include <QUrl>
 
 using namespace Kapotah;
 
-ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent, Qt::WindowFlags f) : QDialog (parent, f)
+ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent, Qt::WindowFlags f)
+    : QDialog (parent, f)
 {
     ui.setupUi(this);
     m_ipAddress=ipAddress;
@@ -53,6 +56,13 @@ ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent,
 void ChatDialog::displayRecievedMessage(QString message, QHostAddress peerAddress)
 {
     if (peerAddress.toString() == PeerManager::instance()->peersModel()->data (m_ipAddress, PeersModel::ipAddressRole).toString()) {
+        QString peerName = PeerManager::instance()->peersModel()->peerNameForIp(peerAddress);
+
+        if (QApplication::activeWindow() != this) {
+            NotificationData data = {peerName + " says" , message, QIcon(":/images/download.png"), this };
+            Notifications::instance()->notify(data);
+        }
+
         ui.messageDisplay->appendPlainText (PeerManager::instance()->peersModel()->data (m_ipAddress, Qt::DisplayRole).toString()
                                             + "::" + message);
     }
@@ -137,9 +147,22 @@ void ChatDialog::dropEvent (QDropEvent* event)
         }
 
         QHostAddress address (PeerManager::instance()->peersModel()->data (m_ipAddress, PeersModel::ipAddressRole).toString());
-        Transfer *transfer = TransferManager::instance()->addTransfer (Transfer::Outgoing, files, 0, 0, 0, "", address);
+
+        Transfer *transfer = TransferManager::instance()->addTransfer (Transfer::Outgoing, files, address, false);
         transfer->start();
     }
+}
+
+void ChatDialog::notificationActivated()
+{
+    show();
+    activateWindow();
+}
+
+void ChatDialog::closeEvent(QCloseEvent* event)
+{
+    hide();
+    event->ignore();
 }
 
 #include "chatdialog.moc"

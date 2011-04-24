@@ -17,33 +17,32 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TRANSFERXMLPARSER_H
-#define TRANSFERXMLPARSER_H
+#ifndef NOTIFICATIONITEMWIDGET_H
+#define NOTIFICATIONITEMWIDGET_H
 
-#include "abstractxmlparser.h"
-#include <transfer.h>
-#include <QList>
+#include "ui_notificationitemwidget.h"
 
-class TransferXmlData : public AbstractXmlData
-{
-    public:
-        TransferXmlData() : AbstractXmlData(), totalSize(0), totalNumFiles(0), totalNumDirs(0),
-                            isSearchResponse(false) { }
-        QList<Kapotah::TransferFile> files;
-        QStringList items;
-        quint64 totalSize;
-        quint64 totalNumFiles;
-        quint64 totalNumDirs;
-        bool isSearchResponse;
-        QString id;
-};
+#include <QWidget>
 
-class TransferXmlParser : public AbstractXmlParser
+class NotificationData;
+class QToolButton;
+
+namespace Ui {
+    class NotificationItemWidget;
+}
+
+class NotificationItemWidget : public QWidget
 {
 
-    public:
-        virtual QString composeXml (AbstractXmlData* data);
-        virtual AbstractXmlData* parseXml (const QString& xml);
+public:
+    explicit NotificationItemWidget (const NotificationData &notificationData, QWidget* parent = 0,
+                                     Qt::WindowFlags f = 0);
+    virtual ~NotificationItemWidget();
+    QToolButton *activateButton();
+
+private:
+    Ui::NotificationItemWidget ui;
+    const NotificationData &m_data;
 };
 
-#endif // TRANSFERXMLPARSER_H
+#endif // NOTIFICATIONITEMWIDGET_H

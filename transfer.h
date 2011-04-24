@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include <QHostAddress>
+#include <QStringList>
 #include "transferthread.h"
 
 namespace Kapotah
@@ -41,13 +42,15 @@ namespace Kapotah
             enum TransferType { Incoming, Outgoing };
             enum TransferState { Waiting, PreparingList, Connecting, Transferring, Done };
             explicit Transfer (QList<TransferFile> files, quint64 totalSize, quint64 numFiles, quint64 numDirs,
-                               QHostAddress peer, QObject* parent = 0);
+                               QHostAddress peer, bool isSearchReponse = false, QObject* parent = 0);
             virtual ~Transfer();
             virtual void start() = 0;
             virtual TransferType type() = 0;
             QHostAddress peerAddress();
             bool isSearchResponse() const;
             void setIsSearchResponse(bool isSearchResponse);
+            QStringList itemNames() const;
+            void setItemNames(const QStringList &list);
 
         protected:
             //Details about the transfer
@@ -65,6 +68,7 @@ namespace Kapotah
             TransferThread *m_thread;
             QList<TransferFile>::iterator m_filesIterator;
             QString m_id;
+            QStringList m_items;
 
         signals:
             void progress (quint64 done, quint64 total, quint32 speed);

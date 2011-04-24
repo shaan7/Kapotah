@@ -17,33 +17,42 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TRANSFERXMLPARSER_H
-#define TRANSFERXMLPARSER_H
+#ifndef NOTIFICATIONS_H
+#define NOTIFICATIONS_H
 
-#include "abstractxmlparser.h"
-#include <transfer.h>
-#include <QList>
+#include "singleton.h"
 
-class TransferXmlData : public AbstractXmlData
+#include <QIcon>
+
+class NotificationsDialog;
+
+struct NotificationData
 {
-    public:
-        TransferXmlData() : AbstractXmlData(), totalSize(0), totalNumFiles(0), totalNumDirs(0),
-                            isSearchResponse(false) { }
-        QList<Kapotah::TransferFile> files;
-        QStringList items;
-        quint64 totalSize;
-        quint64 totalNumFiles;
-        quint64 totalNumDirs;
-        bool isSearchResponse;
-        QString id;
+    QString title;
+    QString message;
+    QIcon icon;
+    QObject* handler;
 };
 
-class TransferXmlParser : public AbstractXmlParser
+class Notifications : public Kapotah::Singleton<Notifications>
 {
+    Q_OBJECT
 
-    public:
-        virtual QString composeXml (AbstractXmlData* data);
-        virtual AbstractXmlData* parseXml (const QString& xml);
+public:
+    explicit Notifications();
+    void notify (NotificationData data);
+
+private:
+    QList<NotificationData> m_notificationData;
+    NotificationsDialog *m_dialog;
+    bool m_hasPendingNotifications;
+
+public slots:
+    void updatePosition();
+    void showNotificationsDialog();
+    void hideNotificationsDialog();
+    void toggleNotificationsDialog();
 };
 
-#endif // TRANSFERXMLPARSER_H
+
+#endif // NOTIFICATIONS_H

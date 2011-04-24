@@ -29,7 +29,7 @@ using namespace Kapotah;
 
 template<> TransferManager *Kapotah::Singleton<TransferManager>::m_instance = 0;
 
-TransferManager::TransferManager():m_seqNo(0)
+TransferManager::TransferManager() : m_seqNo(0)
 {
     connect(MessageDispatcher::instance(), SIGNAL(gotNewTransfer(QString,QHostAddress)),
             SLOT(handleIncomingTransfer(QString,QHostAddress)));
@@ -40,19 +40,27 @@ TransferManager::~TransferManager()
 
 }
 
-Transfer* TransferManager::addTransfer (Transfer::TransferType type, QList< TransferFile > fileList,
-                                        quint64 totalSize, quint64 numFiles, quint64 numDirs,
-                                        QString id, QHostAddress peer, bool isSearchResponse)
+Transfer* TransferManager::addTransfer (Transfer::TransferType type, QList< TransferFile > files,
+                                        QHostAddress peer, bool isSearchResponse)
+{
+    TransferXmlData data;
+    data.files = files;
+    return addTransfer(type, data, peer, isSearchResponse);
+}
+
+Transfer* TransferManager::addTransfer (Transfer::TransferType type, TransferXmlData data, QHostAddress peer,
+    bool isSearchResponse)
 {
     Transfer *transfer = 0;
 
     if (type == Transfer::Incoming) {
-        transfer = new IncomingTransfer (fileList, totalSize, numFiles, numDirs, peer, id, this);
-        transfer->setIsSearchResponse(isSearchResponse);
+        transfer = new IncomingTransfer (data.files, data.totalSize, data.totalNumFiles, data.totalNumDirs,
+                                         peer, data.id, isSearchResponse, this);
     } else if (type == Transfer::Outgoing) {
-        transfer = new OutgoingTransfer (fileList, peer, this);
+        transfer = new OutgoingTransfer (data.files, peer, isSearchResponse, this);
     }
 
+    transfer->setItemNames(data.items);
     m_transfersList.append (transfer);
 
     connect (transfer, SIGNAL (done()), SLOT (onTransferFinished()));
@@ -82,14 +90,19 @@ void TransferManager::handleIncomingTransfer (QString transfer, QHostAddress pee
 {
     TransferXmlParser parser;
     TransferXmlData *data = static_cast<TransferXmlData*>(parser.parseXml(transfer));
-    Transfer *newTransfer = addTransfer (Transfer::Incoming, data->files, data->totalSize, data->totalNumFiles,
-                                      data->totalNumDirs, data->id, peer, data->isSearchResponse);
+    Transfer *newTransfer = addTransfer (Transfer::Incoming, *data, peer, data->isSearchResponse);
     delete data;
 }
 
 void TransferManager::onTransferFinished()
 {
     emit transferFinished(qobject_cast<Transfer*>(sender()));
+}
+
+void TransferManager::emitNewTransferAdded (Transfer* transfer)
+{
+    qDebug() << "EMITTING " << transfer->itemNames();
+    emit newTransferAdded(transfer);
 }
 
 #include "transfermanager.moc"

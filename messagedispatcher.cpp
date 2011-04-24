@@ -50,7 +50,6 @@ void MessageDispatcher::newMessage (QString message, QHostAddress peerAddress)
     MessageXmlData *data = static_cast<MessageXmlData*>(parser.parseXml(message));
 
     if (data->type == AbstractXmlData::Message) {
-        qDebug() << "New Message from " << peerAddress.toString() << " reading " << data->message;
         emit gotNewMessage (data->message, peerAddress);
     } else {    //FIXME: Don't straightaway assume its Transfer, do sanity checks
         gotNewTransfer(message, peerAddress);

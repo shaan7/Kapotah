@@ -17,33 +17,34 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TRANSFERXMLPARSER_H
-#define TRANSFERXMLPARSER_H
+#ifndef NOTIFICATIONSDIALOG_H
+#define NOTIFICATIONSDIALOG_H
 
-#include "abstractxmlparser.h"
-#include <transfer.h>
-#include <QList>
+#include "ui_notificationsdialog.h"
 
-class TransferXmlData : public AbstractXmlData
+#include <QDialog>
+
+struct NotificationData;
+
+class NotificationsDialog : public QDialog
 {
-    public:
-        TransferXmlData() : AbstractXmlData(), totalSize(0), totalNumFiles(0), totalNumDirs(0),
-                            isSearchResponse(false) { }
-        QList<Kapotah::TransferFile> files;
-        QStringList items;
-        quint64 totalSize;
-        quint64 totalNumFiles;
-        quint64 totalNumDirs;
-        bool isSearchResponse;
-        QString id;
+    Q_OBJECT
+public:
+    explicit NotificationsDialog (QWidget* parent = 0, Qt::WindowFlags f = 0);
+    void notify(NotificationData data);
+
+protected:
+    virtual void timerEvent (QTimerEvent* event);
+    virtual void enterEvent (QEvent* event);
+    virtual void leaveEvent (QEvent* event);
+
+private:
+    Ui::NotificationsDialog ui;
+    int m_timerId;
+
+public slots:
+    void removeNotification(int index);
+    void clearNotificationsAndClose();
 };
 
-class TransferXmlParser : public AbstractXmlParser
-{
-
-    public:
-        virtual QString composeXml (AbstractXmlData* data);
-        virtual AbstractXmlData* parseXml (const QString& xml);
-};
-
-#endif // TRANSFERXMLPARSER_H
+#endif // NOTIFICATIONSDIALOG_H
