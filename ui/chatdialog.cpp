@@ -47,6 +47,7 @@ ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent,
     ui.messageEdit->setFocus();
     ui.messageEdit->installEventFilter (this);
     ui.sendMessage->setToolTip("Send Message");
+    ui.attachmentButton->setToolTip("Add File/Folder");
 
     setAcceptDrops (true);
 }

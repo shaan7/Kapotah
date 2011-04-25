@@ -85,7 +85,7 @@
        </property>
        <property name="icon">
         <iconset resource="../systray.qrc">
-         <normaloff>:/images/folder-development.png</normaloff>:/images/folder-development.png</iconset>
+         <normaloff>:/images/share-settings.png</normaloff>:/images/share-settings.png</iconset>
        </property>
        <property name="iconSize">
         <size>

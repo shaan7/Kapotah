@@ -35,7 +35,7 @@
 
 using namespace Kapotah;
 
-PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(new TransferDialog(this))
+PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(new TransferDialog(this)), m_timer(0)
 {
     QSystemTrayIcon::isSystemTrayAvailable();
     ui.setupUi(this);
@@ -55,6 +55,8 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(ne
     connect (PeerManager::instance()->peersModel(), SIGNAL(rowsRemoved(QModelIndex, int, int)), this,
              SLOT(updateSystrayTooltip(QModelIndex, int, int)));
     connect (ui.peersListView, SIGNAL(doubleClicked(QModelIndex)), SLOT(showChatDialogOnUserRequest(QModelIndex)));
+    connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString,QHostAddress)),
+             SLOT(notifySysTray(QString, QHostAddress)));
     connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)),
              SLOT(showChatDialogOnIncomingMessage(QString,QHostAddress)));
     connect (ui.multicastButton, SIGNAL(clicked()), this, SLOT(createMulticastDialog()));
@@ -105,7 +107,6 @@ MulticastDialog* PeerDialog::createMulticastDialog()
     PeersModel *model = PeerManager::instance()->peersModel();
     MulticastDialog *multiDlg = new MulticastDialog(this);
     multiDlg->show();
-    multiDlg->ui.reply->setEnabled(false);
     return multiDlg;
 }
 
@@ -184,17 +185,42 @@ void PeerDialog::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
     switch (reason) {
     case QSystemTrayIcon::Trigger:
+    case QSystemTrayIcon::DoubleClick:
+        showNormal();
+        if (m_timer){
+            m_timer->stop();
+            trayIcon->setIcon(QIcon(":/images/systrayicon.png"));
+        }
         if (isVisible())
             hide();
         else
             show();
         break;
-     case QSystemTrayIcon::DoubleClick:
-        break;
     case QSystemTrayIcon::MiddleClick:
         break;
     default:
         ;
+    }
+}
+
+void PeerDialog::notifySysTray(QString str, QHostAddress peerAddress)
+{
+    if(!m_timer){
+        m_timer = new QTimer(this);
+        connect(m_timer, SIGNAL(timeout()), this, SLOT(changeSysTrayIcon()));
+        m_timer->start(500);
+    }
+}
+
+void PeerDialog::changeSysTrayIcon()
+{
+    if (!m_isGreyScale) {
+        trayIcon->setIcon(QIcon(":/images/systrayicon-greyscale.png"));
+        m_isGreyScale = true;
+    }
+    else {
+        trayIcon->setIcon(QIcon(":/images/systrayicon.png"));
+        m_isGreyScale = false;
     }
 }
 

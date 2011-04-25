@@ -57,9 +57,11 @@ class PeerDialog : public QDialog
         QAction *maximizeAction;
         QAction *restoreAction;
         QAction *quitAction;
+        QTimer *m_timer;
 
     protected:
         void closeEvent(QCloseEvent *event);
+        bool m_isGreyScale;
 
     private slots:
         void setPeerNameFromUi();
@@ -76,6 +78,8 @@ class PeerDialog : public QDialog
         void quitApplication();
         void updatePeer();
         void updateSystrayTooltip(QModelIndex parent, int start, int end);
+        void changeSysTrayIcon();
+        void notifySysTray(QString str, QHostAddress addr);
 };
 
 #endif // PEERDIALOG_H

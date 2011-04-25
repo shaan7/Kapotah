@@ -38,6 +38,7 @@ IncomingTransfer::IncomingTransfer (QList< TransferFile > files, quint64 totalSi
     m_speed = 0;
     startTimer(1000);
     m_id = id;
+    qDebug() << "HAHAHA" << files.length() << totalSize << numFiles << numDirs << peer << id << parent;
 }
 
 IncomingTransfer::~IncomingTransfer()
