@@ -24,6 +24,7 @@
 
 #include <QDialog>
 
+class NotificationItemWidget;
 struct NotificationData;
 
 class NotificationsDialog : public QDialog
@@ -37,10 +38,13 @@ protected:
     virtual void timerEvent (QTimerEvent* event);
     virtual void enterEvent (QEvent* event);
     virtual void leaveEvent (QEvent* event);
+    virtual void showEvent (QShowEvent* event);
+    virtual void hideEvent (QHideEvent* event);
 
 private:
     Ui::NotificationsDialog ui;
     int m_timerId;
+    QHash<QObject*, NotificationItemWidget*> m_notificationItems;
 
 public slots:
     void removeNotification(int index);

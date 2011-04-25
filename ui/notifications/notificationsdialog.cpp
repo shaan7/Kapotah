@@ -39,9 +39,14 @@ NotificationsDialog::NotificationsDialog (QWidget* parent, Qt::WindowFlags f)
 
 void NotificationsDialog::notify (NotificationData data)
 {
-    ui.horizontalScrollBar->setMaximum(ui.horizontalScrollBar->maximum()+1);
-    NotificationItemWidget *widget = new NotificationItemWidget(data, this);
-    ui.tabWidget->addTab(widget, data.icon, data.title);
+    if (m_notificationItems.contains(data.handler)) {
+        m_notificationItems[data.handler]->setNotificationData(data);
+    } else {
+        ui.horizontalScrollBar->setMaximum(ui.horizontalScrollBar->maximum()+1);
+        NotificationItemWidget *widget = new NotificationItemWidget(data, this);
+        ui.tabWidget->addTab(widget, data.icon, data.title);
+        m_notificationItems[data.handler] = widget;
+    }
 
     if (!isVisible()) {
         QPropertyAnimation *animation = new QPropertyAnimation(this, "windowOpacity");
@@ -87,6 +92,7 @@ void NotificationsDialog::removeNotification (int index)
     QWidget *page = ui.tabWidget->widget(index);
     ui.tabWidget->removeTab(index);
     ui.horizontalScrollBar->setMaximum(ui.horizontalScrollBar->maximum()-1);
+    m_notificationItems.remove(m_notificationItems.key(static_cast<NotificationItemWidget*>(page)));
     delete page;
 }
 
@@ -99,7 +105,18 @@ void NotificationsDialog::clearNotificationsAndClose()
         ui.horizontalScrollBar->setMaximum(ui.horizontalScrollBar->maximum()-1);
         delete page;
     }
+    m_notificationItems.clear();
     hide();
+}
+
+void NotificationsDialog::hideEvent (QHideEvent* event)
+{
+
+}
+
+void NotificationsDialog::showEvent (QShowEvent* event)
+{
+    
 }
 
 #include "notificationsdialog.moc"

@@ -23,6 +23,7 @@
 #include "ui_notificationitemwidget.h"
 
 #include <QWidget>
+#include "notifications.h"
 
 class NotificationData;
 class QToolButton;
@@ -35,14 +36,17 @@ class NotificationItemWidget : public QWidget
 {
 
 public:
-    explicit NotificationItemWidget (const NotificationData &notificationData, QWidget* parent = 0,
+    explicit NotificationItemWidget (const NotificationData notificationData, QWidget* parent = 0,
                                      Qt::WindowFlags f = 0);
     virtual ~NotificationItemWidget();
     QToolButton *activateButton();
+    void setNotificationData(const NotificationData &data);
 
 private:
     Ui::NotificationItemWidget ui;
-    const NotificationData &m_data;
+    NotificationData m_data;
+
+    void updateItem();
 };
 
 #endif // NOTIFICATIONITEMWIDGET_H

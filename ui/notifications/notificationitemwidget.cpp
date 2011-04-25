@@ -22,13 +22,12 @@
 #include "ui_notificationitemwidget.h"
 #include "notifications.h"
 
-NotificationItemWidget::NotificationItemWidget (const NotificationData& notificationData,
+NotificationItemWidget::NotificationItemWidget (const NotificationData notificationData,
                                                 QWidget* parent, Qt::WindowFlags f) : QWidget (parent, f),
                                                 m_data(notificationData)
 {
     ui.setupUi(this);
-    ui.notificationMessage->setText(m_data.message);
-    ui.notificationMessage->setIcon(m_data.icon);
+    updateItem();
 
     connect(ui.notificationMessage, SIGNAL(clicked()), m_data.handler, SLOT(notificationActivated()));
 }
@@ -43,3 +42,14 @@ QToolButton* NotificationItemWidget::activateButton()
     return ui.notificationMessage;
 }
 
+void NotificationItemWidget::setNotificationData (const NotificationData& data)
+{
+    m_data = data;
+    updateItem();
+}
+
+void NotificationItemWidget::updateItem()
+{
+    ui.notificationMessage->setText(m_data.message);
+    ui.notificationMessage->setIcon(m_data.icon);
+}
