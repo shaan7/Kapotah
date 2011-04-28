@@ -33,20 +33,16 @@ ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent,
     : QDialog (parent, f)
 {
     ui.setupUi(this);
-    m_ipAddress=ipAddress;
-    setWindowTitle(PeerManager::instance()->peersModel()->data(m_ipAddress, Qt::DisplayRole).toString()
-                   +" ("+PeerManager::instance()->peersModel()->data(m_ipAddress, PeersModel::ipAddressRole).toString()
-                   +")");
+    m_peerIp=PeerManager::instance()->ipFromIndex(ipAddress);
+    setWindowTitle(PeerManager::instance()->nameFromIp(m_peerIp));
     connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)), this,
              SLOT(displayRecievedMessage(QString, QHostAddress)));
     connect (Announcer::instance(), SIGNAL(peerTyping(QHostAddress)), this, SLOT(displayPeerStatus(QHostAddress)));
     connect (ui.sendMessage, SIGNAL(pressed()), this, SLOT(sendNewMessage()));
     connect (ui.sendMessage, SIGNAL(pressed()), this, SLOT(displaySendingMessage()));
     connect (ui.sendMessage, SIGNAL(pressed()), ui.messageEdit, SLOT(clear()));
-    connect (PeerManager::instance()->peersModel(), SIGNAL(rowsRemoved(QModelIndex, int, int)), this,
-             SLOT(userOffline(QModelIndex, int, int)));
-    connect (PeerManager::instance()->peersModel(), SIGNAL(rowsInserted(QModelIndex, int, int)), this,
-             SLOT(userBackOnline(QModelIndex, int, int)));
+    connect(PeerManager::instance(), SIGNAL(peerAdded(QHostAddress)), SLOT(userBackOnline(QHostAddress)));
+    connect(PeerManager::instance(), SIGNAL(peerRemoved(QHostAddress)), SLOT(userOffline(QHostAddress)));
 
     ui.messageEdit->setFocus();
     ui.messageEdit->installEventFilter (this);
@@ -59,8 +55,8 @@ ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent,
 
 void ChatDialog::displayRecievedMessage(QString message, QHostAddress peerAddress)
 {
-    if (peerAddress.toString() == PeerManager::instance()->peersModel()->data (m_ipAddress, PeersModel::ipAddressRole).toString()) {
-        QString peerName = PeerManager::instance()->peersModel()->peerNameForIp(peerAddress);
+    if (peerAddress == m_peerIp) {
+        QString peerName = PeerManager::instance()->nameFromIp(peerAddress);
 
         if (QApplication::activeWindow() != this) {
             NotificationData data = {peerName + " says" , message, QIcon(":/images/download.png"), this };
@@ -68,8 +64,7 @@ void ChatDialog::displayRecievedMessage(QString message, QHostAddress peerAddres
         }
 
         if(!message.isEmpty()){
-        ui.messageDisplay->appendPlainText (PeerManager::instance()->peersModel()->data (m_ipAddress, Qt::DisplayRole).toString()
-                                            + "::" + message);
+            ui.messageDisplay->appendPlainText(PeerManager::instance()->nameFromIp(peerAddress) + "::" + message);
         }
     }
 }
@@ -78,9 +73,9 @@ void ChatDialog::displayPeerStatus(QHostAddress peerAddress)
 {
         connect (&m_isTypingTimer, SIGNAL(timeout()), this, SLOT(clearStatus()));
         m_isTypingTimer.start(2000);
-        if(peerAddress.toString() == PeerManager::instance()->peersModel()->data(m_ipAddress, PeersModel::ipAddressRole).toString())
+        if(peerAddress == m_peerIp)
         {
-            ui.peerStatus->setText(PeerManager::instance()->peersModel()->data(m_ipAddress).toString() + " is typing....");
+            ui.peerStatus->setText(PeerManager::instance()->nameFromIp(m_peerIp) + " is typing....");
         }
 }
 
@@ -98,8 +93,7 @@ void ChatDialog::displaySendingMessage()
 
 void ChatDialog::sendNewMessage()
 {
-    QHostAddress address (PeerManager::instance()->peersModel()->data (m_ipAddress, PeersModel::ipAddressRole).toString());
-    Kapotah::MessageDispatcher::instance()->sendNewMessage (ui.messageEdit->toPlainText(), address);
+    Kapotah::MessageDispatcher::instance()->sendNewMessage (ui.messageEdit->toPlainText(), m_peerIp);
 }
 
 ChatDialog::~ChatDialog()
@@ -111,8 +105,7 @@ bool ChatDialog::eventFilter (QObject* obj, QEvent* event)
 {
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
-        Announcer::instance()->peerStatus(QHostAddress(PeerManager::instance()->peersModel()->data(m_ipAddress,
-                                                                                                     PeersModel::ipAddressRole).toString()));//send "is typing datagram"
+        Announcer::instance()->peerStatus(m_peerIp);     //send "is typing datagram"
         if ((keyEvent->modifiers()==Qt::NoModifier)  
             && (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter) ) {
                 ui.sendMessage->animateClick(); //Click the button
@@ -154,9 +147,7 @@ void ChatDialog::dropEvent (QDropEvent* event)
             files.append (file);
         }
 
-        QHostAddress address (PeerManager::instance()->peersModel()->data (m_ipAddress, PeersModel::ipAddressRole).toString());
-
-        Transfer *transfer = TransferManager::instance()->addTransfer (Transfer::Outgoing, files, address, false);
+        Transfer *transfer = TransferManager::instance()->addTransfer (Transfer::Outgoing, files, m_peerIp, false);
         transfer->start();
     }
 }
@@ -167,23 +158,21 @@ void ChatDialog::notificationActivated()
     activateWindow();
 }
 
-/*void ChatDialog::userOffline(QModelIndex parent, int start, int end)
+void ChatDialog::userBackOnline(const QHostAddress& address)
 {
-    if(parent.model()->index().data(m_ipAddress, PeersModel::ipAddressRole) == m_ipAddress)
-    {
-        ui.messageDisplay->appendPlainText(parent.model()->index().data(m_ipAddress, PeersModel::Qt::DisplayRole).toString()
-        + " is offline");
+    if (address == m_peerIp) {
+        ui.messageDisplay->appendPlainText(address.toString() + " is back online");
+        ui.sendMessage->setEnabled(true);
     }
 }
 
-void ChatDialog::userBackOnline(QModelIndex parent, int start, int end)
+void ChatDialog::userOffline(const QHostAddress& address)
 {
-    if(parent.model()->index().data(m_ipAddress, PeersModel::ipAddressRole) == m_ipAddress)
-    {
-        ui.messageDisplay->appendPlainText(parent.model()->index().data(m_ipAddress, PeersModel::Qt::DisplayRole).toString()
-        + " is online");
+    if (address == m_peerIp) {
+        ui.messageDisplay->appendPlainText(address.toString() + " is now offline");
+        ui.sendMessage->setEnabled(false);
     }
-}*/
+}
 
 void ChatDialog::closeEvent(QCloseEvent* event)
 {

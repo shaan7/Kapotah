@@ -33,6 +33,9 @@ namespace Kapotah
             PeerManager();
             virtual ~PeerManager();
             PeersModel *peersModel();
+            QHostAddress ipFromIndex(const QModelIndex &index);
+            QString nameFromIndex(const QModelIndex &index);
+            QString nameFromIp(const QHostAddress &address);
 
         private:
             PeersModel *m_peersModel;
@@ -42,8 +45,8 @@ namespace Kapotah
             void peerRemovedInModel(const QModelIndex &index, int start, int finish);
 
         signals:
-            void peerAdded(const QModelIndex &index);
-            void peerRemoved(const QModelIndex &index);
+            void peerAdded(const QHostAddress &peerAddress);
+            void peerRemoved(const QHostAddress &peerAddress);
     };
 
 }

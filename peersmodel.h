@@ -40,6 +40,7 @@ namespace Kapotah
             virtual ~PeersModel();
 
         private:
+            QList<QHostAddress> m_peerAddresses;
             QHash<QHostAddress, Peer> m_peers;
             QHash<QHostAddress, int> m_ages;
 

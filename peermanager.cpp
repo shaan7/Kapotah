@@ -27,7 +27,7 @@ PeerManager::PeerManager() : m_peersModel(new PeersModel(this))
 {
     connect(m_peersModel, SIGNAL(rowsInserted(const QModelIndex&, int, int)),
             SLOT(peerAddedInModel(QModelIndex,int,int)));
-    connect(m_peersModel, SIGNAL(rowsRemoved(const QModelIndex&, int, int)),
+    connect(m_peersModel, SIGNAL(rowsAboutToBeRemoved(const QModelIndex&, int, int)),
             SLOT(peerRemovedInModel(QModelIndex,int,int)));
 }
 
@@ -43,12 +43,27 @@ PeersModel* PeerManager::peersModel()
 
 void PeerManager::peerAddedInModel (const QModelIndex& index, int start, int finish)
 {
-    emit peerAdded(m_peersModel->index(start));
+    emit peerAdded(ipFromIndex(m_peersModel->index(start)));
 }
 
 void PeerManager::peerRemovedInModel (const QModelIndex& index, int start, int finish)
 {
-    emit peerAdded(m_peersModel->index(start));
+    emit peerRemoved(ipFromIndex(m_peersModel->index(start)));
+}
+
+QHostAddress PeerManager::ipFromIndex(const QModelIndex& index)
+{
+    return QHostAddress(m_peersModel->data(index, PeersModel::ipAddressRole).toString());
+}
+
+QString PeerManager::nameFromIndex(const QModelIndex& index)
+{
+    return m_peersModel->data(index).toString();
+}
+
+QString PeerManager::nameFromIp(const QHostAddress& address)
+{
+    return m_peersModel->peerNameForIp(address);
 }
 
 #include "peermanager.moc"

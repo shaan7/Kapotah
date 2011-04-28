@@ -32,12 +32,12 @@ QVariant PeersModel::data (const QModelIndex& index, int role) const
 
     if (role == Qt::DisplayRole)
     {
-        return m_peers[m_peers.keys().at (index.row()) ].name();
+        return m_peers[m_peerAddresses.at(index.row())].name();
     }
 
     else if (role == ipAddressRole)
     {
-        return m_peers[m_peers.keys().at (index.row()) ].ipAddress().toString();
+        return m_peers[m_peerAddresses.at(index.row())].ipAddress().toString();
     }
 
     return QVariant();
@@ -45,7 +45,7 @@ QVariant PeersModel::data (const QModelIndex& index, int role) const
 
 int PeersModel::rowCount (const QModelIndex& parent) const
 {
-    return m_peers.keys().count();
+    return m_peerAddresses.count();
 }
 
 PeersModel::PeersModel (QObject* parent) : QAbstractListModel (parent)
@@ -61,13 +61,13 @@ PeersModel::~PeersModel()
 
 void PeersModel::addNewPeer (Peer peer)
 {
-    if (m_peers.contains (peer.ipAddress())) {
+    if (m_peerAddresses.contains (peer.ipAddress())) {
         m_ages[peer.ipAddress()] = 0;
         if (m_peers[peer.ipAddress()].name() != peer.name()) {
             Peer &existingPeer = m_peers[peer.ipAddress()];
             existingPeer.setName(peer.name());
-            emit dataChanged(createIndex(m_peers.keys().indexOf(peer.ipAddress()), 0),
-                        createIndex(m_peers.keys().indexOf(peer.ipAddress()), 0));
+            emit dataChanged(createIndex(m_peerAddresses.indexOf(peer.ipAddress()), 0),
+                        createIndex(m_peerAddresses.indexOf(peer.ipAddress()), 0));
         }
         return;
     }
@@ -76,10 +76,10 @@ void PeersModel::addNewPeer (Peer peer)
 
     beginInsertRows (QModelIndex(), row, row);
 
-    qDebug() << "Adding " << peer.name() << " at " << peer.ipAddress() << " as " << row;
-
+    m_peerAddresses.append(peer.ipAddress());
     m_peers[peer.ipAddress() ] = peer;
     m_ages[peer.ipAddress()] = 0;
+    qDebug() << "Adding " << peer.name() << peer.ipAddress() << " at " << m_peerAddresses.indexOf(peer.ipAddress());
 
     endInsertRows();
 }
@@ -88,7 +88,7 @@ void PeersModel::checkStatus()
 {
     QList<QHostAddress> addressesToRemove;
 
-    foreach (QHostAddress host, m_peers.keys()) {
+    foreach (QHostAddress host, m_peerAddresses) {
         m_ages[host]++;
         if (m_ages[host] > peerAnnounceTimeout) {
             addressesToRemove.append(host);
@@ -96,9 +96,11 @@ void PeersModel::checkStatus()
     }
 
     foreach (QHostAddress address, addressesToRemove) {
-        int row = m_peers.keys().indexOf(address);
+        int row = m_peerAddresses.indexOf(address);
         beginRemoveRows(QModelIndex(), row, row);
+        qDebug() << "Removing " << address;
         m_peers.remove(address);
+        m_peerAddresses.removeAll(address);
         endRemoveRows();
     }
 }

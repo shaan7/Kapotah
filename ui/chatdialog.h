@@ -39,7 +39,7 @@ class ChatDialog : public QDialog
 
     private:
         Ui::ChatDialog ui;
-        QPersistentModelIndex m_ipAddress;
+        QHostAddress m_peerIp;
         QTimer m_isTypingTimer;
 
     private slots:
@@ -48,8 +48,8 @@ class ChatDialog : public QDialog
         void sendNewMessage();
         void displayPeerStatus(QHostAddress);
         void clearStatus();
-        //void userOffline(QModelIndex parent, int start, int end);
-        //void userBackOnline(QModelIndex parent, int start, int end);
+        void userOffline(const QHostAddress &address);
+        void userBackOnline(const QHostAddress &address);
 
     public slots:
         void notificationActivated();
