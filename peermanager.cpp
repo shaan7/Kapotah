@@ -25,7 +25,10 @@ template<> PeerManager *Kapotah::Singleton<PeerManager>::m_instance = 0;
 
 PeerManager::PeerManager() : m_peersModel(new PeersModel(this))
 {
-
+    connect(m_peersModel, SIGNAL(rowsInserted(const QModelIndex&, int, int)),
+            SLOT(peerAddedInModel(QModelIndex,int,int)));
+    connect(m_peersModel, SIGNAL(rowsRemoved(const QModelIndex&, int, int)),
+            SLOT(peerRemovedInModel(QModelIndex,int,int)));
 }
 
 PeerManager::~PeerManager()
@@ -37,3 +40,15 @@ PeersModel* PeerManager::peersModel()
 {
     return m_peersModel;
 }
+
+void PeerManager::peerAddedInModel (const QModelIndex& index, int start, int finish)
+{
+    emit peerAdded(m_peersModel->index(start));
+}
+
+void PeerManager::peerRemovedInModel (const QModelIndex& index, int start, int finish)
+{
+    emit peerAdded(m_peersModel->index(start));
+}
+
+#include "peermanager.moc"

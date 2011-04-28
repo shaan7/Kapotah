@@ -28,7 +28,7 @@ namespace Kapotah
 
     class PeerManager : public Singleton<PeerManager>
     {
-
+            Q_OBJECT
         public:
             PeerManager();
             virtual ~PeerManager();
@@ -36,8 +36,17 @@ namespace Kapotah
 
         private:
             PeersModel *m_peersModel;
+
+        private slots:
+            void peerAddedInModel(const QModelIndex &index, int start, int finish);
+            void peerRemovedInModel(const QModelIndex &index, int start, int finish);
+
+        signals:
+            void peerAdded(const QModelIndex &index);
+            void peerRemoved(const QModelIndex &index);
     };
 
 }
 
 #endif // KAPOTAH_PEERMANAGER_H
+
