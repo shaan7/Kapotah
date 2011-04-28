@@ -29,6 +29,7 @@
 #include <QProgressBar>
 #include <QToolButton>
 #include <QFileDialog>
+#include "notifications/notifications.h"
 
 using namespace Kapotah;
 
@@ -42,6 +43,8 @@ TransferWidget::TransferWidget (Transfer* transfer, QWidget* parent, Qt::WindowF
         connect(m_incomingTransfer, SIGNAL(needDestinationDir()), SLOT(transferNeedsDestinationDir()));
         m_peerLabel->setText("Receiving from ");
         m_startStop->setIcon(QIcon(":/images/download.png"));
+        /*NotificationData data = { peerName + " sent" , message, QIcon(":/images/download.png"), this };
+        Notifications::instance()->notify(data);*/
     } else if (transfer->type() == Transfer::Outgoing) {
         m_outgoingTransfer = qobject_cast<OutgoingTransfer*>(transfer);
         m_peerLabel->setText("Sending to ");

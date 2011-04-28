@@ -48,6 +48,8 @@ class ChatDialog : public QDialog
         void sendNewMessage();
         void displayPeerStatus(QHostAddress);
         void clearStatus();
+        //void userOffline(QModelIndex parent, int start, int end);
+        //void userBackOnline(QModelIndex parent, int start, int end);
 
     public slots:
         void notificationActivated();
@@ -61,6 +63,9 @@ class ChatDialog : public QDialog
         virtual void closeEvent (QCloseEvent* event);
 
         friend class PeerDialog;
+        
+    signals:
+        
 };
 
 #endif // CHATDIALOG_H
