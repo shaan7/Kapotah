@@ -43,6 +43,10 @@ ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent,
     connect (ui.sendMessage, SIGNAL(pressed()), this, SLOT(sendNewMessage()));
     connect (ui.sendMessage, SIGNAL(pressed()), this, SLOT(displaySendingMessage()));
     connect (ui.sendMessage, SIGNAL(pressed()), ui.messageEdit, SLOT(clear()));
+    connect (PeerManager::instance()->peersModel(), SIGNAL(rowsRemoved(QModelIndex, int, int)), this,
+             SLOT(userOffline(QModelIndex, int, int)));
+    connect (PeerManager::instance()->peersModel(), SIGNAL(rowsInserted(QModelIndex, int, int)), this,
+             SLOT(userBackOnline(QModelIndex, int, int)));
 
     ui.messageEdit->setFocus();
     ui.messageEdit->installEventFilter (this);
@@ -63,8 +67,10 @@ void ChatDialog::displayRecievedMessage(QString message, QHostAddress peerAddres
             Notifications::instance()->notify(data);
         }
 
+        if(!message.isEmpty()){
         ui.messageDisplay->appendPlainText (PeerManager::instance()->peersModel()->data (m_ipAddress, Qt::DisplayRole).toString()
                                             + "::" + message);
+        }
     }
 }
 
@@ -85,7 +91,9 @@ void ChatDialog::clearStatus()
 
 void ChatDialog::displaySendingMessage()
 {
-    ui.messageDisplay->appendPlainText ("Me:: " + ui.messageEdit->toPlainText());
+    if(!ui.messageEdit->toPlainText().isEmpty()){
+        ui.messageDisplay->appendPlainText ("Me:: " + ui.messageEdit->toPlainText());
+    }
 }
 
 void ChatDialog::sendNewMessage()
@@ -158,6 +166,24 @@ void ChatDialog::notificationActivated()
     show();
     activateWindow();
 }
+
+/*void ChatDialog::userOffline(QModelIndex parent, int start, int end)
+{
+    if(parent.model()->index().data(m_ipAddress, PeersModel::ipAddressRole) == m_ipAddress)
+    {
+        ui.messageDisplay->appendPlainText(parent.model()->index().data(m_ipAddress, PeersModel::Qt::DisplayRole).toString()
+        + " is offline");
+    }
+}
+
+void ChatDialog::userBackOnline(QModelIndex parent, int start, int end)
+{
+    if(parent.model()->index().data(m_ipAddress, PeersModel::ipAddressRole) == m_ipAddress)
+    {
+        ui.messageDisplay->appendPlainText(parent.model()->index().data(m_ipAddress, PeersModel::Qt::DisplayRole).toString()
+        + " is online");
+    }
+}*/
 
 void ChatDialog::closeEvent(QCloseEvent* event)
 {
