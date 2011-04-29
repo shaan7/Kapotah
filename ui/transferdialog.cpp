@@ -52,4 +52,10 @@ void TransferDialog::addTransfer (Transfer* transfer)
     dynamic_cast<QVBoxLayout*>(ui.scrollAreaWidgetContents->layout())->addStretch();
 }
 
+void TransferDialog::notificationActivated()
+{
+    show();
+    activateWindow();
+}
+
 #include "transferdialog.moc"

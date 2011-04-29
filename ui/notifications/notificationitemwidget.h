@@ -25,9 +25,6 @@
 #include <QWidget>
 #include "notifications.h"
 
-class NotificationData;
-class QToolButton;
-
 namespace Ui {
     class NotificationItemWidget;
 }
