@@ -1,10 +1,6 @@
 BUG:
 1. Let the incoming transfer thread verify file size from the server.
-2. Make it less lenthy to typecast from model.
-3. Make sysTray icon blink on recieve of message.
-4. Notification for new messages.
-5. scrollWidget to show messages recieved.
-6. Make user able to select/deselect peers after opening the multicast window.
-
-
-
+2. Make attach button funtional
+3. Notification for fileTransfer
+4. Cancel button for transferDialog
+7. Make a funtion to calculate non-zero speed
