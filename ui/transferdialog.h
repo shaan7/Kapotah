@@ -45,6 +45,9 @@ class TransferDialog : public QDialog
 
     private slots:
         void addTransfer (Transfer *transfer);
+        
+    public slots:
+        void notificationActivated();
 
     private:
         Ui::TransferDialog ui;

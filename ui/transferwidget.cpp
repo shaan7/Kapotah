@@ -43,8 +43,10 @@ TransferWidget::TransferWidget (Transfer* transfer, QWidget* parent, Qt::WindowF
         connect(m_incomingTransfer, SIGNAL(needDestinationDir()), SLOT(transferNeedsDestinationDir()));
         m_peerLabel->setText("Receiving from ");
         m_startStop->setIcon(QIcon(":/images/download.png"));
-        /*NotificationData data = { peerName + " sent" , message, QIcon(":/images/download.png"), this };
-        Notifications::instance()->notify(data);*/
+        QString peerName = PeerManager::instance()->nameFromIp(transfer->peerAddress());
+        QString message = transfer->itemNames().join(", ");
+        NotificationData data = { peerName + " sent" , message, QIcon(":/images/download.png"), parent };
+        Notifications::instance()->notify(data);
     } else if (transfer->type() == Transfer::Outgoing) {
         m_outgoingTransfer = qobject_cast<OutgoingTransfer*>(transfer);
         m_peerLabel->setText("Sending to ");
@@ -52,7 +54,7 @@ TransferWidget::TransferWidget (Transfer* transfer, QWidget* parent, Qt::WindowF
     }
 
     m_peerLabel->setText(m_peerLabel->text().append(
-        Kapotah::PeerManager::instance()->peersModel()->peerNameForIp(transfer->peerAddress())));
+        PeerManager::instance()->peersModel()->peerNameForIp(transfer->peerAddress())));
     m_progress = new QProgressBar(this);
     m_progressLabel = new QLabel("Waiting for transfer to begin");
 
