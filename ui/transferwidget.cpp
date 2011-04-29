@@ -44,7 +44,7 @@ TransferWidget::TransferWidget (Transfer* transfer, QWidget* parent, Qt::WindowF
         m_peerLabel->setText("Receiving from ");
         m_startStop->setIcon(QIcon(":/images/download.png"));
         QString peerName = PeerManager::instance()->nameFromIp(transfer->peerAddress());
-        QString message = "a";
+        QString message = transfer->itemNames().join(", ");
         NotificationData data = { peerName + " sent" , message, QIcon(":/images/download.png"), parent };
         Notifications::instance()->notify(data);
     } else if (transfer->type() == Transfer::Outgoing) {
