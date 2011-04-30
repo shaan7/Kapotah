@@ -109,7 +109,7 @@ void IncomingTransfer::reportProgress (quint64 done, quint64 size)
 
 void IncomingTransfer::timerEvent (QTimerEvent* event)
 {
-    m_speed = (m_doneTillLastProgressReport - m_doneSinceLastSpeedEstimate) / 1024;   //KiB
+    m_speed = (m_doneTillLastProgressReport - m_doneSinceLastSpeedEstimate);
     m_doneSinceLastSpeedEstimate = m_doneTillLastProgressReport;
 }
 

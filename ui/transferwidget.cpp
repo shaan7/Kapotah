@@ -22,6 +22,8 @@
 #include <incomingtransfer.h>
 #include <outgoingtransfer.h>
 #include <peermanager.h>
+#include "notifications/notifications.h"
+#include <kapotah_global.h>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -29,7 +31,7 @@
 #include <QProgressBar>
 #include <QToolButton>
 #include <QFileDialog>
-#include "notifications/notifications.h"
+
 
 using namespace Kapotah;
 
@@ -112,8 +114,8 @@ void TransferWidget::transferNeedsDestinationDir()
 void TransferWidget::updateProgress (quint64 done, quint64 total, quint32 speed)
 {
     m_progress->setValue(done*100/total);
-    m_progressLabel->setText(QString("%1 MiB of %2 MiB done at %3 MiB/s").arg(done/1024/1024)
-                                .arg(total/1024/1024).arg(speed/1024));
+    m_progressLabel->setText(QString("%1B of %2B done at %3B/s").arg(Kapotah::humanReadableNumber(done))
+                                .arg(Kapotah::humanReadableNumber(total)).arg(Kapotah::humanReadableNumber(speed)));
 }
 
 #include "transferwidget.moc"

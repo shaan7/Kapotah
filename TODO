@@ -1,6 +1,4 @@
-BUG:
+TODO:
 1. Let the incoming transfer thread verify file size from the server.
 2. Make attach button funtional
-3. Notification for fileTransfer
 4. Cancel button for transferDialog
-7. Make a funtion to calculate non-zero speed

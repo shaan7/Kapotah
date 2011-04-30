@@ -44,7 +44,7 @@ namespace Kapotah
             quint64 m_doneSinceLastSpeedEstimate;
             quint64 m_doneTillLastProgressReport;
             quint64 m_prevTime;
-            quint32 m_speed;
+            quint64 m_speed;
 
         protected slots:
             void startNextFile();
