@@ -34,7 +34,7 @@ ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent,
 {
     ui.setupUi(this);
     m_peerIp=PeerManager::instance()->ipFromIndex(ipAddress);
-    setWindowTitle(PeerManager::instance()->nameFromIp(m_peerIp));
+    setWindowTitle(PeerManager::instance()->nameFromIp(m_peerIp) + " (" + m_peerIp.toString() + ")");
     connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)), this,
              SLOT(displayRecievedMessage(QString, QHostAddress)));
     connect (Announcer::instance(), SIGNAL(peerTyping(QHostAddress)), this, SLOT(displayPeerStatus(QHostAddress)));
