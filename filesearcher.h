@@ -73,7 +73,7 @@ private slots:
     void directoryLoaded (const QString& path);
 
 signals:
-    void initDone();
+    void initDone(const QString &path);
 
 public slots:
     void addSearch (const QString& pattern, const QHostAddress& host);

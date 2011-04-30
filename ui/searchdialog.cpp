@@ -24,8 +24,9 @@
 #include "transfermanager.h"
 #include "transfer.h"
 #include "peermanager.h"
-#include <QFileDialog>
 #include <incomingtransfer.h>
+#include <ui/notifications/notifications.h>
+#include <QFileDialog>
 
 using namespace Kapotah;
 
@@ -41,6 +42,7 @@ SearchDialog::SearchDialog(QWidget* parent, Qt::WindowFlags f) : QDialog (parent
     connect (TransferManager::instance(), SIGNAL (newTransferAdded (Transfer*)),
              SLOT (addTransfer (Transfer*)));
     connect(ui.downloadButton, SIGNAL(clicked()), SLOT(startTransfer()));
+    connect(Kapotah::FileSearcher::instance(), SIGNAL(initDone(QString)), SLOT(notifyIndexingComplete(QString)));
 }
 
 void SearchDialog::search()
@@ -73,6 +75,16 @@ void SearchDialog::startTransfer()
     Transfer *transfer = m_transfers.at(ui.resultsList->selectionModel()->currentIndex().row());
     transfer->setIsSearchResponse(false);
     emit TransferManager::instance()->emitNewTransferAdded(transfer);
+}
+
+void SearchDialog::notifyIndexingComplete(const QString &path)
+{
+    NotificationData data;
+    data.handler = 0;
+    data.icon = ui.settingsButton->icon();
+    data.title = "Indexing complete";
+    data.message = "For " + path;
+    Notifications::instance()->notify(data);
 }
 
 #include "searchdialog.moc"

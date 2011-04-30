@@ -103,7 +103,7 @@ void FileSearcher::directoryLoaded (const QString& path)
         qDebug() << "Done Loading " << m_searchPath;
         m_isProcessing = false;
         doScheduling();
-        emit initDone();
+        emit initDone(m_searchPath);
     }
 }
 

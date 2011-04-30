@@ -47,6 +47,7 @@ class SearchDialog : public QDialog
         void setSharedDir();
         void addTransfer(Transfer *transfer);
         void startTransfer();
+        void notifyIndexingComplete(const QString& path);
 };
 
 #endif // SEARCHDIALOG_H
