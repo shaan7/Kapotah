@@ -17,38 +17,30 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SEARCHDIALOG_H
-#define SEARCHDIALOG_H
+#ifndef KAPOTAH_GLOBAL_H
+#define KAPOTAH_GLOBAL_H
 
-#include "ui_searchdialog.h"
+#include "announcer.h"
 
-#include <QDialog>
+#include <QStringList>
 
-namespace Kapotah
-{
-    class Transfer;
+namespace Kapotah{
+    inline QString humanReadableNumber(quint64 num) {
+        QStringList suffixes;
+        suffixes << "" << "Ki" << "Mi" << "Gi" << "Ti";
+        int current=0;
+
+        while (num > 1024) {
+            num /= 1024;
+            current++;
+        }
+
+        if (current >= suffixes.count()) {
+            qDebug() << "WARNING: Too Much Speed";
+        }
+
+        return (QString::number(num) + " " + suffixes.at(current));
+    }
 }
 
-using namespace Kapotah;
-
-class SearchDialog : public QDialog
-{
-        Q_OBJECT
-
-    public:
-        explicit SearchDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
-
-    private:
-        Ui::SearchDialog ui;
-        QList<Kapotah::Transfer*> m_transfers;
-
-    private slots:
-        void search();
-        void setSharedDir();
-        void addTransfer(Transfer *transfer);
-        void startTransfer();
-        void notifyIndexingComplete(const QString& path);
-};
-
-#endif // SEARCHDIALOG_H
-
+#endif  //KAPOTAH_GLOBAL_H
