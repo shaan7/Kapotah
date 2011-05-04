@@ -55,9 +55,9 @@
         </widget>
        </item>
        <item>
-        <widget class="QToolButton" name="attachmentButton">
+        <widget class="QToolButton" name="sendFileButton">
          <property name="text">
-          <string>&amp;Attach</string>
+          <string>Send &amp;File</string>
          </property>
          <property name="icon">
           <iconset resource="../systray.qrc">

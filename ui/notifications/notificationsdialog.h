@@ -38,8 +38,6 @@ protected:
     virtual void timerEvent (QTimerEvent* event);
     virtual void enterEvent (QEvent* event);
     virtual void leaveEvent (QEvent* event);
-    virtual void showEvent (QShowEvent* event);
-    virtual void hideEvent (QHideEvent* event);
 
 private:
     Ui::NotificationsDialog ui;
@@ -49,6 +47,7 @@ private:
 public slots:
     void removeNotification(int index);
     void clearNotificationsAndClose();
+    void closeNotificationDialog(int index);
 };
 
 #endif // NOTIFICATIONSDIALOG_H
