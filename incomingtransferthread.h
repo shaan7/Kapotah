@@ -22,6 +22,7 @@
 
 #include "transferthread.h"
 #include <QHostAddress>
+#include <QMutex>
 
 class IncomingTransferThread : public TransferThread
 {
@@ -43,6 +44,7 @@ class IncomingTransferThread : public TransferThread
         QString m_id;
         QString m_filename;
         quint64 m_size;
+        QMutex m_mutex;
 };
 
 #endif // INCOMINGTRANSFERTHREAD_H

@@ -22,6 +22,7 @@
 
 #include "transferthread.h"
 #include "transfer.h"
+#include <QMutex>
 
 class OutgoingTransferThread : public TransferThread
 {
@@ -48,6 +49,7 @@ class OutgoingTransferThread : public TransferThread
         quint64 m_totalDirCount;
         QString m_parentId;
         bool m_isSearchResponse;
+        QMutex m_mutex;
 
         void addFilesInDir (QString path);
         void addFileToList (QString fullPath, QString relativePath);

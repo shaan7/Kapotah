@@ -38,7 +38,9 @@ OutgoingTransferThread::OutgoingTransferThread (QHostAddress ip, QList< Kapotah:
 
 OutgoingTransferThread::~OutgoingTransferThread()
 {
-    stopTransfer();
+    m_mutex.lock();
+    doQuit = true;
+    m_mutex.unlock();
     wait();
 }
 
@@ -48,9 +50,13 @@ void OutgoingTransferThread::run()
 
     TransferXmlData data;
     foreach (Kapotah::TransferFile file, m_initialList) {
+        m_mutex.lock();
         if (doQuit) {
+            m_mutex.unlock();
             break;
         }
+        m_mutex.unlock();
+
         QFileInfo info (file.path);
         data.items.append(info.fileName());
 
@@ -63,6 +69,13 @@ void OutgoingTransferThread::run()
             addFileToList(file.path, info.fileName());
         }
     }
+
+    m_mutex.lock();
+    if (doQuit) {
+        deleteLater();
+    }
+    m_mutex.unlock();
+
     emit donePreparingList();
 
     emit startSendingList();

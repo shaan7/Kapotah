@@ -22,6 +22,7 @@
 
 #include <QThread>
 #include <QStringList>
+#include <QMutex>
 #include "announcer.h"
 #include "peer.h"
 
@@ -40,6 +41,7 @@ class FileSearcherThread : public QThread
 public:
     explicit FileSearcherThread ( QFileSystemModel &model, const QString &pattern, const QHostAddress &host,
                                   Kapotah::FileSearcher &fileSearcher, QObject* parent = 0);
+    virtual ~FileSearcherThread();
 protected:
     virtual void run();
 
@@ -49,6 +51,7 @@ private:
     QHostAddress m_host;
     Kapotah::FileSearcher &m_fileSearcher;
     QStringList m_matches;
+    QMutex m_mutex;
 
     void traverseModelIndex(QModelIndex index);
 };

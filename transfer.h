@@ -45,6 +45,7 @@ namespace Kapotah
                                QHostAddress peer, bool isSearchReponse = false, QObject* parent = 0);
             virtual ~Transfer();
             virtual void start() = 0;
+            virtual void stop() = 0;
             virtual TransferType type() = 0;
             QHostAddress peerAddress();
             bool isSearchResponse() const;
@@ -73,6 +74,7 @@ namespace Kapotah
         signals:
             void progress (quint64 done, quint64 total, quint32 speed);
             void done();
+            void canceled();
     };
 
 }

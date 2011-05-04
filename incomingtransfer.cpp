@@ -38,7 +38,6 @@ IncomingTransfer::IncomingTransfer (QList< TransferFile > files, quint64 totalSi
     m_speed = 0;
     startTimer(1000);
     m_id = id;
-    qDebug() << "HAHAHA" << files.length() << totalSize << numFiles << numDirs << peer << id << parent;
 }
 
 IncomingTransfer::~IncomingTransfer()
@@ -111,6 +110,15 @@ void IncomingTransfer::timerEvent (QTimerEvent* event)
 {
     m_speed = (m_doneTillLastProgressReport - m_doneSinceLastSpeedEstimate);
     m_doneSinceLastSpeedEstimate = m_doneTillLastProgressReport;
+}
+
+void IncomingTransfer::stop()
+{
+    reportProgress(-m_sizeDone-1, m_totalSize);         //Send negative progress
+    delete m_thread;
+    qDebug() << "killed thread";
+    emit canceled();
+    deleteLater();
 }
 
 #include "incomingtransfer.moc"

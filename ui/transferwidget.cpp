@@ -36,10 +36,11 @@
 using namespace Kapotah;
 
 TransferWidget::TransferWidget (Transfer* transfer, QWidget* parent, Qt::WindowFlags f)
-    : QWidget (parent, f), m_transfer(transfer)
+    : QWidget (parent, f), m_peerLabel(new QLabel(this)), m_progress(new QProgressBar(this)), m_startStop(new QToolButton(this)),
+    m_progressLabel(new QLabel("Waiting for transfer to begin")), m_verticalLayout(new QVBoxLayout()),
+    m_horizontalLayout(new QHBoxLayout()), m_transfer(transfer), m_incomingTransfer(0), m_outgoingTransfer(0),
+    m_transferStarted(false)
 {
-    m_peerLabel = new QLabel(this);
-    m_startStop = new QToolButton(this);
     if (transfer->type() == Transfer::Incoming) {
         m_incomingTransfer = qobject_cast<IncomingTransfer*>(transfer);
         connect(m_incomingTransfer, SIGNAL(needDestinationDir()), SLOT(transferNeedsDestinationDir()));
@@ -57,11 +58,7 @@ TransferWidget::TransferWidget (Transfer* transfer, QWidget* parent, Qt::WindowF
 
     m_peerLabel->setText(m_peerLabel->text().append(
         PeerManager::instance()->peersModel()->peerNameForIp(transfer->peerAddress())));
-    m_progress = new QProgressBar(this);
-    m_progressLabel = new QLabel("Waiting for transfer to begin");
 
-    m_horizontalLayout = new QHBoxLayout();
-    m_verticalLayout = new QVBoxLayout();
     m_horizontalLayout->addWidget(m_peerLabel);
     m_horizontalLayout->addWidget(m_startStop);
 
@@ -92,7 +89,12 @@ TransferWidget::~TransferWidget()
 
 void TransferWidget::startTransfer()
 {
-    m_transfer->start();
+    if (m_transferStarted) {
+        m_transfer->stop();
+        deleteLater();
+    } else {
+        m_transfer->start();
+    }
 }
 
 void TransferWidget::transferFinished()
@@ -103,10 +105,15 @@ void TransferWidget::transferFinished()
 
 void TransferWidget::transferNeedsDestinationDir()
 {
+    #ifdef KAPOTAH_DEBUG
+    QString dirname = "/tmp/";
+    #else
     QString dirname = QFileDialog::getExistingDirectory(this, "Select a dir");
+    #endif
     if (dirname.isEmpty())
         return;
-    m_startStop->hide();
+    m_transferStarted = true;
+    m_startStop->setIcon(QIcon(":/images/dialog-close.png"));
     m_incomingTransfer->setDestinationDir(dirname);
     m_transfer->start();
 }

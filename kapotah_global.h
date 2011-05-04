@@ -37,6 +37,7 @@ namespace Kapotah{
 
         if (current >= suffixes.count()) {
             qDebug() << "WARNING: Too Much Speed";
+            return "X";
         }
 
         return (QString::number(num) + " " + suffixes.at(current));

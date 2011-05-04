@@ -67,4 +67,10 @@ void FileSearcherThread::traverseModelIndex (QModelIndex index)
     }
 }
 
+FileSearcherThread::~FileSearcherThread()
+{
+
+}
+
+
 #include "filesearcherthread.moc"

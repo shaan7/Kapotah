@@ -35,6 +35,7 @@ namespace Kapotah
                                        QObject* parent = 0);
             virtual ~OutgoingTransfer();
             virtual void start();
+            virtual void stop();
             virtual TransferType type();
 
         private:

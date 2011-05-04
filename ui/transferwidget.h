@@ -57,6 +57,7 @@ class TransferWidget : public QWidget
         Kapotah::Transfer *m_transfer;
         Kapotah::IncomingTransfer *m_incomingTransfer;
         Kapotah::OutgoingTransfer *m_outgoingTransfer;
+        bool m_transferStarted;
 
     private slots:
         void startTransfer();

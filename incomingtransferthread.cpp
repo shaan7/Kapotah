@@ -31,12 +31,15 @@ IncomingTransferThread::IncomingTransferThread (QHostAddress ip, QString id, QSt
 
 IncomingTransferThread::~IncomingTransferThread()
 {
-
+    m_mutex.lock();
+    doQuit = true;
+    m_mutex.unlock();
+    wait();
 }
 
 void IncomingTransferThread::stopTransfer()
 {
-    doQuit = true;
+    deleteLater();
 }
 
 void IncomingTransferThread::run()
@@ -62,7 +65,14 @@ void IncomingTransferThread::run()
     socket.write (m_id.toUtf8()); //ID
     socket.waitForBytesWritten();
 
-    while (!doQuit) {
+    while (1) {
+        m_mutex.lock();
+        if (doQuit) {
+            m_mutex.unlock();
+            break;
+        }
+        m_mutex.unlock();
+
         while (socket.bytesAvailable() == 0) {
             socket.waitForReadyRead();
         }
@@ -107,7 +117,10 @@ void IncomingTransferThread::run()
         }
     }
 
-    deleteLater();
+    m_mutex.lock();
+    if (!doQuit)
+        deleteLater();
+    m_mutex.unlock();
 }
 
 #include "incomingtransferthread.moc"

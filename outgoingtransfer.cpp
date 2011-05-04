@@ -34,7 +34,6 @@ OutgoingTransfer::OutgoingTransfer (QList< TransferFile > files, QHostAddress pe
             SLOT(processProgress(QHostAddress,QString,quint64,quint64,quint64)));
 }
 
-
 OutgoingTransfer::~OutgoingTransfer()
 {
 
@@ -70,8 +69,22 @@ void OutgoingTransfer::processProgress(const QHostAddress& peer, QString id, qui
                                        quint64 total, quint64 speed)
 {
     if (peer == m_peerAddress && id == m_id) {
-        emit progress(bytesDone, total, speed);
+        if (bytesDone < 0) {
+            qDebug() << "OUCH " << bytesDone;
+            stop();
+        } else {
+            emit progress(bytesDone, total, speed);
+        }
     }
+}
+
+void OutgoingTransfer::stop()
+{
+    m_state = Stopped;
+    delete m_thread;
+    qDebug() << "QUIT ";
+    emit canceled();
+    deleteLater();
 }
 
 #include "outgoingtransfer.moc"
