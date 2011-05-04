@@ -21,6 +21,7 @@
 
 #include "ui_notificationitemwidget.h"
 #include "notifications.h"
+#include "notificationsdialog.h"
 
 NotificationItemWidget::NotificationItemWidget (const NotificationData notificationData,
                                                 QWidget* parent, Qt::WindowFlags f) : QWidget (parent, f),
@@ -31,6 +32,7 @@ NotificationItemWidget::NotificationItemWidget (const NotificationData notificat
 
     if (m_data.handler) {
         connect(ui.notificationMessage, SIGNAL(clicked()), m_data.handler, SLOT(notificationActivated()));
+        connect(ui.notificationMessage, SIGNAL(clicked()), this, SLOT(closeNotification()));
     }
 }
 
@@ -55,3 +57,10 @@ void NotificationItemWidget::updateItem()
     ui.notificationMessage->setText(m_data.message);
     ui.notificationMessage->setIcon(m_data.icon);
 }
+
+void NotificationItemWidget::closeNotification()
+{
+    deleteLater();
+}
+
+#include "notificationitemwidget.moc"

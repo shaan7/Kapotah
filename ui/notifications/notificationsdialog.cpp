@@ -109,14 +109,4 @@ void NotificationsDialog::clearNotificationsAndClose()
     hide();
 }
 
-void NotificationsDialog::hideEvent (QHideEvent* event)
-{
-
-}
-
-void NotificationsDialog::showEvent (QShowEvent* event)
-{
-    
-}
-
 #include "notificationsdialog.moc"

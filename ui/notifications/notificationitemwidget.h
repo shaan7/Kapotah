@@ -31,7 +31,7 @@ namespace Ui {
 
 class NotificationItemWidget : public QWidget
 {
-
+    Q_OBJECT
 public:
     explicit NotificationItemWidget (const NotificationData notificationData, QWidget* parent = 0,
                                      Qt::WindowFlags f = 0);
@@ -44,6 +44,9 @@ private:
     NotificationData m_data;
 
     void updateItem();
+    
+private slots:
+    void closeNotification();
 };
 
 #endif // NOTIFICATIONITEMWIDGET_H

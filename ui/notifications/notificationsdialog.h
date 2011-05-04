@@ -38,8 +38,6 @@ protected:
     virtual void timerEvent (QTimerEvent* event);
     virtual void enterEvent (QEvent* event);
     virtual void leaveEvent (QEvent* event);
-    virtual void showEvent (QShowEvent* event);
-    virtual void hideEvent (QHideEvent* event);
 
 private:
     Ui::NotificationsDialog ui;
