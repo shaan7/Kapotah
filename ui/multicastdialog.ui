@@ -33,12 +33,12 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QToolButton" name="attachButton">
+        <widget class="QToolButton" name="sendFileButton">
          <property name="enabled">
           <bool>true</bool>
          </property>
          <property name="text">
-          <string>&amp;Attach</string>
+          <string>Send &amp;File</string>
          </property>
          <property name="icon">
           <iconset resource="../systray.qrc">

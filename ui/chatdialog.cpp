@@ -26,6 +26,7 @@
 #include <xml/transferxmlparser.h>
 #include "notifications/notifications.h"
 #include <QUrl>
+#include <QFileDialog>
 
 using namespace Kapotah;
 
@@ -41,13 +42,14 @@ ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent,
     connect (ui.sendMessage, SIGNAL(pressed()), this, SLOT(sendNewMessage()));
     connect (ui.sendMessage, SIGNAL(pressed()), this, SLOT(displaySendingMessage()));
     connect (ui.sendMessage, SIGNAL(pressed()), ui.messageEdit, SLOT(clear()));
-    connect(PeerManager::instance(), SIGNAL(peerAdded(QHostAddress)), SLOT(userBackOnline(QHostAddress)));
-    connect(PeerManager::instance(), SIGNAL(peerRemoved(QHostAddress)), SLOT(userOffline(QHostAddress)));
+    connect (PeerManager::instance(), SIGNAL(peerAdded(QHostAddress)), SLOT(userBackOnline(QHostAddress)));
+    connect (PeerManager::instance(), SIGNAL(peerRemoved(QHostAddress)), SLOT(userOffline(QHostAddress)));
+    connect (ui.sendFileButton, SIGNAL(clicked()), SLOT(sendFileNeedsSourceDir()));
 
     ui.messageEdit->setFocus();
     ui.messageEdit->installEventFilter (this);
     ui.sendMessage->setToolTip("Send Message");
-    ui.attachmentButton->setToolTip("Add File/Folder");
+    ui.sendFileButton->setToolTip("Send file. To send multiple file, use Drag & Drop");
 
     setAcceptDrops (true);
 }
@@ -141,15 +143,16 @@ void ChatDialog::dropEvent (QDropEvent* event)
 
     if (mimeData->hasUrls()) {
         QList<TransferFile> files;
-        foreach (QUrl url, mimeData->urls()) {
-            TransferFile file;
-            file.path = url.toLocalFile();
-            files.append (file);
-        }
-
-        Transfer *transfer = TransferManager::instance()->addTransfer (Transfer::Outgoing, files, m_peerIp, false);
-        transfer->start();
-    }
+         foreach (QUrl url, mimeData->urls()) {
+             TransferFile file;
+             file.path = url.toLocalFile();
+             files.append (file);
+             ui.messageDisplay->appendHtml ("<b>Sent the file</b> " + file.path);
+         }
+ 
+         Transfer *transfer = TransferManager::instance()->addTransfer (Transfer::Outgoing, files, m_peerIp, false);
+         transfer->start();
+     }
 }
 
 void ChatDialog::notificationActivated()
@@ -161,7 +164,7 @@ void ChatDialog::notificationActivated()
 void ChatDialog::userBackOnline(const QHostAddress& address)
 {
     if (address == m_peerIp) {
-        ui.messageDisplay->appendPlainText(address.toString() + " is back online");
+        ui.messageDisplay->appendHtml(address.toString() + " <b><font color=\"green\">is back online</font></b>");
         ui.sendMessage->setEnabled(true);
     }
 }
@@ -169,7 +172,7 @@ void ChatDialog::userBackOnline(const QHostAddress& address)
 void ChatDialog::userOffline(const QHostAddress& address)
 {
     if (address == m_peerIp) {
-        ui.messageDisplay->appendPlainText(address.toString() + " is now offline");
+        ui.messageDisplay->appendHtml(address.toString() + " <b><font color=\"red\">is now offline</font></b>");
         ui.sendMessage->setEnabled(false);
     }
 }
@@ -178,6 +181,22 @@ void ChatDialog::closeEvent(QCloseEvent* event)
 {
     hide();
     event->ignore();
+}
+
+void ChatDialog::sendFileNeedsSourceDir()
+{
+    QStringList filenames = QFileDialog::getOpenFileNames(this, "Select file(s)", QDir::homePath());
+    QList<TransferFile> fileList;
+
+    foreach (QString path, filenames) {
+        TransferFile file;
+        file.path = path;
+        fileList.append (file);
+        ui.messageDisplay->appendHtml ("<b>Sent the file</b> " + file.path);
+    }
+         
+    Transfer *transfer = TransferManager::instance()->addTransfer (Transfer::Outgoing, fileList, m_peerIp, false);
+    transfer->start();
 }
 
 #include "chatdialog.moc"

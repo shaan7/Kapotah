@@ -50,6 +50,7 @@ class ChatDialog : public QDialog
         void clearStatus();
         void userOffline(const QHostAddress &address);
         void userBackOnline(const QHostAddress &address);
+        void sendFileNeedsSourceDir();
 
     public slots:
         void notificationActivated();
@@ -63,8 +64,6 @@ class ChatDialog : public QDialog
         virtual void closeEvent (QCloseEvent* event);
 
         friend class PeerDialog;
-        
-    signals:
         
 };
 
