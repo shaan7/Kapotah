@@ -13,5 +13,7 @@
         <file>images/edit-clear.png</file>
         <file>images/dialog-close.png</file>
         <file>images/preferences-desktop-notification.png</file>
+        <file>images/list-add.png</file>
+        <file>images/list-remove.png</file>
     </qresource>
 </RCC>

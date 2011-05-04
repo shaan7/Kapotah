@@ -58,10 +58,10 @@ class PeerDialog : public QDialog
         QAction *restoreAction;
         QAction *quitAction;
         QTimer *m_timer;
+        bool m_isGreyScale;
 
     protected:
         void closeEvent(QCloseEvent *event);
-        bool m_isGreyScale;
 
     private slots:
         void setPeerNameFromUi();
@@ -70,7 +70,6 @@ class PeerDialog : public QDialog
         ChatDialog* createChatDialog (QModelIndex index);
         void showChatDialogOnUserRequest(QModelIndex index);
         void showChatDialogOnIncomingMessage (QString message, QHostAddress peerAddress);
-        //MultiCastDialog* createMulticastDialogOnMessage ();
         MulticastDialog* createMulticastDialog();
         SearchDialog* showSearchDialog();
         void showTransferDialog (bool checked);
@@ -80,6 +79,9 @@ class PeerDialog : public QDialog
         void updateSystrayTooltip(QModelIndex parent, int start, int end);
         void changeSysTrayIcon();
         void notifySysTray(QString str, QHostAddress addr);
+        void initSubnets();
+        void askUserForNewAdditionalSubnet();
+        void removeSelectedAdditionalSubnet();
 };
 
 #endif // PEERDIALOG_H

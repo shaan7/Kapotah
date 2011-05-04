@@ -51,6 +51,7 @@ namespace Kapotah
             void peerStatus(QHostAddress address);
             void searchPeersForFile(const QString &pattern);
             void addAdditionalBroadcastAddress(const QHostAddress &broadcastAddress);
+            void removeAdditionalBroadcastAddress(const QHostAddress &broadcastAddress);
 
         signals:
             void gotAnnounce (const Peer &peer);

@@ -35,7 +35,8 @@
 
 using namespace Kapotah;
 
-PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(new TransferDialog(this)), m_timer(0)
+PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(new TransferDialog(this))
+    , m_openMulticastDialog(0), m_openSearchDialog(0), m_timer(0), m_isGreyScale(false)
 {
     QSystemTrayIcon::isSystemTrayAvailable();
     ui.setupUi(this);
@@ -65,8 +66,10 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(ne
     connect (trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, 
              SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
     connect (ui.nameEdit, SIGNAL(returnPressed()), SLOT(setPeerNameFromUi()));
-    connect (ui.notificationsButton, SIGNAL(clicked(bool)),
+    connect (ui.notificationsButton, SIGNAL(clicked()),
              Notifications::instance(), SLOT(toggleNotificationsDialog()));
+    connect (ui.addSubnetButton, SIGNAL(clicked(bool)), SLOT(askUserForNewAdditionalSubnet()));
+    connect (ui.removeSubnetButton, SIGNAL(clicked(bool)), SLOT(removeSelectedAdditionalSubnet()));
     trayIcon->show();
 }
 
@@ -250,6 +253,31 @@ PeerDialog::~PeerDialog()
 void PeerDialog::setPeerNameFromUi()
 {
     Kapotah::Announcer::instance()->setUserName(ui.nameEdit->text());
+}
+
+void PeerDialog::initSubnets()
+{
+    
+}
+
+void PeerDialog::askUserForNewAdditionalSubnet()
+{
+    QString newSubnet = QInputDialog::getText(this, "Enter new subnet", "Enter new subnet");
+    if (newSubnet.isEmpty())
+        return;
+
+    ui.subnetsListWidget->addItem(newSubnet);
+    Kapotah::Announcer::instance()->addAdditionalBroadcastAddress(QHostAddress(newSubnet));
+}
+
+void PeerDialog::removeSelectedAdditionalSubnet()
+{
+    if (ui.subnetsListWidget->count() <= 0)
+        return;
+
+    QListWidgetItem *item = ui.subnetsListWidget->takeItem(ui.subnetsListWidget->currentRow());
+    Kapotah::Announcer::instance()->removeAdditionalBroadcastAddress(QHostAddress(item->text()));
+    delete item;
 }
 
 #include "peerdialog.moc"

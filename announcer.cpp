@@ -132,4 +132,9 @@ void Announcer::addAdditionalBroadcastAddress(const QHostAddress& broadcastAddre
     Kapotah::UdpManager::instance()->addBroadcastAddress(broadcastAddress);
 }
 
+void Announcer::removeAdditionalBroadcastAddress(const QHostAddress& broadcastAddress)
+{
+    Kapotah::UdpManager::instance()->addBroadcastAddress(broadcastAddress);
+}
+
 #include "announcer.moc"

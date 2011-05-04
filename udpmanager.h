@@ -57,6 +57,7 @@ namespace Kapotah
             void sendBroadcast (const QByteArray &datagram);
             void sendDatagram (const QByteArray &datagram, const QHostAddress &host);
             void addBroadcastAddress (const QHostAddress &broadcastAddress);
+            void removeBroadcastAddress (const QHostAddress &broadcastAddress);
 
         signals:
             void gotDatagram (const QByteArray &datagram, const QHostAddress &host, quint16 port);

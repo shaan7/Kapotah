@@ -116,4 +116,9 @@ void UdpManager::addBroadcastAddress(const QHostAddress& broadcastAddress)
     m_additionalBroadcastAddresses << broadcastAddress;
 }
 
+void UdpManager::removeBroadcastAddress(const QHostAddress& broadcastAddress)
+{
+    m_additionalBroadcastAddresses.removeAll(broadcastAddress);
+}
+
 #include "udpmanager.moc"
