@@ -45,6 +45,7 @@ namespace Kapotah
 
         private:
             QList<QHostAddress> m_broadcastAddresses;
+            QList<QHostAddress> m_additionalBroadcastAddresses;
             QList<QHostAddress> m_ipAddresses;
             QUdpSocket m_broadcastSocket;
             int m_timerId;
@@ -55,6 +56,7 @@ namespace Kapotah
         public slots:
             void sendBroadcast (const QByteArray &datagram);
             void sendDatagram (const QByteArray &datagram, const QHostAddress &host);
+            void addBroadcastAddress (const QHostAddress &broadcastAddress);
 
         signals:
             void gotDatagram (const QByteArray &datagram, const QHostAddress &host, quint16 port);

@@ -127,4 +127,9 @@ void Announcer::searchPeersForFile (const QString& pattern)
     Kapotah::UdpManager::instance()->sendBroadcast(parser.composeXml(&data).toUtf8());
 }
 
+void Announcer::addAdditionalBroadcastAddress(const QHostAddress& broadcastAddress)
+{
+    Kapotah::UdpManager::instance()->addBroadcastAddress(broadcastAddress);
+}
+
 #include "announcer.moc"

@@ -88,7 +88,7 @@ void UdpManager::readBroadcast()
 void UdpManager::sendBroadcast (const QByteArray& datagram)
 {
     bool validBroadcastAddresses = true;
-    foreach (QHostAddress address, m_broadcastAddresses) {
+    foreach (QHostAddress address, m_broadcastAddresses + m_additionalBroadcastAddresses) {
         if (m_broadcastSocket.writeDatagram (datagram, address,
                                              s_broadcastPort) == -1)
             validBroadcastAddresses = false;
@@ -109,6 +109,11 @@ bool UdpManager::isLocalHostIp (const QHostAddress& ip)
     if (m_ipAddresses.contains(ip))
         return true;
     return false;
+}
+
+void UdpManager::addBroadcastAddress(const QHostAddress& broadcastAddress)
+{
+    m_additionalBroadcastAddresses << broadcastAddress;
 }
 
 #include "udpmanager.moc"

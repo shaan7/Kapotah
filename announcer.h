@@ -50,6 +50,7 @@ namespace Kapotah
             void processDatagram (const QByteArray &datagram, const QHostAddress &host, quint16 port);
             void peerStatus(QHostAddress address);
             void searchPeersForFile(const QString &pattern);
+            void addAdditionalBroadcastAddress(const QHostAddress &broadcastAddress);
 
         signals:
             void gotAnnounce (const Peer &peer);
