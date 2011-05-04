@@ -35,6 +35,7 @@ NotificationsDialog::NotificationsDialog (QWidget* parent, Qt::WindowFlags f)
     m_timerId = startTimer(s_tabSwitchDelay);
     connect(ui.tabWidget, SIGNAL(tabCloseRequested(int)), SLOT(removeNotification(int)));
     connect(ui.clearButton, SIGNAL(clicked()), SLOT(clearNotificationsAndClose()));
+    connect(ui.tabWidget, SIGNAL(currentChanged(int)), SLOT(closeNotificationDialog(int)));
 }
 
 void NotificationsDialog::notify (NotificationData data)
@@ -107,6 +108,13 @@ void NotificationsDialog::clearNotificationsAndClose()
     }
     m_notificationItems.clear();
     hide();
+}
+
+void NotificationsDialog::closeNotificationDialog (int index)
+{
+    if(index == -1) {
+        hide();
+    }
 }
 
 #include "notificationsdialog.moc"

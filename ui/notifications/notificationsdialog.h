@@ -47,6 +47,7 @@ private:
 public slots:
     void removeNotification(int index);
     void clearNotificationsAndClose();
+    void closeNotificationDialog(int index);
 };
 
 #endif // NOTIFICATIONSDIALOG_H
