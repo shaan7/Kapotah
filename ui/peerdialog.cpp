@@ -37,8 +37,8 @@
 using namespace Kapotah;
 
 PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(new TransferDialog(this)),
-    m_openMulticastDialog(new MulticastDialog(this)), m_openSearchDialog(new SearchDialog(this)),
-    m_openAboutDialog(0), m_timer(0), m_isGreyScale(false)
+    m_MulticastDialog(new MulticastDialog(this)), m_SearchDialog(new SearchDialog(this)),
+    m_AboutDialog(0), m_timer(0), m_isGreyScale(false)
 {
     QSystemTrayIcon::isSystemTrayAvailable();
     ui.setupUi(this);
@@ -61,7 +61,7 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(ne
     connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)),
              SLOT(showChatDialogOnIncomingMessage(QString,QHostAddress)));
     connect (ui.multicastButton, SIGNAL(clicked()), this, SLOT(createMulticastDialog()));
-    connect (ui.transferButton, SIGNAL(clicked(bool)), SLOT(showTransferDialog(bool)));
+    connect (ui.transferButton, SIGNAL(clicked()), SLOT(showTransferDialog()));
     connect (ui.searchButton, SIGNAL(clicked()), SLOT(showSearchDialog()));
     connect (trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, 
              SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
@@ -114,17 +114,17 @@ void PeerDialog::showChatDialogOnUserRequest (QModelIndex index)
     createChatDialog(index)->show();
 }
 
-MulticastDialog* PeerDialog::createMulticastDialog()    //FIXME: Rename to show, no return value needed
+void PeerDialog::createMulticastDialog()    
 {
-    m_openMulticastDialog->show();      //FIXME: Stupid varname
+    m_MulticastDialog->show();      
 }
 
-SearchDialog* PeerDialog::showSearchDialog()    //FIXME: no return value needed
+void PeerDialog::showSearchDialog()    
 {
-    m_openSearchDialog->show();         //FIXME: Stupid varname
+    m_SearchDialog->show();         
 }
 
-void PeerDialog::showTransferDialog (bool checked)      //FIXME: bool checked not necessary
+void PeerDialog::showTransferDialog ()
 {
     m_transferDialog->show();
 }
@@ -164,11 +164,10 @@ void PeerDialog::removeSelectedAdditionalSubnet()
     delete item;
 }
 
-AboutDialog* PeerDialog::showAboutDialog()
+void PeerDialog::showAboutDialog()
 {
-    AboutDialog *aboutDlg = new AboutDialog(this);
+    AboutDialog *aboutDlg = new AboutDialog;
     aboutDlg->show();
-    return aboutDlg;
 }
 
 /*--------------------------------------------

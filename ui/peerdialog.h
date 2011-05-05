@@ -46,9 +46,9 @@ class PeerDialog : public QDialog
         Ui::PeersDialog ui;
         QHash<QString, ChatDialog*> m_openChatDialogs;
         TransferDialog *m_transferDialog;
-        MulticastDialog *m_openMulticastDialog;
-        SearchDialog *m_openSearchDialog;
-        AboutDialog *m_openAboutDialog;
+        MulticastDialog *m_MulticastDialog;
+        SearchDialog *m_SearchDialog;
+        AboutDialog *m_AboutDialog;
 
         void createTrayIcon();
         void createActions();
@@ -70,9 +70,9 @@ class PeerDialog : public QDialog
         ChatDialog* createChatDialog (QModelIndex index);
         void showChatDialogOnUserRequest(QModelIndex index);
         void showChatDialogOnIncomingMessage (QString message, QHostAddress peerAddress);
-        MulticastDialog* createMulticastDialog();
-        SearchDialog* showSearchDialog();
-        void showTransferDialog (bool checked);
+        void createMulticastDialog();
+        void showSearchDialog();
+        void showTransferDialog();
         void iconActivated(QSystemTrayIcon::ActivationReason);
         void quitApplication();
         void updatePeer();
@@ -83,7 +83,7 @@ class PeerDialog : public QDialog
         void askUserForNewAdditionalSubnet();
         void removeSelectedAdditionalSubnet();
         void appendDebugMessage(const QString &sender, const QString &message);
-        AboutDialog* showAboutDialog();
+        void showAboutDialog();
 };
 
 #endif // PEERDIALOG_H
