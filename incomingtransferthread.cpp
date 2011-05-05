@@ -23,6 +23,8 @@
 #include <QTcpSocket>
 #include <QDir>
 
+static const int fileTransferPort = 45002;
+
 IncomingTransferThread::IncomingTransferThread (QHostAddress ip, QString id, QString filename, quint64 size,
         QObject* parent) : TransferThread (ip, parent), m_id (id), m_filename (filename), m_size (size)
 {
