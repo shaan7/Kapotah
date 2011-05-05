@@ -54,6 +54,9 @@ int main (int argc, char** argv)
 {
     qInstallMsgHandler(myMessageOutput);
     QApplication app (argc, argv);
+    QApplication::setOrganizationName("BMSCE");
+    QApplication::setOrganizationDomain("bmsce.in");
+    QApplication::setApplicationName("Kapotah");
 
     Kapotah::UdpManager::instance();   //Start the broadcast engine
     Kapotah::Announcer::instance()->setUserName(Kapotah::PeerEnvironment::getPeerName()); //Start the announcer

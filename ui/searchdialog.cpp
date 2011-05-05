@@ -27,15 +27,13 @@
 #include <incomingtransfer.h>
 #include <ui/notifications/notifications.h>
 #include <QFileDialog>
+#include <QSettings>
 
 using namespace Kapotah;
 
 SearchDialog::SearchDialog(QWidget* parent, Qt::WindowFlags f) : QDialog (parent, f)
 {
     ui.setupUi(this);
-    setWindowTitle("Search");
-    ui.searchButton->setToolTip("Search");
-    ui.downloadButton->setToolTip("Download");
 
     connect(ui.searchButton, SIGNAL(clicked()), SLOT(search()));
     connect(ui.settingsButton, SIGNAL(clicked()), SLOT(setSharedDir()));
@@ -43,6 +41,15 @@ SearchDialog::SearchDialog(QWidget* parent, Qt::WindowFlags f) : QDialog (parent
              SLOT (addTransfer (Transfer*)));
     connect(ui.downloadButton, SIGNAL(clicked()), SLOT(startTransfer()));
     connect(Kapotah::FileSearcher::instance(), SIGNAL(initDone(QString)), SLOT(notifyIndexingComplete(QString)));
+
+    QSettings settings;
+    Kapotah::FileSearcher::instance()->setSearchPath(settings.value("SearchPath").toString());
+}
+
+SearchDialog::~SearchDialog()
+{
+    QSettings settings;
+    settings.setValue("SearchPath", Kapotah::FileSearcher::instance()->searchPath());
 }
 
 void SearchDialog::search()

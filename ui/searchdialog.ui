@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Search</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -21,6 +21,9 @@
      </item>
      <item>
       <widget class="QToolButton" name="searchButton">
+       <property name="toolTip">
+        <string>Search</string>
+       </property>
        <property name="text">
         <string>&amp;Search</string>
        </property>
@@ -54,6 +57,9 @@
        <property name="enabled">
         <bool>true</bool>
        </property>
+       <property name="toolTip">
+        <string>Download matching items from selected host</string>
+       </property>
        <property name="text">
         <string>&amp;Download Item</string>
        </property>
@@ -80,6 +86,9 @@
      </item>
      <item>
       <widget class="QToolButton" name="settingsButton">
+       <property name="toolTip">
+        <string>Change your shared path</string>
+       </property>
        <property name="text">
         <string>S&amp;haring Settings</string>
        </property>

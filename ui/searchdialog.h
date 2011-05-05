@@ -37,6 +37,7 @@ class SearchDialog : public QDialog
 
     public:
         explicit SearchDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
+        virtual ~SearchDialog();
 
     private:
         Ui::SearchDialog ui;

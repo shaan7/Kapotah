@@ -16,5 +16,6 @@
         <file>images/list-add.png</file>
         <file>images/list-remove.png</file>
         <file>images/kde.png</file>
+        <file>images/peer.png</file>
     </qresource>
 </RCC>

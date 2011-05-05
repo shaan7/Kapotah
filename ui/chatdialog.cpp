@@ -48,8 +48,6 @@ ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent,
 
     ui.messageEdit->setFocus();
     ui.messageEdit->installEventFilter (this);
-    ui.sendMessage->setToolTip("Send Message");
-    ui.sendFileButton->setToolTip("Send file. To send multiple file, use Drag & Drop");
 
     setAcceptDrops (true);
 }

@@ -56,6 +56,9 @@
        </item>
        <item>
         <widget class="QToolButton" name="sendFileButton">
+         <property name="toolTip">
+          <string>Send file. To send multiple file, use Drag &amp; Drop</string>
+         </property>
          <property name="text">
           <string>Send &amp;File</string>
          </property>
@@ -84,6 +87,9 @@
            <width>32</width>
            <height>32</height>
           </size>
+         </property>
+         <property name="toolTip">
+          <string>Send</string>
          </property>
          <property name="text">
           <string>&amp;Send</string>

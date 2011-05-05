@@ -52,6 +52,8 @@ QString FileSearcher::searchPath() const
 
 void FileSearcher::setSearchPath (const QString& searchPath)
 {
+    if (searchPath.isEmpty())
+        return;
     m_searchPath = searchPath;
     initFileSystemModel();
 }

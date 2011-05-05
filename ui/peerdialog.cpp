@@ -36,21 +36,18 @@
 
 using namespace Kapotah;
 
-PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(new TransferDialog(this))
-    , m_openMulticastDialog(0), m_openSearchDialog(0), m_openAboutDialog(0), m_timer(0), m_isGreyScale(false)
+PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(new TransferDialog(this)),
+    m_openMulticastDialog(new MulticastDialog(this)), m_openSearchDialog(new SearchDialog(this)),
+    m_openAboutDialog(0), m_timer(0), m_isGreyScale(false)
 {
     QSystemTrayIcon::isSystemTrayAvailable();
     ui.setupUi(this);
-    setWindowTitle("Kapotah");
+    setWindowTitle(QApplication::applicationName());
     createActions();
     createTrayIcon();
     Notifications::instance();
-    ui.multicastButton->setToolTip("To multicast, select users and click on \"multicast\" button");
     ui.peersListView->setModel(PeerManager::instance()->peersModel());
     ui.nameEdit->setText(Kapotah::Announcer::instance()->username());
-    ui.refreshButton->setToolTip("Refresh Peers");
-    ui.transferButton->setToolTip("Transfer Log");
-    ui.searchButton->setToolTip("Search");
     ui.tabWidget->setCurrentIndex(0);
     connect (ui.refreshButton, SIGNAL(clicked()), this, SLOT(updatePeer()));
     connect (PeerManager::instance()->peersModel(), SIGNAL(rowsInserted(QModelIndex, int, int)), this,
@@ -75,6 +72,14 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(ne
     connect (ui.removeSubnetButton, SIGNAL(clicked(bool)), SLOT(removeSelectedAdditionalSubnet()));
     connect (Debug::instance(), SIGNAL(added(QString,QString)), SLOT(appendDebugMessage(QString,QString)));
     trayIcon->show();
+
+    //Load settings
+    QSettings settings;
+
+    QVariantList list = settings.value("SubnetsList").toList();
+    foreach (QVariant item, list) {
+        ui.subnetsListWidget->addItem(new QListWidgetItem(QIcon(":/images/peer.png"), item.toString()));
+    }
 }
 
 ChatDialog* PeerDialog::createChatDialog (QModelIndex index)
@@ -109,26 +114,19 @@ void PeerDialog::showChatDialogOnUserRequest (QModelIndex index)
     createChatDialog(index)->show();
 }
 
-MulticastDialog* PeerDialog::createMulticastDialog()
+MulticastDialog* PeerDialog::createMulticastDialog()    //FIXME: Rename to show, no return value needed
 {
-    PeersModel *model = PeerManager::instance()->peersModel();
-    MulticastDialog *multiDlg = new MulticastDialog(this);
-    multiDlg->show();
-    return multiDlg;
+    m_openMulticastDialog->show();      //FIXME: Stupid varname
 }
 
-SearchDialog* PeerDialog::showSearchDialog()
+SearchDialog* PeerDialog::showSearchDialog()    //FIXME: no return value needed
 {
-    SearchDialog *srchDlg = new SearchDialog(this);
-    srchDlg->show();
-    return srchDlg;
+    m_openSearchDialog->show();         //FIXME: Stupid varname
 }
 
-void PeerDialog::showTransferDialog (bool checked)
+void PeerDialog::showTransferDialog (bool checked)      //FIXME: bool checked not necessary
 {
-    if (m_transferDialog) {
-        m_transferDialog->show();
-    }
+    m_transferDialog->show();
 }
 
 void PeerDialog::updatePeer()
@@ -152,7 +150,7 @@ void PeerDialog::askUserForNewAdditionalSubnet()
     if (newSubnet.isEmpty())
         return;
 
-    ui.subnetsListWidget->addItem(newSubnet);
+    ui.subnetsListWidget->addItem(new QListWidgetItem(QIcon(":/images/peer.png"), newSubnet));
     Kapotah::Announcer::instance()->addAdditionalBroadcastAddress(QHostAddress(newSubnet));
 }
 
@@ -267,7 +265,14 @@ void PeerDialog::quitApplication()
 
 PeerDialog::~PeerDialog()
 {
+    //Save settings
+    QSettings settings;
 
+    QVariantList list;
+    foreach (QListWidgetItem *item, ui.subnetsListWidget->findItems("", Qt::MatchContains).toSet()) {
+        list << item->text();
+    }
+    settings.setValue("SubnetsList", list);
 }
 
 void PeerDialog::appendDebugMessage(const QString& sender, const QString& message)
