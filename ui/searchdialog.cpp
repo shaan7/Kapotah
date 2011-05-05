@@ -62,7 +62,7 @@ void SearchDialog::setSharedDir()
 
 void SearchDialog::addTransfer (Transfer* transfer)
 {
-    if (!transfer->isSearchResponse())
+    if ( (!transfer->isSearchResponse()) || (transfer->type() = Transfer::Outgoing) )
         return;
     ui.resultsList->addItem(PeerManager::instance()->peersModel()->peerNameForIp(transfer->peerAddress()));
     m_transfers.append(transfer);

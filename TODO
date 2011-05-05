@@ -3,3 +3,4 @@ TODO:
 2. Make attach button funtional
 4. Prevent deadlock when canceling localhost <-> localhost transfers.
 5. Chat input text box is too tall
+6. Save settings
