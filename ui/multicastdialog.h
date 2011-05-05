@@ -24,6 +24,11 @@
 
 #include <QDialog>
 
+namespace Kapotah
+{
+    struct TransferFile;
+}
+
 class MulticastDialog : public QDialog
 {
         Q_OBJECT
@@ -33,9 +38,11 @@ class MulticastDialog : public QDialog
         
     private:
         Ui::MulticastDialog ui;
+        void sendFiles(QList<Kapotah::TransferFile> fileList);
     
     private slots:
         void sendMessage();
+        void sendFileNeedsSourceDir();
     
     protected:
         bool eventFilter (QObject *obj, QEvent *event);

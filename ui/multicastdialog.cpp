@@ -22,6 +22,7 @@
 #include "transfermanager.h"
 #include "messagedispatcher.h"
 #include <xml/transferxmlparser.h>
+#include <QFileDialog>
 #include <QUrl>
 #include <QModelIndex>
 
@@ -33,6 +34,7 @@ MulticastDialog::MulticastDialog(QWidget* parent, Qt::WindowFlags f) : QDialog (
     setWindowTitle("Multicast");
     connect (ui.sendMessage, SIGNAL(pressed()), this, SLOT(sendMessage()));
     ui.peersList->setModel(PeerManager::instance()->peersModel());
+    connect(ui.sendFileButton, SIGNAL(clicked()), SLOT(sendFileNeedsSourceDir()));
 
     setAcceptDrops (true);
 }
@@ -91,14 +93,34 @@ void MulticastDialog::dropEvent (QDropEvent* event)
             files.append (file);
         }
 
-     foreach (QModelIndex index, ui.peersList->selectionModel()->selectedIndexes()) {
-        QHostAddress address (PeerManager::instance()->peersModel()->data (index, PeersModel::ipAddressRole).toString());
-        Transfer *transfer = TransferManager::instance()->addTransfer (Transfer::Outgoing, files, address, false);
+        sendFiles(files);
+    }
+
+    accept();
+}
+
+void MulticastDialog::sendFileNeedsSourceDir()
+{
+    QStringList filenames = QFileDialog::getOpenFileNames(this, "Select file(s)", QDir::homePath());
+    QList<TransferFile> fileList;
+
+    foreach (QString path, filenames) {
+        TransferFile file;
+        file.path = path;
+        fileList.append (file);
+    }
+
+    sendFiles(fileList);
+}
+
+void MulticastDialog::sendFiles (QList< TransferFile > fileList)
+{
+    foreach (QModelIndex index, ui.peersList->selectionModel()->selectedIndexes()) {
+        QHostAddress address = PeerManager::instance()->ipFromIndex(index);
+        Transfer *transfer = TransferManager::instance()->addTransfer (Transfer::Outgoing, fileList, address, false);
         qDebug()<<transfer;
         transfer->start();
-        }
-     }
-     accept();
+    }
 }
 
 
