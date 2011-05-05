@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>226</width>
+    <width>239</width>
     <height>480</height>
    </rect>
   </property>
@@ -19,8 +19,8 @@
   <property name="layoutDirection">
    <enum>Qt::LeftToRight</enum>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
-   <item>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
       <number>0</number>
@@ -29,8 +29,8 @@
       <attribute name="title">
        <string>People</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="0">
         <widget class="QListView" name="peersListView"/>
        </item>
       </layout>
@@ -150,9 +150,24 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tab_3">
+      <attribute name="title">
+       <string>About</string>
+      </attribute>
+      <widget class="QPlainTextEdit" name="aboutText">
+       <property name="geometry">
+        <rect>
+         <x>9</x>
+         <y>9</y>
+         <width>199</width>
+         <height>371</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
     </widget>
    </item>
-   <item>
+   <item row="1" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QToolButton" name="refreshButton">
