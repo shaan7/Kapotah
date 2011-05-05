@@ -54,7 +54,6 @@ ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent,
     setAcceptDrops (true);
 }
 
-
 void ChatDialog::displayRecievedMessage(QString message, QHostAddress peerAddress)
 {
     if (peerAddress == m_peerIp) {
