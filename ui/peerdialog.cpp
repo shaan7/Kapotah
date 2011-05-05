@@ -45,7 +45,6 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(ne
     createTrayIcon();
     Notifications::instance();
     ui.multicastButton->setToolTip("To multicast, select users and click on \"multicast\" button");
-    ui.aboutText->setPlainText("");
     ui.peersListView->setModel(PeerManager::instance()->peersModel());
     ui.nameEdit->setText(Kapotah::Announcer::instance()->username());
     ui.refreshButton->setToolTip("Refresh Peers");
