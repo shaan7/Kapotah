@@ -15,5 +15,6 @@
         <file>images/preferences-desktop-notification.png</file>
         <file>images/list-add.png</file>
         <file>images/list-remove.png</file>
+        <file>images/kde.png</file>
     </qresource>
 </RCC>

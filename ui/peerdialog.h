@@ -32,6 +32,7 @@ class ChatDialog;
 class SearchDialog;
 class MulticastDialog;
 class TransferDialog;
+class AboutDialog;
 
 class PeerDialog : public QDialog
 {
@@ -47,6 +48,7 @@ class PeerDialog : public QDialog
         TransferDialog *m_transferDialog;
         MulticastDialog *m_openMulticastDialog;
         SearchDialog *m_openSearchDialog;
+        AboutDialog *m_openAboutDialog;
 
         void createTrayIcon();
         void createActions();
@@ -65,8 +67,6 @@ class PeerDialog : public QDialog
 
     private slots:
         void setPeerNameFromUi();
-
-    private slots:
         ChatDialog* createChatDialog (QModelIndex index);
         void showChatDialogOnUserRequest(QModelIndex index);
         void showChatDialogOnIncomingMessage (QString message, QHostAddress peerAddress);
@@ -83,6 +83,7 @@ class PeerDialog : public QDialog
         void askUserForNewAdditionalSubnet();
         void removeSelectedAdditionalSubnet();
         void appendDebugMessage(const QString &sender, const QString &message);
+        AboutDialog* showAboutDialog();
 };
 
 #endif // PEERDIALOG_H

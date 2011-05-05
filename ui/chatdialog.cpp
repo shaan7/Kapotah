@@ -66,7 +66,7 @@ void ChatDialog::displayRecievedMessage(QString message, QHostAddress peerAddres
         }
 
         if(!message.isEmpty()){
-            ui.messageDisplay->appendPlainText(PeerManager::instance()->nameFromIp(peerAddress) + "::" + message);
+            ui.messageDisplay->appendHtml("<b>" + PeerManager::instance()->nameFromIp(peerAddress) + "</b>" + ":: " + message);
         }
     }
 }
@@ -89,7 +89,7 @@ void ChatDialog::clearStatus()
 void ChatDialog::displaySendingMessage()
 {
     if(!ui.messageEdit->toPlainText().isEmpty()){
-        ui.messageDisplay->appendPlainText ("Me:: " + ui.messageEdit->toPlainText());
+        ui.messageDisplay->appendHtml ("<b>Me::</b> " + ui.messageEdit->toPlainText());
     }
 }
 
@@ -194,7 +194,7 @@ void ChatDialog::sendFileNeedsSourceDir()
         fileList.append (file);
         ui.messageDisplay->appendHtml ("<b>Sent the file</b> " + file.path);
     }
-         
+
     Transfer *transfer = TransferManager::instance()->addTransfer (Transfer::Outgoing, fileList, m_peerIp, false);
     transfer->start();
 }

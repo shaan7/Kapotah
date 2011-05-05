@@ -28,6 +28,7 @@
 #include "transferdialog.h"
 #include "multicastdialog.h"
 #include "searchdialog.h"
+#include "aboutdialog.h"
 
 #include "debug.h"
 #include "filesearcher.h"
@@ -36,7 +37,7 @@
 using namespace Kapotah;
 
 PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(new TransferDialog(this))
-    , m_openMulticastDialog(0), m_openSearchDialog(0), m_timer(0), m_isGreyScale(false)
+    , m_openMulticastDialog(0), m_openSearchDialog(0), m_openAboutDialog(0), m_timer(0), m_isGreyScale(false)
 {
     QSystemTrayIcon::isSystemTrayAvailable();
     ui.setupUi(this);
@@ -56,6 +57,7 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(ne
     connect (PeerManager::instance()->peersModel(), SIGNAL(rowsRemoved(QModelIndex, int, int)), this,
              SLOT(updateSystrayTooltip(QModelIndex, int, int)));
     connect (ui.peersListView, SIGNAL(doubleClicked(QModelIndex)), SLOT(showChatDialogOnUserRequest(QModelIndex)));
+    connect (ui.aboutButton, SIGNAL(clicked()), SLOT(showAboutDialog()));
     connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString,QHostAddress)),
              SLOT(notifySysTray(QString, QHostAddress)));
     connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)),
@@ -161,6 +163,13 @@ void PeerDialog::removeSelectedAdditionalSubnet()
     QListWidgetItem *item = ui.subnetsListWidget->takeItem(ui.subnetsListWidget->currentRow());
     Kapotah::Announcer::instance()->removeAdditionalBroadcastAddress(QHostAddress(item->text()));
     delete item;
+}
+
+AboutDialog* PeerDialog::showAboutDialog()
+{
+    AboutDialog *aboutDlg = new AboutDialog(this);
+    aboutDlg->show();
+    return aboutDlg;
 }
 
 /*--------------------------------------------
