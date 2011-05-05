@@ -82,6 +82,7 @@ class PeerDialog : public QDialog
         void initSubnets();
         void askUserForNewAdditionalSubnet();
         void removeSelectedAdditionalSubnet();
+        void appendDebugMessage(const QString &sender, const QString &message);
 };
 
 #endif // PEERDIALOG_H

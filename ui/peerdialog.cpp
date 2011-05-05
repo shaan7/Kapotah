@@ -24,12 +24,12 @@
 #include "peersmodel.h"
 #include "announcer.h"
 #include "notifications/notifications.h"
-
 #include "chatdialog.h"
 #include "transferdialog.h"
 #include "multicastdialog.h"
 #include "searchdialog.h"
 
+#include "debug.h"
 #include "filesearcher.h"
 #include <QtGui>
 
@@ -45,7 +45,6 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(ne
     createTrayIcon();
     Notifications::instance();
     ui.multicastButton->setToolTip("To multicast, select users and click on \"multicast\" button");
-    ui.aboutText->setPlainText("");
     ui.peersListView->setModel(PeerManager::instance()->peersModel());
     ui.nameEdit->setText(Kapotah::Announcer::instance()->username());
     ui.refreshButton->setToolTip("Refresh Peers");
@@ -71,6 +70,7 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(ne
              Notifications::instance(), SLOT(toggleNotificationsDialog()));
     connect (ui.addSubnetButton, SIGNAL(clicked(bool)), SLOT(askUserForNewAdditionalSubnet()));
     connect (ui.removeSubnetButton, SIGNAL(clicked(bool)), SLOT(removeSelectedAdditionalSubnet()));
+    connect (Debug::instance(), SIGNAL(added(QString,QString)), SLOT(appendDebugMessage(QString,QString)));
     trayIcon->show();
 }
 
@@ -258,6 +258,11 @@ void PeerDialog::quitApplication()
 PeerDialog::~PeerDialog()
 {
 
+}
+
+void PeerDialog::appendDebugMessage(const QString& sender, const QString& message)
+{
+    ui.debugText->appendHtml("<b>"+sender+"</b><br />"+message+"<br />");
 }
 
 #include "peerdialog.moc"

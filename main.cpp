@@ -27,12 +27,32 @@
 #include <fileserversingleton.h>
 #include <peerenvironment.h>
 #include <filesearcher.h>
+#include <debug.h>
 
 static const int s_messageServerPort = 45001;
 static const int s_fileServerPort = 45002;
 
+void myMessageOutput(QtMsgType type, const char *msg)
+{
+    switch (type) {
+    case QtDebugMsg:
+        kaDebug(msg);
+        break;
+    case QtWarningMsg:
+        kaDebug(msg);
+        break;
+    case QtCriticalMsg:
+        kaDebug(msg);
+        break;
+    case QtFatalMsg:
+        kaDebug(msg);
+        abort();
+    }
+}
+ 
 int main (int argc, char** argv)
 {
+    qInstallMsgHandler(myMessageOutput);
     QApplication app (argc, argv);
 
     Kapotah::UdpManager::instance();   //Start the broadcast engine

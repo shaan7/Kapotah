@@ -19,6 +19,7 @@
 
 #include "peersmodel.h"
 #include "announcer.h"
+#include "debug.h"
 
 using namespace Kapotah;
 
@@ -80,7 +81,6 @@ void PeersModel::addNewPeer (Peer peer)
     m_peers[peer.ipAddress() ] = peer;
     m_ages[peer.ipAddress()] = 0;
     qDebug() << "Adding " << peer.name() << peer.ipAddress() << " at " << m_peerAddresses.indexOf(peer.ipAddress());
-
     endInsertRows();
 }
 
