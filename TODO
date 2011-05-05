@@ -2,3 +2,4 @@ TODO:
 1. Let the incoming transfer thread verify file size from the server.
 2. Make attach button funtional
 4. Prevent deadlock when canceling localhost <-> localhost transfers.
+5. Chat input text box is too tall
