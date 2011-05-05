@@ -29,6 +29,11 @@
 
 #include <QTimer>
 
+namespace Kapotah
+{
+    struct TransferFile;
+}
+
 class ChatDialog : public QDialog
 {
         Q_OBJECT
@@ -41,6 +46,7 @@ class ChatDialog : public QDialog
         Ui::ChatDialog ui;
         QHostAddress m_peerIp;
         QTimer m_isTypingTimer;
+        void sendFiles(QList<Kapotah::TransferFile> fileList);
 
     private slots:
         void displayRecievedMessage (QString message, QHostAddress peerAddress);

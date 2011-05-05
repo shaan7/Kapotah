@@ -147,8 +147,7 @@ void ChatDialog::dropEvent (QDropEvent* event)
              ui.messageDisplay->appendHtml ("<b>Sent the file</b> " + file.path);
          }
  
-         Transfer *transfer = TransferManager::instance()->addTransfer (Transfer::Outgoing, files, m_peerIp, false);
-         transfer->start();
+        sendFiles(files); 
      }
 }
 
@@ -192,6 +191,11 @@ void ChatDialog::sendFileNeedsSourceDir()
         ui.messageDisplay->appendHtml ("<b>Sent the file</b> " + file.path);
     }
 
+    sendFiles(fileList);
+}
+
+void ChatDialog::sendFiles(QList< TransferFile > fileList)
+{
     Transfer *transfer = TransferManager::instance()->addTransfer (Transfer::Outgoing, fileList, m_peerIp, false);
     transfer->start();
 }
