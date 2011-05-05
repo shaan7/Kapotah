@@ -24,7 +24,7 @@
 using namespace Kapotah;
 
 static const int agingInterval = 1000;          //milliseconds after which to age the peers
-static const int peerAnnounceTimeout = 4;    //seconds after which a peer can be assumed dead
+static const int peerAnnounceTimeout = 10;    //seconds after which a peer can be assumed dead
 
 QVariant PeersModel::data (const QModelIndex& index, int role) const
 {
