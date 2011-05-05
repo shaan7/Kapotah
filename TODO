@@ -1,4 +1,5 @@
 TODO:
 1. Let the incoming transfer thread verify file size from the server.
 2. Make attach button funtional
+3. Tell server that we canceled
 4. Prevent deadlock when canceling localhost <-> localhost transfers.

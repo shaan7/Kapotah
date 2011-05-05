@@ -12,6 +12,4 @@ mkdir build
 cd build
 cmake ..
 make
-./Kapotah UserName
-
-where UserName is the name you want to show on the network.
+./Kapotah

@@ -37,8 +37,8 @@
 using namespace Kapotah;
 
 PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(new TransferDialog(this)),
-    m_openMulticastDialog(new MulticastDialog(this)), m_openSearchDialog(new SearchDialog(this)),
-    m_openAboutDialog(0), m_timer(0), m_isGreyScale(false)
+    m_multicastDialog(new MulticastDialog(this)), m_searchDialog(new SearchDialog(this)),
+    m_aboutDialog(new AboutDialog(this)), m_timer(0), m_isGreyScale(false)
 {
     QSystemTrayIcon::isSystemTrayAvailable();
     ui.setupUi(this);
@@ -61,15 +61,15 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(ne
     connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)),
              SLOT(showChatDialogOnIncomingMessage(QString,QHostAddress)));
     connect (ui.multicastButton, SIGNAL(clicked()), this, SLOT(createMulticastDialog()));
-    connect (ui.transferButton, SIGNAL(clicked(bool)), SLOT(showTransferDialog(bool)));
+    connect (ui.transferButton, SIGNAL(clicked()), SLOT(showTransferDialog()));
     connect (ui.searchButton, SIGNAL(clicked()), SLOT(showSearchDialog()));
     connect (trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, 
              SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
     connect (ui.nameEdit, SIGNAL(returnPressed()), SLOT(setPeerNameFromUi()));
     connect (ui.notificationsButton, SIGNAL(clicked()),
              Notifications::instance(), SLOT(toggleNotificationsDialog()));
-    connect (ui.addSubnetButton, SIGNAL(clicked(bool)), SLOT(askUserForNewAdditionalSubnet()));
-    connect (ui.removeSubnetButton, SIGNAL(clicked(bool)), SLOT(removeSelectedAdditionalSubnet()));
+    connect (ui.addSubnetButton, SIGNAL(clicked()), SLOT(askUserForNewAdditionalSubnet()));
+    connect (ui.removeSubnetButton, SIGNAL(clicked()), SLOT(removeSelectedAdditionalSubnet()));
     connect (Debug::instance(), SIGNAL(added(QString,QString)), SLOT(appendDebugMessage(QString,QString)));
     trayIcon->show();
 
@@ -114,17 +114,17 @@ void PeerDialog::showChatDialogOnUserRequest (QModelIndex index)
     createChatDialog(index)->show();
 }
 
-MulticastDialog* PeerDialog::createMulticastDialog()    //FIXME: Rename to show, no return value needed
+void PeerDialog::showMulticastDialog()
 {
-    m_openMulticastDialog->show();      //FIXME: Stupid varname
+    m_multicastDialog->show();
 }
 
-SearchDialog* PeerDialog::showSearchDialog()    //FIXME: no return value needed
+void PeerDialog::showSearchDialog()
 {
-    m_openSearchDialog->show();         //FIXME: Stupid varname
+    m_searchDialog->show();
 }
 
-void PeerDialog::showTransferDialog (bool checked)      //FIXME: bool checked not necessary
+void PeerDialog::showTransferDialog ()
 {
     m_transferDialog->show();
 }
@@ -164,11 +164,9 @@ void PeerDialog::removeSelectedAdditionalSubnet()
     delete item;
 }
 
-AboutDialog* PeerDialog::showAboutDialog()
+void PeerDialog::showAboutDialog()
 {
-    AboutDialog *aboutDlg = new AboutDialog(this);
-    aboutDlg->show();
-    return aboutDlg;
+    m_aboutDialog->show();
 }
 
 /*--------------------------------------------
