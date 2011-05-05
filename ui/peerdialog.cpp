@@ -120,21 +120,6 @@ SearchDialog* PeerDialog::showSearchDialog()
     return srchDlg;
 }
 
-/*ChatDialog* PeerDialog::createMulticastDialogOnMessage(QString message, QHostAddress peerAddress)
-{
-    if (m_openMulticastDialog.contains(peerAddress.toString())) //Already created
-        return m_openChatDialogs[peerAddress.toString()];
-
-    PeersModel *model = PeerManager::instance()->peersModel();
-    QModelIndexList list = model->match(model->index(0), PeersModel::ipAddressRole, peerAddress.toString());
-
-    if (list.count() == 0) {
-        qDebug() << "NOOOO! someone sent message after being offline, huh?";
-    } else {
-        createMulticastDialog(list.at(0))->displayRecievedMessage(message, peerAddress);
-    }
-}*/
-
 void PeerDialog::showTransferDialog (bool checked)
 {
     if (m_transferDialog) {
@@ -142,15 +127,39 @@ void PeerDialog::showTransferDialog (bool checked)
     }
 }
 
-/*void PeerDialog::removeKeyFromHash()  //NOT NEEDED NOW
-{
-    ChatDialog* dlg = qobject_cast<ChatDialog*> (sender());
-    m_openChatDialogs.remove(m_openChatDialogs.key(dlg));
-}*/
-
 void PeerDialog::updatePeer()
 {
     UdpManager::instance()->updateAddresses();
+}
+
+void PeerDialog::setPeerNameFromUi()
+{
+    Kapotah::Announcer::instance()->setUserName(ui.nameEdit->text());
+}
+
+void PeerDialog::initSubnets()
+{
+    
+}
+
+void PeerDialog::askUserForNewAdditionalSubnet()
+{
+    QString newSubnet = QInputDialog::getText(this, "Enter new subnet", "Enter new subnet");
+    if (newSubnet.isEmpty())
+        return;
+
+    ui.subnetsListWidget->addItem(newSubnet);
+    Kapotah::Announcer::instance()->addAdditionalBroadcastAddress(QHostAddress(newSubnet));
+}
+
+void PeerDialog::removeSelectedAdditionalSubnet()
+{
+    if (ui.subnetsListWidget->count() <= 0)
+        return;
+
+    QListWidgetItem *item = ui.subnetsListWidget->takeItem(ui.subnetsListWidget->currentRow());
+    Kapotah::Announcer::instance()->removeAdditionalBroadcastAddress(QHostAddress(item->text()));
+    delete item;
 }
 
 /*--------------------------------------------
@@ -248,36 +257,6 @@ void PeerDialog::quitApplication()
 PeerDialog::~PeerDialog()
 {
 
-}
-
-void PeerDialog::setPeerNameFromUi()
-{
-    Kapotah::Announcer::instance()->setUserName(ui.nameEdit->text());
-}
-
-void PeerDialog::initSubnets()
-{
-    
-}
-
-void PeerDialog::askUserForNewAdditionalSubnet()
-{
-    QString newSubnet = QInputDialog::getText(this, "Enter new subnet", "Enter new subnet");
-    if (newSubnet.isEmpty())
-        return;
-
-    ui.subnetsListWidget->addItem(newSubnet);
-    Kapotah::Announcer::instance()->addAdditionalBroadcastAddress(QHostAddress(newSubnet));
-}
-
-void PeerDialog::removeSelectedAdditionalSubnet()
-{
-    if (ui.subnetsListWidget->count() <= 0)
-        return;
-
-    QListWidgetItem *item = ui.subnetsListWidget->takeItem(ui.subnetsListWidget->currentRow());
-    Kapotah::Announcer::instance()->removeAdditionalBroadcastAddress(QHostAddress(item->text()));
-    delete item;
 }
 
 #include "peerdialog.moc"
