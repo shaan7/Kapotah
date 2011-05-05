@@ -105,11 +105,7 @@ void TransferWidget::transferFinished()
 
 void TransferWidget::transferNeedsDestinationDir()
 {
-    #ifdef KAPOTAH_DEBUG
-    QString dirname = "/tmp/";
-    #else
     QString dirname = QFileDialog::getExistingDirectory(this, "Select a dir");
-    #endif
     if (dirname.isEmpty())
         return;
     m_transferStarted = true;
