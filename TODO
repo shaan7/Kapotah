@@ -1,4 +1,6 @@
 TODO:
 1. Let the incoming transfer thread verify file size from the server.
-2. Make attach button funtional
+2. Make attach button funtional in multicast dialog
+3. Tell server that we canceled
 4. Prevent deadlock when canceling localhost <-> localhost transfers.
+5. Make it possible to transfer empty dirs

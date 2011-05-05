@@ -70,9 +70,15 @@ class PeerDialog : public QDialog
         ChatDialog* createChatDialog (QModelIndex index);
         void showChatDialogOnUserRequest(QModelIndex index);
         void showChatDialogOnIncomingMessage (QString message, QHostAddress peerAddress);
+<<<<<<< HEAD
+        void createMulticastDialog();
+        void showSearchDialog();
+        void showTransferDialog();
+=======
         void showMulticastDialog();
         void showSearchDialog();
         void showTransferDialog ();
+>>>>>>> 03dc7dcacfd86b454ce190aaa8590f85865d501e
         void iconActivated(QSystemTrayIcon::ActivationReason);
         void quitApplication();
         void updatePeer();
