@@ -11,10 +11,12 @@ set (kapotah_RCCS systray.qrc)
 qt4_add_resources(kapotah_RCC_SRCS ${kapotah_RCCS})
 
 set(Kapotah_SRCS
+    ui/aboutdialog.cpp
+    debug.cpp
     ui/notifications/notificationsdialog.cpp
     ui/notifications/notificationitemwidget.cpp
     ui/notifications/notifications.cpp
-    ui/transferdialog.ui
+    ui/transferdialog.cpp
     filesearcherthread.cpp
     filesearcher.cpp
     xml/searchxmlparser.cpp
@@ -54,6 +56,7 @@ set(Kapotah_SRCS
 )
 
 SET(Kapotah_FORMS
+    ui/aboutdialog.ui
     ui/peerdialog.ui
     ui/chatdialog.ui
     ui/multicastdialog.ui
