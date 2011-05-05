@@ -12,7 +12,7 @@ qt4_add_resources(kapotah_RCC_SRCS ${kapotah_RCCS})
 
 set(Kapotah_SRCS
     ui/aboutdialog.cpp
-    debug.cpp
+#    debug.cpp
     ui/notifications/notificationsdialog.cpp
     ui/notifications/notificationitemwidget.cpp
     ui/notifications/notifications.cpp
