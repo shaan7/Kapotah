@@ -51,6 +51,7 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(ne
     ui.refreshButton->setToolTip("Refresh Peers");
     ui.transferButton->setToolTip("Transfer Log");
     ui.searchButton->setToolTip("Search");
+    ui.tabWidget->setCurrentIndex(0);
     connect (ui.refreshButton, SIGNAL(clicked()), this, SLOT(updatePeer()));
     connect (PeerManager::instance()->peersModel(), SIGNAL(rowsInserted(QModelIndex, int, int)), this,
              SLOT(updateSystrayTooltip(QModelIndex, int, int)));
