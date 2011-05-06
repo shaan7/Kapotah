@@ -36,7 +36,7 @@ FileServerThread::~FileServerThread()
     wait();
 }
 
-void FileServerThread::run()
+void FileServerThread::run()    //TODO: use mutexes
 {
     QString filename;
     QString ID;
@@ -45,26 +45,33 @@ void FileServerThread::run()
     socket.setSocketDescriptor (m_descriptor);
 
     while (!m_doQuit) {
-        while (socket.bytesAvailable() == 0) {
+        m_status = Waiting;
+        while (!socket.bytesAvailable() && !m_doQuit) {
             socket.waitForReadyRead();
         }
+        if (m_doQuit)
+            break;
 
         QString data (socket.readAll());
 
         if (!Kapotah::TransferManager::instance()->pathForId (data).isEmpty()) {
+            m_status = PreparingToSend;
             ID = data;
             filename = Kapotah::TransferManager::instance()->pathForId (data);
 
             file.setFileName (filename);
 
-            if (!file.open (QIODevice::ReadOnly))
-                break;  //TODO: too quiet, let the system know the error
+            if (!file.open (QIODevice::ReadOnly)) {
+                m_status = ErrorFileNotFound;
+                break;
+            }
 
             socket.write ("OK");
             socket.waitForBytesWritten();
             emit startedTransfer (ID);
+            m_status = Sending;
 
-            while (!file.atEnd()) {
+            while (!file.atEnd() && !m_doQuit) {
                 if (socket.state() != QTcpSocket::ConnectedState) {
                     emit finishedTransfer (ID);
                     break;
@@ -81,14 +88,28 @@ void FileServerThread::run()
 
             file.close();
 
-            socket.waitForDisconnected (-1);
-            emit finishedTransfer (ID);
-            break;
-        } else
-            break;      //TODO: too quiet, let the system know the error
-    }
+            if (m_doQuit) {
+                emit canceledTransfer(ID);
+                socket.disconnectFromHost();
+            } else {
+                emit finishedTransfer (ID);
+            }
 
-    //deleteLater();    //FIXME: what to do?
+            socket.waitForDisconnected ();
+            break;
+        } else {
+            m_status = ErrorIDNotFound;
+            emit transferNotFound(ID);
+            break;
+        }
+
+        deleteLater();
+    }
+}
+
+FileServerThread::Status FileServerThread::status() const
+{
+    return m_status;
 }
 
 #include "fileserverthread.moc"

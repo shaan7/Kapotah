@@ -29,9 +29,12 @@ class IncomingTransferThread : public TransferThread
         Q_OBJECT
 
     public:
+        enum Status { Connecting, Requesting, Canceled, PreparingToReceive, ErrorCreatingFile, 
+                        ErrorTransferNotFound, Receiving };
         explicit IncomingTransferThread (QHostAddress ip, QString id, QString filename,
                                          quint64 size, QObject* parent = 0);
         virtual ~IncomingTransferThread();
+        Status status();
 
     protected:
         virtual void run();
@@ -45,6 +48,9 @@ class IncomingTransferThread : public TransferThread
         QString m_filename;
         quint64 m_size;
         QMutex m_mutex;
+        Status m_status;
+
+        void setStatus(Status status);
 };
 
 #endif // INCOMINGTRANSFERTHREAD_H

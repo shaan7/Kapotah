@@ -29,6 +29,7 @@ class OutgoingTransferThread : public TransferThread
         Q_OBJECT
 
     public:
+        enum Status { Waiting };
         explicit OutgoingTransferThread (QHostAddress ip, QList<Kapotah::TransferFile> files, QString parentId,
                                          bool isSearchResponse, QObject* parent = 0);
         virtual ~OutgoingTransferThread();

@@ -20,8 +20,7 @@
 #ifndef FILESERVERTHREAD_H
 #define FILESERVERTHREAD_H
 
-#include <qthread.h>
-
+#include <QThread>
 
 class FileServerThread : public QThread
 {
@@ -31,17 +30,22 @@ class FileServerThread : public QThread
         virtual void run();
 
     public:
+        enum Status { Waiting, PreparingToSend, ErrorFileNotFound, ErrorIDNotFound, Sending };
         explicit FileServerThread (int socketDescriptor, QObject* parent = 0);
         virtual ~FileServerThread();
+        Status status() const;
 
     private:
         int m_descriptor;
         bool m_doQuit;
+        Status m_status;
 
     signals:
         void startedTransfer (QString ID);
         void finishedTransfer (QString ID);
         void transferProgress (QString ID, quint64 percentDone);
+        void canceledTransfer (QString ID);
+        void transferNotFound (QString ID);
 };
 
 #endif // FILESERVERTHREAD_H

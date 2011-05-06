@@ -23,7 +23,7 @@
 #include <QTcpSocket>
 #include <QDir>
 
-static const int fileTransferPort = 45002;
+static const int s_fileTransferPort = 45002;
 
 IncomingTransferThread::IncomingTransferThread (QHostAddress ip, QString id, QString filename, quint64 size,
         QObject* parent) : TransferThread (ip, parent), m_id (id), m_filename (filename), m_size (size)
@@ -51,6 +51,7 @@ void IncomingTransferThread::run()
 
     QFile file;
 
+    //TODO: set enums in special case of size == 0
     if (m_size == 0) {  //Create an empty file
         file.setFileName (m_filename);
         file.open (QIODevice::WriteOnly);
@@ -61,9 +62,11 @@ void IncomingTransferThread::run()
 
     QTcpSocket socket;
 
-    socket.connectToHost (m_ip, 45002);  //FIXME: hardcoded port
+    setStatus(Connecting);
+    socket.connectToHost (m_ip, s_fileTransferPort);
     socket.waitForConnected();
 
+    setStatus(Requesting);
     socket.write (m_id.toUtf8()); //ID
     socket.waitForBytesWritten();
 
@@ -75,8 +78,12 @@ void IncomingTransferThread::run()
         }
         m_mutex.unlock();
 
-        while (socket.bytesAvailable() == 0) {
+        while (!socket.bytesAvailable() && !doQuit) {
             socket.waitForReadyRead();
+        }
+        if (doQuit) {
+            setStatus(Canceled);
+            break;
         }
 
         if (readyToReceive) {
@@ -99,7 +106,7 @@ void IncomingTransferThread::run()
             QString data (socket.read (2));
 
             if (data == "OK") {
-                readyToReceive = true;
+                setStatus(PreparingToReceive);
 
                 QDir dir(m_filename);   //filename is a/b/c/d/blah.txt
                 if (!dir.exists()) {
@@ -109,20 +116,39 @@ void IncomingTransferThread::run()
                 file.setFileName (m_filename);
 
                 if (!file.open (QIODevice::WriteOnly)) {
+                    setStatus(ErrorCreatingFile);
                     qDebug() << "Could not open file " << file.fileName();
                     break;
                 }
+
+                readyToReceive = true;
+                setStatus(Receiving);
             } else {
+                setStatus(ErrorTransferNotFound);
                 qDebug() << m_id << " not found on server: " << data;
                 break;
             }
         }
     }
 
+    deleteLater();
+}
+
+void IncomingTransferThread::setStatus(IncomingTransferThread::Status status)
+{
     m_mutex.lock();
-    if (!doQuit)
-        deleteLater();
+    m_status = status;
     m_mutex.unlock();
+}
+
+IncomingTransferThread::Status IncomingTransferThread::status()
+{
+    Status status;
+    m_mutex.lock();
+    status = m_status;
+    m_mutex.unlock();
+
+    return status;
 }
 
 #include "incomingtransferthread.moc"
