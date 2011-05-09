@@ -56,8 +56,6 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(ne
              SLOT(updateSystrayTooltip(QModelIndex, int, int)));
     connect (ui.peersListView, SIGNAL(doubleClicked(QModelIndex)), SLOT(showChatDialogOnUserRequest(QModelIndex)));
     connect (ui.aboutButton, SIGNAL(clicked()), SLOT(showAboutDialog()));
-    connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString,QHostAddress)),
-             SLOT(notifySysTray(QString, QHostAddress)));
     connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)),
              SLOT(showChatDialogOnIncomingMessage(QString,QHostAddress)));
     connect (ui.multicastButton, SIGNAL(clicked()), this, SLOT(showMulticastDialog()));
@@ -169,6 +167,11 @@ void PeerDialog::showAboutDialog()
     m_aboutDialog->show();
 }
 
+void PeerDialog::appendDebugMessage(const QString& sender, const QString& message)
+{
+    ui.debugText->appendHtml("<b>"+sender+"</b><br />"+message+"<br />");
+}
+
 /*--------------------------------------------
  * 
  * code for system tray icon starts here
@@ -222,27 +225,6 @@ void PeerDialog::iconActivated(QSystemTrayIcon::ActivationReason reason)
     }
 }
 
-void PeerDialog::notifySysTray(QString str, QHostAddress peerAddress)
-{
-    if(!m_timer){
-        m_timer = new QTimer(this);
-        connect(m_timer, SIGNAL(timeout()), this, SLOT(changeSysTrayIcon()));
-        m_timer->start(500);
-    }
-}
-
-void PeerDialog::changeSysTrayIcon()
-{
-    if (!m_isGreyScale) {
-        trayIcon->setIcon(QIcon(":/images/systrayicon-greyscale.png"));
-        m_isGreyScale = true;
-    }
-    else {
-        trayIcon->setIcon(QIcon(":/images/systrayicon.png"));
-        m_isGreyScale = false;
-    }
-}
-
 void PeerDialog::closeEvent(QCloseEvent* event)
 {
     QDialog::closeEvent(event);
@@ -273,9 +255,5 @@ PeerDialog::~PeerDialog()
     settings.setValue("SubnetsList", list);
 }
 
-void PeerDialog::appendDebugMessage(const QString& sender, const QString& message)
-{
-    ui.debugText->appendHtml("<b>"+sender+"</b><br />"+message+"<br />");
-}
 
 #include "peerdialog.moc"

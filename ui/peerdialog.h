@@ -77,8 +77,6 @@ class PeerDialog : public QDialog
         void quitApplication();
         void updatePeer();
         void updateSystrayTooltip(QModelIndex parent, int start, int end);
-        void changeSysTrayIcon();
-        void notifySysTray(QString str, QHostAddress addr);
         void initSubnets();
         void askUserForNewAdditionalSubnet();
         void removeSelectedAdditionalSubnet();
