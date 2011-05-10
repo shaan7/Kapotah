@@ -16,7 +16,6 @@ set(Kapotah_SRCS
     ui/notifications/notificationsdialog.cpp
     ui/notifications/notificationitemwidget.cpp
     ui/notifications/notifications.cpp
-    ui/transferdialog.cpp
     filesearcherthread.cpp
     filesearcher.cpp
     xml/searchxmlparser.cpp
