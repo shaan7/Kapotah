@@ -160,7 +160,7 @@ void ChatDialog::notificationActivated()
 void ChatDialog::userBackOnline(const QHostAddress& address)
 {
     if (address == m_peerIp) {
-        ui.messageDisplay->appendHtml(address.toString() + " <b><font color=\"green\">is back online</font></b>");
+        ui.messageDisplay->appendHtml("<b>"+PeerManager::instance()->nameFromIp(address) + " <font color=\"green\">is back online</font></b>");
         ui.sendMessage->setEnabled(true);
     }
 }
@@ -168,7 +168,7 @@ void ChatDialog::userBackOnline(const QHostAddress& address)
 void ChatDialog::userOffline(const QHostAddress& address)
 {
     if (address == m_peerIp) {
-        ui.messageDisplay->appendHtml(address.toString() + " <b><font color=\"red\">is now offline</font></b>");
+        ui.messageDisplay->appendHtml("<b>" +PeerManager::instance()->nameFromIp(address) + " <font color=\"red\">is now offline</font></b>");
         ui.sendMessage->setEnabled(false);
     }
 }

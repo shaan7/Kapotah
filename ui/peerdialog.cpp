@@ -49,16 +49,13 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(ne
     ui.nameEdit->setText(Kapotah::Announcer::instance()->username());
     ui.tabWidget->setCurrentIndex(0);
     connect (ui.refreshButton, SIGNAL(clicked()), this, SLOT(updatePeer()));
-
     connect (ui.peersListView, SIGNAL(doubleClicked(QModelIndex)), SLOT(showChatDialogOnUserRequest(QModelIndex)));
     connect (ui.aboutButton, SIGNAL(clicked()), SLOT(showAboutDialog()));
-
     connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)),
              SLOT(showChatDialogOnIncomingMessage(QString,QHostAddress)));
     connect (ui.multicastButton, SIGNAL(clicked()), this, SLOT(showMulticastDialog()));
     connect (ui.transferButton, SIGNAL(clicked()), SLOT(showTransferDialog()));
     connect (ui.searchButton, SIGNAL(clicked()), SLOT(showSearchDialog()));
-
     connect (ui.nameEdit, SIGNAL(returnPressed()), SLOT(setPeerNameFromUi()));
     connect (ui.notificationsButton, SIGNAL(clicked()),
              Notifications::instance(), SLOT(toggleNotificationsDialog()));
@@ -226,31 +223,6 @@ void PeerDialog::iconActivated(QSystemTrayIcon::ActivationReason reason)
         break;
     default:
         ;
-    }
-}
-
-void PeerDialog::notifySysTray(QString str, QHostAddress peerAddress)
-{
-    if (!m_trayIcon)
-        return;
-    if(!m_timer){
-        m_timer = new QTimer(this);
-        connect(m_timer, SIGNAL(timeout()), this, SLOT(changeSysTrayIcon()));
-        m_timer->start(500);
-    }
-}
-
-void PeerDialog::changeSysTrayIcon()
-{
-    if (!m_trayIcon)
-        return;
-    if (!m_isGreyScale) {
-        m_trayIcon->setIcon(QIcon(":/images/systrayicon-greyscale.png"));
-        m_isGreyScale = true;
-    }
-    else {
-        m_trayIcon->setIcon(QIcon(":/images/systrayicon.png"));
-        m_isGreyScale = false;
     }
 }
 
