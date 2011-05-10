@@ -29,10 +29,11 @@ class OutgoingTransferThread : public TransferThread
         Q_OBJECT
 
     public:
-        enum Status { Waiting };
+        enum Status { PreparingList, SendingList, SentList };
         explicit OutgoingTransferThread (QHostAddress ip, QList<Kapotah::TransferFile> files, QString parentId,
                                          bool isSearchResponse, QObject* parent = 0);
         virtual ~OutgoingTransferThread();
+        Status status();
 
     protected:
         virtual void run();
@@ -51,9 +52,11 @@ class OutgoingTransferThread : public TransferThread
         QString m_parentId;
         bool m_isSearchResponse;
         QMutex m_mutex;
+        Status m_status;
 
         void addFilesInDir (QString path);
         void addFileToList (QString fullPath, QString relativePath);
+        void setStatus(Status status);
 
     signals:
         void startPreparingList();

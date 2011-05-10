@@ -46,6 +46,7 @@ OutgoingTransferThread::~OutgoingTransferThread()
 
 void OutgoingTransferThread::run()
 {
+    setStatus(PreparingList);
     emit startPreparingList();
 
     TransferXmlData data;
@@ -77,7 +78,7 @@ void OutgoingTransferThread::run()
     m_mutex.unlock();
 
     emit donePreparingList();
-
+    setStatus(SendingList);
     emit startSendingList();
     TransferXmlParser parser;
     data.type = AbstractXmlData::Transfer;
@@ -89,6 +90,7 @@ void OutgoingTransferThread::run()
     data.id = m_parentId;
     MessageSenderThread *thread = new MessageSenderThread (parser.composeXml(&data), m_ip);
     thread->start();
+    setStatus(SentList);
     emit doneSendingList();
 }
 
@@ -137,6 +139,23 @@ void OutgoingTransferThread::addFileToList (QString fullPath, QString relativePa
     /*qDebug() << "Adding " << fullPath;
     qDebug() << QString("Total %1 bytes %2 MiB from %3 files and %4 directories")
                     .arg(m_totalSize).arg(m_totalSize/1024/1024).arg(m_totalFileCount).arg(m_totalDirCount);*/
+}
+
+void OutgoingTransferThread::setStatus(OutgoingTransferThread::Status status)
+{
+    m_mutex.lock();
+    m_status = status;
+    m_mutex.unlock();
+}
+
+OutgoingTransferThread::Status OutgoingTransferThread::status()
+{
+    Status status;
+    m_mutex.lock();
+    status = m_status;
+    m_mutex.unlock();
+
+    return status;
 }
 
 #include "outgoingtransferthread.moc"

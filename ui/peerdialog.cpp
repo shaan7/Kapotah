@@ -67,7 +67,7 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(ne
 
     QVariantList list = settings.value("SubnetsList").toList();
     foreach (QVariant item, list) {
-        ui.subnetsListWidget->addItem(new QListWidgetItem(QIcon(":/images/peer.png"), item.toString()));
+        addBroadcastAddress(item.toString());
     }
     QString username = settings.value("username").toString();
     if (!username.isEmpty()) {
@@ -139,8 +139,15 @@ void PeerDialog::askUserForNewAdditionalSubnet()
     if (newSubnet.isEmpty())
         return;
 
-    ui.subnetsListWidget->addItem(new QListWidgetItem(QIcon(":/images/peer.png"), newSubnet));
-    Kapotah::Announcer::instance()->addAdditionalBroadcastAddress(QHostAddress(newSubnet));
+    addBroadcastAddress(newSubnet);
+}
+
+void PeerDialog::addBroadcastAddress(const QString& address)
+{
+    if (ui.subnetsListWidget->findItems(address, Qt::MatchExactly).count())
+        return;
+    ui.subnetsListWidget->addItem(new QListWidgetItem(QIcon(":/images/peer.png"), address));
+    Kapotah::Announcer::instance()->addAdditionalBroadcastAddress(QHostAddress(address));
 }
 
 void PeerDialog::removeSelectedAdditionalSubnet()

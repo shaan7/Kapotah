@@ -81,6 +81,7 @@ class PeerDialog : public QDialog
         void removeSelectedAdditionalSubnet();
         void appendDebugMessage(const QString &sender, const QString &message);
         void showAboutDialog();
+        void addBroadcastAddress(const QString &address);
 };
 
 #endif // PEERDIALOG_H

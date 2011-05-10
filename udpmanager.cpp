@@ -113,6 +113,8 @@ bool UdpManager::isLocalHostIp (const QHostAddress& ip)
 
 void UdpManager::addBroadcastAddress(const QHostAddress& broadcastAddress)
 {
+    if (m_additionalBroadcastAddresses.contains(broadcastAddress))
+        return;
     m_additionalBroadcastAddresses << broadcastAddress;
 }
 
