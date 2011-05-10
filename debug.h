@@ -24,14 +24,33 @@
 
 #define kaDebug(x) Kapotah::Debug::instance()->add(Q_FUNC_INFO, x)
 
+#include <QDebug>
+
 namespace Kapotah
 {
+
+class DebugStream
+{
+public:
+    DebugStream(const QString &sender);
+    //friend DebugStream &operator<<(DebugStream &debug, const QString &message);
+    friend void blah(DebugStream &debug);
+    void done();
+
+private:
+    QString m_sender;
+    QString m_message;
+};
 
 class Debug : public Singleton<Debug>
 {
     Q_OBJECT
 
+public:
+    
+
 public slots:
+    DebugStream &debug(const QString& sender);
     void add(const QString &sender, const QString &message);
 
 signals:

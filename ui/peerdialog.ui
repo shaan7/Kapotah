@@ -202,7 +202,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -393,10 +393,24 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="QPlainTextEdit" name="debugText">
-         <property name="readOnly">
+        <widget class="QTableWidget" name="debugTable">
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="alternatingRowColors">
           <bool>true</bool>
          </property>
+         <property name="sortingEnabled">
+          <bool>true</bool>
+         </property>
+         <property name="cornerButtonEnabled">
+          <bool>true</bool>
+         </property>
+         <property name="columnCount">
+          <number>2</number>
+         </property>
+         <column/>
+         <column/>
         </widget>
        </item>
       </layout>

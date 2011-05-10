@@ -53,8 +53,8 @@ class PeerDialog : public QDialog
         void createTrayIcon();
         void createActions();
 
-        QSystemTrayIcon *trayIcon;
-        QMenu *trayIconMenu;
+        QSystemTrayIcon *m_trayIcon;
+        QMenu *m_trayIconMenu;
         QAction *minimizeAction;
         QAction *maximizeAction;
         QAction *restoreAction;

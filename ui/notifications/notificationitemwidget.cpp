@@ -32,8 +32,9 @@ NotificationItemWidget::NotificationItemWidget (const NotificationData notificat
 
     if (m_data.handler) {
         connect(ui.notificationMessage, SIGNAL(clicked()), m_data.handler, SLOT(notificationActivated()));
-        connect(ui.notificationMessage, SIGNAL(clicked()), this, SLOT(closeNotification()));
     }
+
+    connect(ui.notificationMessage, SIGNAL(clicked()), this, SLOT(closeNotification()));
 }
 
 NotificationItemWidget::~NotificationItemWidget()

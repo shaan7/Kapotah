@@ -38,9 +38,8 @@ using namespace Kapotah;
 
 PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(new TransferDialog(this)),
     m_multicastDialog(new MulticastDialog(this)), m_searchDialog(new SearchDialog(this)),
-    m_aboutDialog(new AboutDialog(this)), m_timer(0), m_isGreyScale(false)
+    m_aboutDialog(new AboutDialog(this)), m_timer(0), m_isGreyScale(false), m_trayIcon(0)
 {
-    QSystemTrayIcon::isSystemTrayAvailable();
     ui.setupUi(this);
     setWindowTitle(QApplication::applicationName());
     createActions();
@@ -50,29 +49,22 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(ne
     ui.nameEdit->setText(Kapotah::Announcer::instance()->username());
     ui.tabWidget->setCurrentIndex(0);
     connect (ui.refreshButton, SIGNAL(clicked()), this, SLOT(updatePeer()));
-    connect (PeerManager::instance()->peersModel(), SIGNAL(rowsInserted(QModelIndex, int, int)), this,
-             SLOT(updateSystrayTooltip(QModelIndex, int, int)));
-    connect (PeerManager::instance()->peersModel(), SIGNAL(rowsRemoved(QModelIndex, int, int)), this,
-             SLOT(updateSystrayTooltip(QModelIndex, int, int)));
+
     connect (ui.peersListView, SIGNAL(doubleClicked(QModelIndex)), SLOT(showChatDialogOnUserRequest(QModelIndex)));
     connect (ui.aboutButton, SIGNAL(clicked()), SLOT(showAboutDialog()));
-    connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString,QHostAddress)),
-             SLOT(notifySysTray(QString, QHostAddress)));
+
     connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)),
              SLOT(showChatDialogOnIncomingMessage(QString,QHostAddress)));
     connect (ui.multicastButton, SIGNAL(clicked()), this, SLOT(showMulticastDialog()));
     connect (ui.transferButton, SIGNAL(clicked()), SLOT(showTransferDialog()));
     connect (ui.searchButton, SIGNAL(clicked()), SLOT(showSearchDialog()));
-    connect (trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, 
-             SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+
     connect (ui.nameEdit, SIGNAL(returnPressed()), SLOT(setPeerNameFromUi()));
     connect (ui.notificationsButton, SIGNAL(clicked()),
              Notifications::instance(), SLOT(toggleNotificationsDialog()));
     connect (ui.addSubnetButton, SIGNAL(clicked()), SLOT(askUserForNewAdditionalSubnet()));
     connect (ui.removeSubnetButton, SIGNAL(clicked()), SLOT(removeSelectedAdditionalSubnet()));
     connect (Debug::instance(), SIGNAL(added(QString,QString)), SLOT(appendDebugMessage(QString,QString)));
-    trayIcon->show();
-
     //Load settings
     QSettings settings;
 
@@ -177,15 +169,28 @@ void PeerDialog::showAboutDialog()
 
 void PeerDialog::createTrayIcon()
 {
-    trayIcon = new QSystemTrayIcon(QIcon(":/images/systrayicon.png"));
-    
-    trayIconMenu = new QMenu(this);
-    trayIconMenu->addAction(minimizeAction);
-    trayIconMenu->addAction(maximizeAction);
-    trayIconMenu->addAction(restoreAction);
-    trayIconMenu->addSeparator();
-    trayIconMenu->addAction(quitAction);
-    trayIcon->setContextMenu(trayIconMenu);
+    if (!QSystemTrayIcon::isSystemTrayAvailable())
+        return;
+    m_trayIcon = new QSystemTrayIcon(QIcon(":/images/systrayicon.png"));
+
+    m_trayIconMenu = new QMenu(this);
+    m_trayIconMenu->addAction(minimizeAction);
+    m_trayIconMenu->addAction(maximizeAction);
+    m_trayIconMenu->addAction(restoreAction);
+    m_trayIconMenu->addSeparator();
+    m_trayIconMenu->addAction(quitAction);
+    m_trayIcon->setContextMenu(m_trayIconMenu);
+
+    connect (PeerManager::instance()->peersModel(), SIGNAL(rowsInserted(QModelIndex, int, int)), this,
+             SLOT(updateSystrayTooltip(QModelIndex, int, int)));
+    connect (PeerManager::instance()->peersModel(), SIGNAL(rowsRemoved(QModelIndex, int, int)), this,
+             SLOT(updateSystrayTooltip(QModelIndex, int, int)));
+    connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString,QHostAddress)),
+             SLOT(notifySysTray(QString, QHostAddress)));
+    connect (m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, 
+             SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+
+    m_trayIcon->show();
 }
 
 void PeerDialog::createActions()
@@ -202,13 +207,15 @@ void PeerDialog::createActions()
 
 void PeerDialog::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
+    if (!m_trayIcon)
+        return;
     switch (reason) {
     case QSystemTrayIcon::Trigger:
     case QSystemTrayIcon::DoubleClick:
         showNormal();
         if (m_timer){
             m_timer->stop();
-            trayIcon->setIcon(QIcon(":/images/systrayicon.png"));
+            m_trayIcon->setIcon(QIcon(":/images/systrayicon.png"));
         }
         if (isVisible())
             hide();
@@ -224,6 +231,8 @@ void PeerDialog::iconActivated(QSystemTrayIcon::ActivationReason reason)
 
 void PeerDialog::notifySysTray(QString str, QHostAddress peerAddress)
 {
+    if (!m_trayIcon)
+        return;
     if(!m_timer){
         m_timer = new QTimer(this);
         connect(m_timer, SIGNAL(timeout()), this, SLOT(changeSysTrayIcon()));
@@ -233,12 +242,14 @@ void PeerDialog::notifySysTray(QString str, QHostAddress peerAddress)
 
 void PeerDialog::changeSysTrayIcon()
 {
+    if (!m_trayIcon)
+        return;
     if (!m_isGreyScale) {
-        trayIcon->setIcon(QIcon(":/images/systrayicon-greyscale.png"));
+        m_trayIcon->setIcon(QIcon(":/images/systrayicon-greyscale.png"));
         m_isGreyScale = true;
     }
     else {
-        trayIcon->setIcon(QIcon(":/images/systrayicon.png"));
+        m_trayIcon->setIcon(QIcon(":/images/systrayicon.png"));
         m_isGreyScale = false;
     }
 }
@@ -246,14 +257,16 @@ void PeerDialog::changeSysTrayIcon()
 void PeerDialog::closeEvent(QCloseEvent* event)
 {
     QDialog::closeEvent(event);
-    if(trayIcon->isVisible()){
+    if(m_trayIcon->isVisible()){
     event->ignore();
     }
 }
 
 void PeerDialog::updateSystrayTooltip(QModelIndex parent,int start,int end)
 {
-    trayIcon->setToolTip("Kapotah (" + QString::number(Kapotah::PeerManager::instance()->peersModel()->rowCount()) + ")");
+    if (!m_trayIcon)
+        return;
+    m_trayIcon->setToolTip("Kapotah (" + QString::number(Kapotah::PeerManager::instance()->peersModel()->rowCount()) + ")");
 }
 
 void PeerDialog::quitApplication()
@@ -275,7 +288,12 @@ PeerDialog::~PeerDialog()
 
 void PeerDialog::appendDebugMessage(const QString& sender, const QString& message)
 {
-    ui.debugText->appendHtml("<b>"+sender+"</b><br />"+message+"<br />");
+    int rows = ui.debugTable->rowCount();
+    QTableWidgetItem *item = new QTableWidgetItem(sender);
+    ui.debugTable->insertRow(rows);
+    ui.debugTable->setItem(rows, 0, item);
+    item = new QTableWidgetItem(message);
+    ui.debugTable->setItem(rows, 1, item);
 }
 
 #include "peerdialog.moc"
