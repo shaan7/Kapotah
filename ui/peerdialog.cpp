@@ -69,7 +69,7 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(ne
     foreach (QVariant item, list) {
         ui.subnetsListWidget->addItem(new QListWidgetItem(QIcon(":/images/peer.png"), item.toString()));
     }
-    QString username = settings.value("username");
+    QString username = settings.value("username").toString();
     if (!username.isEmpty()) {
         ui.nameEdit->setText(username);
         setPeerNameFromUi();
@@ -229,8 +229,10 @@ void PeerDialog::iconActivated(QSystemTrayIcon::ActivationReason reason)
 void PeerDialog::closeEvent(QCloseEvent* event)
 {
     QDialog::closeEvent(event);
-    if(m_trayIcon->isVisible()){
-    event->ignore();
+    if (m_trayIcon) {
+        if(m_trayIcon->isVisible()){
+            event->ignore();
+        }
     }
 }
 
