@@ -35,7 +35,8 @@ ChatDialog::ChatDialog (const QPersistentModelIndex &ipAddress, QWidget* parent,
 {
     ui.setupUi(this);
     m_peerIp=PeerManager::instance()->ipFromIndex(ipAddress);
-    setWindowTitle(PeerManager::instance()->nameFromIp(m_peerIp) + " (" + m_peerIp.toString() + ")");
+    setWindowTitle(PeerManager::instance()->nameFromIp(m_peerIp) + " (" + m_peerIp.toString()
+    + ") (online)");
     connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString, QHostAddress)), this,
              SLOT(displayRecievedMessage(QString, QHostAddress)));
     connect (Announcer::instance(), SIGNAL(peerTyping(QHostAddress)), this, SLOT(displayPeerStatus(QHostAddress)));
@@ -160,7 +161,8 @@ void ChatDialog::notificationActivated()
 void ChatDialog::userBackOnline(const QHostAddress& address)
 {
     if (address == m_peerIp) {
-        ui.messageDisplay->appendHtml("<b>"+PeerManager::instance()->nameFromIp(address) + " <font color=\"green\">is back online</font></b>");
+        setWindowTitle(PeerManager::instance()->nameFromIp(m_peerIp) + " (" + m_peerIp.toString()
+        + ") (online)");
         ui.sendMessage->setEnabled(true);
     }
 }
@@ -168,7 +170,8 @@ void ChatDialog::userBackOnline(const QHostAddress& address)
 void ChatDialog::userOffline(const QHostAddress& address)
 {
     if (address == m_peerIp) {
-        ui.messageDisplay->appendHtml("<b>" +PeerManager::instance()->nameFromIp(address) + " <font color=\"red\">is now offline</font></b>");
+        setWindowTitle(PeerManager::instance()->nameFromIp(m_peerIp) + " (" + m_peerIp.toString()
+        + ") (offline)");
         ui.sendMessage->setEnabled(false);
     }
 }
