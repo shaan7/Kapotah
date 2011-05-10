@@ -18,14 +18,3 @@
 */
 
 #include "abstractxmlparser.h"
-
-AbstractXmlParser::AbstractXmlParser()
-{
-
-}
-
-AbstractXmlParser::~AbstractXmlParser()
-{
-
-}
-

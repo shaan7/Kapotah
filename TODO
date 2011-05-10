@@ -6,4 +6,4 @@ TODO:
 6. Implement debug view using QTableWidget
 7. Stop blinkin when not blinken ;)
 8. Make notifications dialog always on top
-9. Make it say "user" is online, not the IP <---***********URGENT*************
+10. Save username **************URGENT***************
