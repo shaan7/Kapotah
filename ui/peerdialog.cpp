@@ -69,6 +69,11 @@ PeerDialog::PeerDialog (QDialog* parent) : QDialog (parent), m_transferDialog(ne
     foreach (QVariant item, list) {
         ui.subnetsListWidget->addItem(new QListWidgetItem(QIcon(":/images/peer.png"), item.toString()));
     }
+    QString username = settings.value("username");
+    if (!username.isEmpty()) {
+        ui.nameEdit->setText(username);
+        setPeerNameFromUi();
+    }
 }
 
 ChatDialog* PeerDialog::createChatDialog (QModelIndex index)
@@ -126,11 +131,6 @@ void PeerDialog::updatePeer()
 void PeerDialog::setPeerNameFromUi()
 {
     Kapotah::Announcer::instance()->setUserName(ui.nameEdit->text());
-}
-
-void PeerDialog::initSubnets()
-{
-    
 }
 
 void PeerDialog::askUserForNewAdditionalSubnet()
@@ -256,6 +256,9 @@ PeerDialog::~PeerDialog()
         list << item->text();
     }
     settings.setValue("SubnetsList", list);
+    
+    if (!ui.nameEdit->text().isEmpty())
+        settings.setValue("username", ui.nameEdit->text());
 }
 
 void PeerDialog::appendDebugMessage(const QString& sender, const QString& message)

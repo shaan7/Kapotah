@@ -77,7 +77,6 @@ class PeerDialog : public QDialog
         void quitApplication();
         void updatePeer();
         void updateSystrayTooltip(QModelIndex parent, int start, int end);
-        void initSubnets();
         void askUserForNewAdditionalSubnet();
         void removeSelectedAdditionalSubnet();
         void appendDebugMessage(const QString &sender, const QString &message);
