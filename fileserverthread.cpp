@@ -32,7 +32,9 @@ FileServerThread::FileServerThread (int socketDescriptor, QObject* parent)
 
 FileServerThread::~FileServerThread()
 {
+    m_mutex.lock();
     m_doQuit = true;
+    m_mutex.unlock();
     wait();
 }
 
@@ -55,25 +57,26 @@ void FileServerThread::run()    //TODO: use mutexes
         QString data (socket.readAll());
 
         if (!Kapotah::TransferManager::instance()->pathForId (data).isEmpty()) {
-            m_status = PreparingToSend;
+            setStatus(PreparingToSend);
             ID = data;
             filename = Kapotah::TransferManager::instance()->pathForId (data);
 
             file.setFileName (filename);
 
             if (!file.open (QIODevice::ReadOnly)) {
-                m_status = ErrorFileNotFound;
+                setStatus(ErrorFileNotFound);
                 break;
             }
 
             socket.write ("OK");
             socket.waitForBytesWritten();
             emit startedTransfer (ID);
-            m_status = Sending;
+            setStatus(Sending);
 
             while (!file.atEnd() && !m_doQuit) {
                 if (socket.state() != QTcpSocket::ConnectedState) {
                     emit finishedTransfer (ID);
+                    setStatus(Finished);
                     break;
                 }
 
@@ -89,16 +92,18 @@ void FileServerThread::run()    //TODO: use mutexes
             file.close();
 
             if (m_doQuit) {
+                setStatus(Canceled);
                 emit canceledTransfer(ID);
                 socket.disconnectFromHost();
             } else {
+                setStatus(Finished);
                 emit finishedTransfer (ID);
             }
 
             socket.waitForDisconnected ();
             break;
         } else {
-            m_status = ErrorIDNotFound;
+            setStatus(ErrorIDNotFound);
             emit transferNotFound(ID);
             break;
         }
@@ -107,9 +112,21 @@ void FileServerThread::run()    //TODO: use mutexes
     }
 }
 
-FileServerThread::Status FileServerThread::status() const
+FileServerThread::Status FileServerThread::status()
 {
-    return m_status;
+    Status status;
+    m_mutex.lock();
+    status = m_status;
+    m_mutex.unlock();
+
+    return status;
+}
+
+void FileServerThread::setStatus(FileServerThread::Status status)
+{
+    m_mutex.lock();
+    m_status = status;
+    m_mutex.unlock();
 }
 
 #include "fileserverthread.moc"

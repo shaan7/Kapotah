@@ -21,6 +21,7 @@
 #define FILESERVERTHREAD_H
 
 #include <QThread>
+#include <QMutex>
 
 class FileServerThread : public QThread
 {
@@ -30,15 +31,18 @@ class FileServerThread : public QThread
         virtual void run();
 
     public:
-        enum Status { Waiting, PreparingToSend, ErrorFileNotFound, ErrorIDNotFound, Sending };
+        enum Status { Waiting, PreparingToSend, ErrorFileNotFound, ErrorIDNotFound, Sending, Finished, Canceled };
         explicit FileServerThread (int socketDescriptor, QObject* parent = 0);
         virtual ~FileServerThread();
-        Status status() const;
+        Status status();
 
     private:
         int m_descriptor;
         bool m_doQuit;
         Status m_status;
+        QMutex m_mutex;
+
+        void setStatus(Status status);
 
     signals:
         void startedTransfer (QString ID);

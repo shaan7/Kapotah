@@ -1,4 +1,4 @@
-/*
+ /*
     This file is part of the Kapotah project.
     Copyright (C) 2010 Shantanu Tushar <jhahoneyk@gmail.com>
     Copyright (C) 2010 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
