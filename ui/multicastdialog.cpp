@@ -102,6 +102,9 @@ void MulticastDialog::dropEvent (QDropEvent* event)
 void MulticastDialog::sendFileNeedsSourceDir()
 {
     QStringList filenames = QFileDialog::getOpenFileNames(this, "Select file(s)", QDir::homePath());
+    if (filenames.empty()) {
+        return;
+    }
     QList<TransferFile> fileList;
 
     foreach (QString path, filenames) {
