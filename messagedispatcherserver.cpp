@@ -36,10 +36,5 @@ MessageDispatcherServer::MessageDispatcherServer (QObject* parent) : QTcpServer 
     qRegisterMetaType<QHostAddress>("QHostAddress");
 }
 
-MessageDispatcherServer::~MessageDispatcherServer()
-{
-
-}
-
 #include "messagedispatcherserver.moc"
 

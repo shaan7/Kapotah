@@ -33,11 +33,6 @@ Peer::Peer (const QString& name, const QHostAddress& ipAddress)
 
 }
 
-Peer::~Peer()
-{
-
-}
-
 QHostAddress Peer::ipAddress() const
 {
     return m_ipAddress;

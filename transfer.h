@@ -34,6 +34,11 @@ namespace Kapotah
         quint64 size;
     };
 
+    /**
+     * \brief Base class for all types of transfers
+     *
+     * This abstract class serves as a base for all transfers
+     */
     class Transfer : public QObject
     {
             Q_OBJECT
@@ -43,9 +48,20 @@ namespace Kapotah
             enum TransferState { Waiting, PreparingList, Connecting, Transferring, Done };
             explicit Transfer (QList<TransferFile> files, quint64 totalSize, quint64 numFiles, quint64 numDirs,
                                QHostAddress peer, bool isSearchReponse = false, QObject* parent = 0);
-            virtual ~Transfer();
+
+            /**
+             * Start the transfer, must be implemented in subclasses
+             */
             virtual void start() = 0;
+
+            /**
+             * Stop the transfer, must be implemented in subclasses
+             */
             virtual void stop() = 0;
+
+            /**
+             * Return the transfer Type, must be implemented in subclasses
+             */
             virtual TransferType type() = 0;
             QHostAddress peerAddress();
             bool isSearchResponse() const;
@@ -72,8 +88,23 @@ namespace Kapotah
             QStringList m_items;
 
         signals:
+            /**
+             * Emitted when progress of this transfer changes
+             *
+             * @param   done    number of bytes done
+             * @param   total   total number of bytes
+             * @param   speed   speed of transfer
+             */
             void progress (quint64 done, quint64 total, quint32 speed);
+
+            /**
+             * Emitted when the transfer is finished
+             */
             void done();
+
+            /**
+             * Emitted when the transfer is canceled
+             */
             void canceled();
     };
 

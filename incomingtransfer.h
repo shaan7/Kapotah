@@ -27,6 +27,12 @@
 namespace Kapotah
 {
 
+    /**
+     * \brief Handles an incoming transfer collection
+     *
+     * Handles <b>one</b> incoming transfer, that is a collection of files which
+     * a peer has sent at once (together)
+     */
     class IncomingTransfer : public Transfer
     {
             Q_OBJECT
@@ -35,7 +41,6 @@ namespace Kapotah
             explicit IncomingTransfer (QList< TransferFile > files, quint64 totalSize, quint64 numFiles,
                                        quint64 numDirs, QHostAddress peer, QString id, bool isSearchResponse,
                                        QObject* parent = 0);
-            virtual ~IncomingTransfer();
             virtual void start();
             virtual void stop();
             virtual TransferType type();
@@ -53,9 +58,15 @@ namespace Kapotah
             void reportProgress (quint64 done, quint64 size);
 
         public slots:
+            /**
+             * Set the destination where the files will be saved
+             */
             void setDestinationDir (QString path);
 
         signals:
+            /**
+             * Emitted when there is no destination dir defined
+             */
             void needDestinationDir();
 
         protected:

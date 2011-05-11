@@ -24,6 +24,12 @@
 #include <QTcpServer>
 #include <QHostAddress>
 
+/**
+ * \brief TCP Server that listens for messages on the network
+ *
+ * This is a TCP server that listens for messages, which include
+ * normal text messages, and transfer metadata
+ */
 class MessageDispatcherServer : public QTcpServer
 {
         Q_OBJECT
@@ -33,9 +39,14 @@ class MessageDispatcherServer : public QTcpServer
 
     public:
         MessageDispatcherServer (QObject* parent = 0);
-        virtual ~MessageDispatcherServer();
 
     signals:
+        /**
+         * Emitted when a new message is received
+         *
+         * @param       message         XML message text
+         * @param       peerAddress     peer who sent the message
+         */
         void gotMessage (QString message, QHostAddress peerAddress);
 };
 

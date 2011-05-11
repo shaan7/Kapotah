@@ -25,6 +25,11 @@
 #include <QStringList>
 
 namespace Kapotah{
+    /**
+     * Caclulates a human readable notation for a byte size
+     *
+     * @param   num     number in bytes
+     */
     inline QString humanReadableNumber(quint64 num) {
         QStringList suffixes;
         suffixes << "" << "Ki" << "Mi" << "Gi" << "Ti";

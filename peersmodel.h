@@ -27,28 +27,43 @@
 namespace Kapotah
 {
 
+    /**
+     * \brief Model containing peer list data
+     *
+     * This model contains data about online peers on the network
+     * \note Avoid accessing this directly, user PeerManager
+     */
     class PeersModel : public QAbstractListModel
     {
             Q_OBJECT
 
         public:
-            enum Roles { ipAddressRole = Qt::UserRole };
+            enum Role { ipAddressRole = Qt::UserRole };
+            PeersModel (QObject* parent = 0);
+            /**
+             * Return data for the given peer
+             *
+             * @param   index   model index corresponding to the peer
+             * @param   role    the Role of the data requested
+             */
             virtual QVariant data (const QModelIndex& index, int role = Qt::DisplayRole) const;
             virtual int rowCount (const QModelIndex& parent = QModelIndex()) const;
+
+            /**
+             * Returns the peer's name according to IP address
+             *
+             * @param   address         IP address of peer
+             */
             QString peerNameForIp(const QHostAddress &address);
-            PeersModel (QObject* parent = 0);
-            virtual ~PeersModel();
 
         private:
             QList<QHostAddress> m_peerAddresses;
             QHash<QHostAddress, Peer> m_peers;
             QHash<QHostAddress, int> m_ages;
 
-        public slots:
-            void addNewPeer (Peer peer);
-
         private slots:
             void checkStatus();
+            void addNewPeer (Peer peer);
 
         protected:
             virtual void timerEvent (QTimerEvent* event);

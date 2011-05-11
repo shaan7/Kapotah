@@ -42,7 +42,11 @@ public:
     explicit FileSearcherThread ( QFileSystemModel &model, const QString &pattern, const QHostAddress &host,
                                   Kapotah::FileSearcher &fileSearcher, QObject* parent = 0);
     virtual ~FileSearcherThread();
+
 protected:
+    /**
+     * Run the thread and scan the index tree for the pattern
+     */
     virtual void run();
 
 private:

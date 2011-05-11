@@ -41,11 +41,6 @@ UdpManager::UdpManager()
     connect (&m_broadcastSocket, SIGNAL (readyRead()), this, SLOT (readBroadcast()));
 }
 
-UdpManager::~UdpManager()
-{
-
-}
-
 void UdpManager::timerEvent (QTimerEvent* t)
 {
     QObject::timerEvent (t);

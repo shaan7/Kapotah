@@ -32,11 +32,6 @@ Transfer::Transfer (QList< TransferFile > files, quint64 totalSize, quint64 numF
 
 }
 
-Transfer::~Transfer()
-{
-
-}
-
 QHostAddress Transfer::peerAddress()
 {
     return m_peerAddress;

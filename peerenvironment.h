@@ -25,10 +25,19 @@
 namespace Kapotah
 {
 
+    /**
+     * \brief This class scans the peer's environment for useful data
+     *
+     * This class is currently used to deduce user's name from OS environment
+     */
     class PeerEnvironment
     {
-
         public:
+            /**
+             * Used to get the user's namespace
+             *
+             * @return  user's name from OS environment
+             */
             static QString getPeerName();
     };
 

@@ -71,7 +71,15 @@ void SearchDialog::addTransfer (Transfer* transfer)
 {
     if ( (!transfer->isSearchResponse()) || (transfer->type() == Transfer::Outgoing) )
         return;
-    ui.resultsList->addItem(PeerManager::instance()->peersModel()->peerNameForIp(transfer->peerAddress()));
+
+    QString itemsList;
+    foreach (QString itemName, transfer->itemNames()) {
+        itemsList.append(itemName);
+        itemsList.append(" ");
+    }
+
+    ui.resultsList->addItem(PeerManager::instance()->peersModel()->peerNameForIp(transfer->peerAddress())
+                            + itemsList);
     m_transfers.append(transfer);
 }
 

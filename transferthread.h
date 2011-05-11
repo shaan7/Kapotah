@@ -23,23 +23,46 @@
 #include <QThread>
 #include <QHostAddress>
 
+/**
+ * \brief Abstract class for deriving Transfer threads
+ *
+ * This class serves as an abstract base class for implementing
+ * transfer threads and provides suggestions for must-have methods
+ */
 class TransferThread : public QThread
 {
         Q_OBJECT
 
     public:
         explicit TransferThread (QHostAddress ip, QObject* parent = 0);
-        virtual ~TransferThread();
 
     protected:
+        /**
+         * The method which runs in the thread.
+         * \note Must be impelemented in derived classes
+         */
         virtual void run() = 0;
         QHostAddress m_ip;
 
     public slots:
+        /**
+         * Method which is supposed to stop the transfer
+         * \note Must be impelemented in derived classes
+         */
         virtual void stopTransfer() = 0;
 
     signals:
+        /**
+         * Emitted when a progress is made in this thread
+         *
+         * @param       done    number of bytes done
+         * @param       total   total number of bytes
+         */
         void progress (quint64 done, quint64 total);
+
+        /**
+         * Emitted when the transfer finishes execution
+         */
         void done ();
 };
 

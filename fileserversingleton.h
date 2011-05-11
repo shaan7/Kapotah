@@ -32,7 +32,6 @@ namespace Kapotah
 
         public:
             FileServerSingleton();
-            virtual ~FileServerSingleton();
             FileServer *fileServer();
 
         private:

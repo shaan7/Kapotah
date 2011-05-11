@@ -34,11 +34,6 @@ FileSearcher::FileSearcher() : m_isProcessing(true)
     connect(Announcer::instance(), SIGNAL(gotSearchRequest(QString,QHostAddress)), SLOT(addSearch(QString,QHostAddress)));
 }
 
-FileSearcher::~FileSearcher()
-{
-
-}
-
 void FileSearcher::addSearch (const QString& pattern, const QHostAddress &host)
 {
     m_queue.enqueue(SearchItem(pattern, host));

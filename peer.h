@@ -27,18 +27,48 @@
 namespace Kapotah
 {
 
+    /**
+     * \brief Stores information about a peer
+     *
+     * The Peer class stores information such as name and IP address
+     * of a peer. Can be extended in the future to include other
+     * information
+     */
     class Peer
     {
 
         public:
             Peer();
             Peer(const QString &name, const QHostAddress &ipAddress);
-            ~Peer();
 
+            /**
+             * Returns the advertised name of the peer on the network
+             *
+             * @return  Peer's name
+             */
             QString name() const;
+
+            /**
+             * Set the advertised name of the peer on the network
+             * \warning For internal purposes only, do not use from the UI
+             *
+             * @param   name    Peer's name
+             */
             void setName (const QString &name);
 
+            /**
+             * Returns the IP address of the peer's device
+             *
+             * @return  Peer's IP address
+             */
             QHostAddress ipAddress() const;
+
+            /**
+             * Set the IP address of the peer
+             * \warning For internal purposes only, do not use from the UI
+             *
+             * @param   ipAddress       IP address of peer
+             */
             void setIpAddress (const QHostAddress &ipAddress);
 
             bool operator==(const Peer &peer);
