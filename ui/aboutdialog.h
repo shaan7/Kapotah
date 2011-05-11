@@ -22,6 +22,8 @@
 
 #include "ui_aboutdialog.h"
 
+/** This class shows the dialog which contains the authors, licenses and credits.
+ */
 class AboutDialog : public QDialog {
     Q_OBJECT
 public:

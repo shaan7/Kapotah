@@ -160,6 +160,17 @@ void PeerDialog::removeSelectedAdditionalSubnet()
     delete item;
 }
 
+
+void PeerDialog::appendDebugMessage(const QString& sender, const QString& message)
+{
+    int rows = ui.debugTable->rowCount();
+    QTableWidgetItem *item = new QTableWidgetItem(sender);
+    ui.debugTable->insertRow(rows);
+    ui.debugTable->setItem(rows, 0, item);
+    item = new QTableWidgetItem(message);
+    ui.debugTable->setItem(rows, 1, item);
+}
+
 void PeerDialog::showAboutDialog()
 {
     m_aboutDialog->show();
@@ -189,8 +200,6 @@ void PeerDialog::createTrayIcon()
              SLOT(updateSystrayTooltip(QModelIndex, int, int)));
     connect (PeerManager::instance()->peersModel(), SIGNAL(rowsRemoved(QModelIndex, int, int)), this,
              SLOT(updateSystrayTooltip(QModelIndex, int, int)));
-    connect (MessageDispatcher::instance(), SIGNAL(gotNewMessage(QString,QHostAddress)),
-             SLOT(notifySysTray(QString, QHostAddress)));
     connect (m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, 
              SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
@@ -270,14 +279,5 @@ PeerDialog::~PeerDialog()
         settings.setValue("username", ui.nameEdit->text());
 }
 
-void PeerDialog::appendDebugMessage(const QString& sender, const QString& message)
-{
-    int rows = ui.debugTable->rowCount();
-    QTableWidgetItem *item = new QTableWidgetItem(sender);
-    ui.debugTable->insertRow(rows);
-    ui.debugTable->setItem(rows, 0, item);
-    item = new QTableWidgetItem(message);
-    ui.debugTable->setItem(rows, 1, item);
-}
 
 #include "peerdialog.moc"
