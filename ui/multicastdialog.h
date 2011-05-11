@@ -29,6 +29,11 @@ namespace Kapotah
     struct TransferFile;
 }
 
+/** @brief Displays a dialog for multicasting messages/files/folders over the network
+ * 
+ * It displays a dialog for multicasting messages/files/folders over the network
+ * by selecting as many peers user wants from the list of peers.
+*/
 class MulticastDialog : public QDialog
 {
         Q_OBJECT
@@ -38,6 +43,14 @@ class MulticastDialog : public QDialog
         
     private:
         Ui::MulticastDialog ui;
+        
+        /** We have considered folders to be list of files.So, this funtion takes
+         * parameter fileList, and for each peer selected, sends the type of transfer i.e. outgoing,
+         * fileList, address of peer to the TransferManager. Then tells the TransferManager to
+         * start transfer.
+         * 
+         * @param fileList list of files to be transfered.
+         */
         void sendFiles(QList<Kapotah::TransferFile> fileList);
     
     private slots:

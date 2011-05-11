@@ -31,6 +31,12 @@ namespace Kapotah
 
 using namespace Kapotah;
 
+/** @brief This class displays the search dialog for sharing a folder or for searching for shared files over network
+ * 
+ * This class displays the search dialog for sharing a folder or for searching for shared files over network.
+ * Result of a valid search is displayed on the dialog.
+ * For sharing a folder we make index of the files inside the folder reccursively.
+*/
 class SearchDialog : public QDialog
 {
         Q_OBJECT
@@ -44,7 +50,14 @@ class SearchDialog : public QDialog
         QList<Kapotah::Transfer*> m_transfers;
 
     private slots:
+        
+        /** Sends the announcer search pattern from the UI
+         */
         void search();
+        
+        /** Tells FileSearcher to create the index of the directory to be shared and
+         * keeps the index to itself.
+         */
         void setSharedDir();
         void addTransfer(Transfer *transfer);
         void startTransfer();

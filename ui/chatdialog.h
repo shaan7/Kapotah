@@ -34,6 +34,12 @@ namespace Kapotah
     struct TransferFile;
 }
 
+/** @brief Displays recieved & sending messages and peer status.
+ * 
+ * This class displays the sending & recieving messages, peer status i.e. whether peer is
+ * online/offline/is-typing-any-text.It sends the new message typed to the MessageDispatcher
+ * so that the new message typed can be sent to the friend peer.
+ */
 class ChatDialog : public QDialog
 {
         Q_OBJECT
@@ -49,8 +55,19 @@ class ChatDialog : public QDialog
         void sendFiles(QList<Kapotah::TransferFile> fileList);
 
     private slots:
+        
+        /** If a new message is recieved with the IP same as that of the IP of opened ChatDialog,
+         * it displays the message.
+         * If ChatDialog not in focus, it notifies the Notifications about the arrival of new message.
+         * @param message       message to be sent
+         * @param peerAddress   address of peer for whom the message was meant
+         */
         void displayRecievedMessage (QString message, QHostAddress peerAddress);
         void displaySendingMessage();
+        
+        /** It takes the plain text from the UI and sends the new typed message along with the IP address
+         * of the user to MessageDispatcher so it can be sent to friend peer
+         */
         void sendNewMessage();
         void displayPeerStatus(QHostAddress);
         void clearStatus();
@@ -59,6 +76,10 @@ class ChatDialog : public QDialog
         void sendFileNeedsSourceDir();
 
     public slots:
+        
+        /**Whenever a new notification for message is shown and the user clicks on the notification,
+         * this function shows the ChatDialog along with the new message just arrived.
+         */
         void notificationActivated();
 
     protected:

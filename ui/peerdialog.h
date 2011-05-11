@@ -34,6 +34,15 @@ class MulticastDialog;
 class TransferDialog;
 class AboutDialog;
 
+/** @brief Displays the dialog which contains list of peers, address of IP of other subnet and debug messages.
+ * 
+ * This dialog contains 3 tabs.
+ * 1) showing list of peers online
+ * 2) settings tab, which contains the IP address of peers from other subnet, button for about dialog
+ * and place where user can change its name
+ * 3) debug tab for showing debug messages
+ * It also has refresh, open-multicast-dialog, open-search-dialog,open-transfer-dialog and open-notifications button.
+*/
 class PeerDialog : public QDialog
 {
         Q_OBJECT
@@ -49,7 +58,6 @@ class PeerDialog : public QDialog
         MulticastDialog *m_multicastDialog;
         SearchDialog *m_searchDialog;
         AboutDialog *m_aboutDialog;
-
         void createTrayIcon();
         void createActions();
 
@@ -69,6 +77,13 @@ class PeerDialog : public QDialog
         void setPeerNameFromUi();
         ChatDialog* createChatDialog (QModelIndex index);
         void showChatDialogOnUserRequest(QModelIndex index);
+        
+        /** It first checks whether the chat dialog with that perticular peerAddress is already created or not.
+         *  If not already created, it matches with the index list of the peers, then creates the chat dialog
+         *  and displays the new message.
+         *  @param message      message recieved from peerAddress
+         *  @param peerAddress  IP address for whom the message was meant
+         */
         void showChatDialogOnIncomingMessage (QString message, QHostAddress peerAddress);
         void showMulticastDialog();
         void showSearchDialog();
