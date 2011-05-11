@@ -23,12 +23,18 @@
 #include "abstractxmlparser.h"
 #include <QString>
 
+/**
+ * XML data for announce
+ */
 class AnnounceXmlData : public AbstractXmlData
 {
     public:
         QString senderName;
 };
 
+/**
+ * XML Parser for announce data
+ */
 class AnnounceXmlParser : public AbstractXmlParser
 {
     public:

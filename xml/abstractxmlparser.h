@@ -22,19 +22,44 @@
 
 #include <QString>
 
+/**
+ * \brief Abstract base class for data storage for XML parsers for parsing Kapotah data
+ *
+ * This class provides a base for implementing XML data storage classes for various XML
+ * parsers which implement AbstractXmlParser
+ */
 class AbstractXmlData
 {
-
     public:
         enum Type { Error, Announce, Message, Transfer, PeerStatus, TransferStatus, Search };
+
+        /**
+         * the type of the XML data
+         * \remarks It is important to add more typedefs when new parsers are implemented
+         */
         Type type;
 };
 
+/**
+ * \brief Abstract base class for XML parsers for parsing Kapotah data
+ *
+ * This class provides a base for implementing XML parsers for various uses
+ * inside Kapotah communications
+ */
 class AbstractXmlParser
 {
-
     public:
+        /**
+         * Accepts XML data and returns pointer to parsed data
+         * \note pointer will actually be to a data storage class
+         * deriving from AbstractXmlData
+         */
         virtual AbstractXmlData *parseXml (const QString &xml) = 0;
+
+        /**
+         * Takes pointer to a data storage class deriving from AbstractXmlData
+         * and returns the created XML data
+         */
         virtual QString composeXml (AbstractXmlData *data) = 0;
 };
 

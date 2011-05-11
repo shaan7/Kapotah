@@ -23,12 +23,18 @@
 #include "abstractxmlparser.h"
 #include <QString>
 
+/**
+ * XML data for message
+ */
 class MessageXmlData : public AbstractXmlData
 {
     public:
         QString message;
 };
 
+/**
+ * XML Parser for message data
+ */
 class MessageXmlParser : public AbstractXmlParser
 {
     public:

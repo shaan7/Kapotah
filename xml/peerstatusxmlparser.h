@@ -23,12 +23,18 @@
 #include <xml/abstractxmlparser.h>
 #include <QString>
 
+/**
+ * XML data for peer status
+ */
 class PeerStatusXmlData : public AbstractXmlData
 {
     public:
         bool isTyping;
 };
 
+/**
+ * XML Parser for peer status data
+ */
 class PeerStatusXmlParser : public AbstractXmlParser
 {
 

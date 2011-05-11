@@ -22,12 +22,18 @@
 
 #include <xml/abstractxmlparser.h>
 
+/**
+ * XML data for search
+ */
 class SearchXmlData : public AbstractXmlData
 {
 public:
     QString pattern;
 };
 
+/**
+ * XML Parser for search data
+ */
 class SearchXmlParser : public AbstractXmlParser
 {
 public:
