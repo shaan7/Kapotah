@@ -24,6 +24,9 @@
 #include <transfer.h>
 #include <QList>
 
+/**
+ * XML data for transfer
+ */
 class TransferXmlData : public AbstractXmlData
 {
     public:
@@ -38,6 +41,9 @@ class TransferXmlData : public AbstractXmlData
         QString id;
 };
 
+/**
+ * XML Parser for transfer data
+ */
 class TransferXmlParser : public AbstractXmlParser
 {
 

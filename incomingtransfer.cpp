@@ -40,11 +40,6 @@ IncomingTransfer::IncomingTransfer (QList< TransferFile > files, quint64 totalSi
     m_id = id;
 }
 
-IncomingTransfer::~IncomingTransfer()
-{
-
-}
-
 void IncomingTransfer::start()
 {
     if (m_destinationDir.isEmpty()) {

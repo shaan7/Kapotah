@@ -24,6 +24,12 @@
 #include <QThread>
 #include <QHostAddress>
 
+/**
+ * \brief Thread that processes each message the MessageDispatcher receives
+ *
+ * This is a thread which is run by the MessageDispatcher whenever a new message
+ * is about to arrive
+ */
 class MessageDispatcherThread : public QThread
 {
     Q_OBJECT
@@ -38,6 +44,12 @@ class MessageDispatcherThread : public QThread
         bool m_doQuit;
 
     signals:
+        /**
+         * Emitted when the thread is done processing a message
+         *
+         * @param       message         message raw text
+         * @param       peerAddress     address of the peer
+         */
         void gotMessage (QString message, QHostAddress peerAddress);
 };
 

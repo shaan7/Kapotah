@@ -23,18 +23,27 @@
 
 #include <QtNetwork/QTcpServer>
 
+/**
+ *\brief TCP Server which listens for transfer requests
+ * This class is a TCP server that listens for file transfer
+ * requests
+ */
 class FileServer : public QTcpServer
 {
         Q_OBJECT
 
     public:
         explicit FileServer (QObject* parent = 0);
-        virtual ~FileServer();
 
     protected:
         virtual void incomingConnection (int handle);
 
     signals:
+        /**
+         * Emitted when a file is requested
+         *
+         * @param       id      id of the requested file requested
+         */
         void fileRequested (QString id);
 };
 

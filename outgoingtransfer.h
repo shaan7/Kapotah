@@ -25,6 +25,12 @@
 namespace Kapotah
 {
 
+    /**
+     * \brief Handles an outgoing transfer collection
+     *
+     * Handles <b>one</b> outgoing transfer, that is a collection of files which
+     * a peer has sent at once (together)
+     */
     class OutgoingTransfer : public Transfer
     {
             Q_OBJECT
@@ -45,6 +51,9 @@ namespace Kapotah
             void onThreadStartPreparingList();
             void onThreadStartSendingList();
             void onThreadDoneSendingList();
+            /**
+             * Processes the overall progress depending upon individual progress
+             */
             void processProgress(const QHostAddress &peer, QString id, quint64 bytesDone,
                                  quint64 total, quint64 speed);
     };

@@ -24,6 +24,9 @@
 
 #include <QString>
 
+/**
+ * XML data for transfer status
+ */
 class TransferStatusXmlData : public AbstractXmlData
 {
 public:
@@ -33,6 +36,9 @@ public:
     quint64 speed;
 };
 
+/**
+ * XML Parser for transferstatus data
+ */
 class TransferStatusXmlParser : public AbstractXmlParser
 {
 

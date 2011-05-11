@@ -32,19 +32,66 @@ class TransferXmlData;
 namespace Kapotah
 {
 
+    /**
+     * \brief Singleton class which handles current transfers
+     *
+     * This class maintains pointers to ongoing transfers,
+     * both incoming and outgoing.
+     * The class should be used when a new transfer is to be
+     * added to the system.
+     * Provides convenience functions to generate IDs and resolve
+     * the IDs to files
+     */
     class TransferManager : public Singleton<TransferManager>
     {
             Q_OBJECT
 
         public:
             TransferManager();
-            virtual ~TransferManager();
+
+            /**
+             * Adds a new transfer from the XML data for the transfer
+             *
+             * @param   type    the TransferType
+             * @param   data    XML data for the transfer
+             * @param   peer    address of the remote peer
+             * @param   isSearchResponse        if the transfer is result of a search
+             */
             Transfer *addTransfer (Transfer::TransferType type, TransferXmlData data, QHostAddress peer,
                 bool isSearchResponse);
+
+            /**
+             * Adds a new transfer from the list of files
+             *
+             * @param   type    the TransferType
+             * @param   files   the list of TransferFile
+             * @param   peer    address of the remote peer
+             * @param   isSearchResponse        if the transfer is result of a search
+             */
             Transfer *addTransfer (Transfer::TransferType type, QList<TransferFile> files, QHostAddress peer,
                 bool isSearchResponse);
+
+            /**
+             * Generate a random ID for the given path
+             *
+             * @param   path    path to be used when generating ID
+             */
             QString newId (QString path);
+
+            /**
+             * Return the path associcated with the ID
+             *
+             * @param   id      the ID to search
+             */
             QString pathForId (QString id);
+
+            /**
+             * Use whenever its required to emulate a "re-add" of a Transfer in case
+             * it was ignored for some reason
+             * \note Use only when absolutely necessary
+             *
+             * @param   transfer        the Transfer to re-add
+             */
             void emitNewTransferAdded(Transfer *transfer);
 
         private:
@@ -57,7 +104,18 @@ namespace Kapotah
             void onTransferFinished();
 
         signals:
+            /**
+             * Emitted when a new transfer is added
+             *
+             * @param   transfer        The Transfer object which has been added
+             */
             void newTransferAdded (Transfer *transfer);
+
+            /**
+             * Emitted when a transfer finishes
+             *
+             * @param   transfer        The Transfer object which has finished
+             */
             void transferFinished (Transfer *transfer);
     };
 

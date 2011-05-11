@@ -30,14 +30,32 @@
 namespace Kapotah
 {
 
+    /**
+     * \brief Handles UDP datagrams
+     *
+     * This Singleton class handles low level UDP functions such as
+     * sending, broadcasts and unicasts, and receiving datagrams.
+     * Other library classes can connect to this to get the data.
+     */
     class UdpManager : public Singleton<UdpManager>
     {
             Q_OBJECT
 
         public:
             UdpManager();
-            virtual ~UdpManager();
+
+            /**
+             * Update brodcast addresses, localhost addreses.
+             * Typically should be called after the user indicates
+             * a change in network configurations
+             */
             void updateAddresses();
+
+            /**
+             * Used to check if an IP belongs to the local device
+             * @param   ip      IP address to be checked
+             * @return  true if IP is locahost, false otherwise
+             */
             bool isLocalHostIp(const QHostAddress &ip);
 
         protected:
@@ -54,12 +72,44 @@ namespace Kapotah
             void readBroadcast();
 
         public slots:
+            /**
+             * Send a brodcast on the network, and additional addresses
+             *
+             * @param   datagram        the datagram to broadcast
+             */
             void sendBroadcast (const QByteArray &datagram);
+
+            /**
+             * Send a datagram to a particular host
+             *
+             * @param   datagram        the datagram to send
+             * @param   host    host to which the datagram should be sent
+             */
             void sendDatagram (const QByteArray &datagram, const QHostAddress &host);
+
+            /**
+             * Library call to add additional broadcast addresses
+             *
+             * @param   broadcastAddress        the address to broadcast to
+             */
             void addBroadcastAddress (const QHostAddress &broadcastAddress);
+
+            /**
+             * Library call to remove additional broadcast addresses
+             *
+             * @param   broadcastAddress        the address to stop broadcasting to
+             */
             void removeBroadcastAddress (const QHostAddress &broadcastAddress);
 
         signals:
+            /**
+             * Emitted when a new datagram is received
+             * \note Datagram maybe broadcast or unicast
+             *
+             * @param   datagram        the datagram received
+             * @param   host    host which sent the datagram
+             * @param   port    sender port (generally not useful)
+             */
             void gotDatagram (const QByteArray &datagram, const QHostAddress &host, quint16 port);
     };
 

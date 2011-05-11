@@ -26,12 +26,26 @@
 namespace Kapotah
 {
 
+    /**
+     * \brief Singleton which serves as central management of peer information
+     *
+     * This class stores the list the client has of the peers on the network.
+     * The list is updated from the network time to time, and dead peers are
+     * removed as required.
+     * The class also provides convenience functions to get name, ip etc for a
+     * peer according to model indices
+     */
     class PeerManager : public Singleton<PeerManager>
     {
             Q_OBJECT
         public:
             PeerManager();
-            virtual ~PeerManager();
+
+            /**
+             * Return a pointer to the PeersModel instance
+             *
+             * @return pointer to the PeersModel instance
+             */
             PeersModel *peersModel();
             QHostAddress ipFromIndex(const QModelIndex &index);
             QString nameFromIndex(const QModelIndex &index);
@@ -45,7 +59,18 @@ namespace Kapotah
             void peerRemovedInModel(const QModelIndex &index, int start, int finish);
 
         signals:
+            /**
+             * Emitted when a new peer has been added to the model
+             *
+             * @param   peerAddress     address of the peer
+             */
             void peerAdded(const QHostAddress &peerAddress);
+
+            /**
+             * Emitted when a new peer has been removed from the model
+             *
+             * @param   peerAddress     address of the peer
+             */
             void peerRemoved(const QHostAddress &peerAddress);
     };
 

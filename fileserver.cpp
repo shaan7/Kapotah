@@ -31,9 +31,4 @@ void FileServer::incomingConnection (int handle)
     thread->start();    //TODO: connect to signals
 }
 
-FileServer::~FileServer()
-{
-
-}
-
 #include "fileserver.moc"

@@ -55,11 +55,6 @@ PeersModel::PeersModel (QObject* parent) : QAbstractListModel (parent)
     startTimer(1000);
 }
 
-PeersModel::~PeersModel()
-{
-
-}
-
 void PeersModel::addNewPeer (Peer peer)
 {
     if (m_peerAddresses.contains (peer.ipAddress())) {

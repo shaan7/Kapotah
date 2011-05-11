@@ -27,13 +27,24 @@
 namespace Kapotah
 {
 
+    /**
+     * \brief Handles sending and notifies reception of messages
+     *
+     * This classes uses MessageDispatcherServer to send messages,
+     * and notifies when new messages arrive
+     */
     class MessageDispatcher : public Singleton<MessageDispatcher>
     {
             Q_OBJECT
 
         public:
             MessageDispatcher();
-            virtual ~MessageDispatcher();
+
+            /**
+             * Returns the associated MessageDispatcherServer
+             *
+             * @return  pointer to the associated MessageDispatcherServer
+             */
             MessageDispatcherServer *messageDispatcherServer();
 
         private:
@@ -43,11 +54,30 @@ namespace Kapotah
             void newMessage (QString message, QHostAddress peerAddress);
 
         public slots:
+            /**
+             * Send a message to a peer on the network
+             *
+             * @param   message         the message to send
+             * @param   peerAddress     the peer to whom the message should be sent
+             */
             void sendNewMessage (QString message, QHostAddress peerAddress);
 
         signals:
+            /**
+             * Emitted when a new message has been received
+             *
+             * @param   message         the new message
+             * @param   peerAddress     the peer who send the message
+             */
             void gotNewMessage (QString message, QHostAddress peerAddress);
-            void gotNewTransfer (QString transfer, QHostAddress peerAddress); 
+
+            /**
+             * Emitted when a new transfer message has been received
+             *
+             * @param   transfer        the transfer XML data
+             * @param   peerAddress     the peer who send the transfer
+             */
+            void gotNewTransfer (QString transfer, QHostAddress peerAddress);
     };
 
 }

@@ -31,11 +31,6 @@ PeerManager::PeerManager() : m_peersModel(new PeersModel(this))
             SLOT(peerRemovedInModel(QModelIndex,int,int)));
 }
 
-PeerManager::~PeerManager()
-{
-
-}
-
 PeersModel* PeerManager::peersModel()
 {
     return m_peersModel;

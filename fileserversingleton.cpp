@@ -28,11 +28,6 @@ FileServerSingleton::FileServerSingleton()
     m_fileServer = new FileServer(this);
 }
 
-FileServerSingleton::~FileServerSingleton()
-{
-
-}
-
 FileServer* FileServerSingleton::fileServer()
 {
     return m_fileServer;

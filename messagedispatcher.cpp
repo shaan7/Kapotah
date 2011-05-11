@@ -34,10 +34,6 @@ MessageDispatcher::MessageDispatcher()
              SLOT (newMessage (QString, QHostAddress)));
 }
 
-MessageDispatcher::~MessageDispatcher()
-{
-}
-
 MessageDispatcherServer* MessageDispatcher::messageDispatcherServer()
 {
     return m_messageDispatcherServer;

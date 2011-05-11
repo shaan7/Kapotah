@@ -25,10 +25,4 @@ TransferThread::TransferThread (QHostAddress ip, QObject* parent)
 
 }
 
-
-TransferThread::~TransferThread()
-{
-
-}
-
 #include "transferthread.moc"

@@ -24,6 +24,12 @@
 #include <QThread>
 #include <QHostAddress>
 
+/**
+ * \brief Thread that sends messages to peers
+ *
+ * This thread is responsible for sending messgaes to peers.
+ * A thread is used here so as to not to block the GUI thread
+ */
 class MessageSenderThread : public QThread
 {
     Q_OBJECT

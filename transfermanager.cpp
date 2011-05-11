@@ -35,11 +35,6 @@ TransferManager::TransferManager() : m_seqNo(0)
             SLOT(handleIncomingTransfer(QString,QHostAddress)));
 }
 
-TransferManager::~TransferManager()
-{
-
-}
-
 Transfer* TransferManager::addTransfer (Transfer::TransferType type, QList< TransferFile > files,
                                         QHostAddress peer, bool isSearchResponse)
 {
