@@ -19,6 +19,8 @@
 
 #include "incomingtransferthread.h"
 
+#include "debug.h"
+
 #include <QFile>
 #include <QTcpSocket>
 #include <QDir>
@@ -117,7 +119,7 @@ void IncomingTransferThread::run()
 
                 if (!file.open (QIODevice::WriteOnly)) {
                     setStatus(ErrorCreatingFile);
-                    qDebug() << "Could not open file " << file.fileName();
+                    kaDebug("Could not open file " + file.fileName());
                     break;
                 }
 
@@ -125,7 +127,7 @@ void IncomingTransferThread::run()
                 setStatus(Receiving);
             } else {
                 setStatus(ErrorTransferNotFound);
-                qDebug() << m_id << " not found on server: " << data;
+                kaDebug(m_id + " not found on server: " + data);
                 break;
             }
         }

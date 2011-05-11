@@ -70,7 +70,6 @@ void OutgoingTransfer::processProgress(const QHostAddress& peer, QString id, qui
 {
     if (peer == m_peerAddress && id == m_id) {
         if (bytesDone < 0) {
-            qDebug() << "OUCH " << bytesDone;
             stop();
         } else {
             emit progress(bytesDone, total, speed);
@@ -82,7 +81,6 @@ void OutgoingTransfer::stop()
 {
     m_state = Stopped;
     delete m_thread;
-    qDebug() << "QUIT ";
     emit canceled();
     deleteLater();
 }

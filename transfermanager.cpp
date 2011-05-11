@@ -96,7 +96,6 @@ void TransferManager::onTransferFinished()
 
 void TransferManager::emitNewTransferAdded (Transfer* transfer)
 {
-    qDebug() << "EMITTING " << transfer->itemNames();
     emit newTransferAdded(transfer);
 }
 

@@ -21,6 +21,7 @@
 #define KAPOTAH_GLOBAL_H
 
 #include "announcer.h"
+#include "debug.h"
 
 #include <QStringList>
 
@@ -41,7 +42,7 @@ namespace Kapotah{
         }
 
         if (current >= suffixes.count()) {
-            qDebug() << "WARNING: Too Much Speed";
+            kaDebug("WARNING: Too Much Speed");
             return "X";
         }
 

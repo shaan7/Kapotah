@@ -75,7 +75,9 @@ void PeersModel::addNewPeer (Peer peer)
     m_peerAddresses.append(peer.ipAddress());
     m_peers[peer.ipAddress() ] = peer;
     m_ages[peer.ipAddress()] = 0;
-    qDebug() << "Adding " << peer.name() << peer.ipAddress() << " at " << m_peerAddresses.indexOf(peer.ipAddress());
+    //qDebug() << "Adding " << peer.name() << peer.ipAddress() << " at " << m_peerAddresses.indexOf(peer.ipAddress());
+    kaDebug("Adding " + peer.name() + peer.ipAddress().toString() + " at "
+        + QString::number(m_peerAddresses.indexOf(peer.ipAddress())));
     endInsertRows();
 }
 
@@ -93,7 +95,7 @@ void PeersModel::checkStatus()
     foreach (QHostAddress address, addressesToRemove) {
         int row = m_peerAddresses.indexOf(address);
         beginRemoveRows(QModelIndex(), row, row);
-        qDebug() << "Removing " << address;
+        kaDebug("Removing " + address.toString());
         m_peers.remove(address);
         m_peerAddresses.removeAll(address);
         endRemoveRows();

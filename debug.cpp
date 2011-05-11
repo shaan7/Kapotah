@@ -23,34 +23,9 @@ using namespace Kapotah;
 
 template<> Debug *Kapotah::Singleton<Debug>::m_instance = 0;
 
-DebugStream::DebugStream(const QString& sender) : m_sender(sender)
-{
-}
-
-// void blah(DebugStream &debug)
-// {
-//     debug.m_message;
-// }
-
-// DebugStream &operator<<(DebugStream &debug, const QString &message)
-// {
-//     debug.m_message.append(message);
-//     return debug;
-// }
-
-void DebugStream::done()
-{
-    Debug::instance()->add(m_sender, m_message);
-}
-
 void Debug::add(const QString &sender, const QString& message)
 {
     emit added(sender, message);
-}
-
-DebugStream& Debug::debug(const QString& sender)
-{
-    
 }
 
 #include "debug.moc"
