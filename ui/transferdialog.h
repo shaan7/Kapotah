@@ -35,6 +35,11 @@ namespace Kapotah
 
 using namespace Kapotah;
 
+/** @brief Displays the transfer dialog
+ * 
+ * Displays the transfer dialog which shows all the incoming and outgoing transfer status
+ * in the transfer widgets contained in it.
+*/
 class TransferDialog : public QDialog
 {
         Q_OBJECT

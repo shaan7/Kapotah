@@ -34,6 +34,12 @@ struct NotificationData
     QObject* handler;
 };
 
+
+/** @brief Used to show notifications in notification dialog.
+ * 
+ * This singleton class tells notification dialog about the notifications recieved
+ * and tell them to show the notifications.
+ */
 class Notifications : public Kapotah::Singleton<Notifications>
 {
     Q_OBJECT

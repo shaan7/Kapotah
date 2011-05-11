@@ -39,6 +39,11 @@ class QProgressBar;
 
 class QToolButton;
 
+/** @brief Displays a particular transfer status.
+ * 
+ * It first checks whether the type of transfer is incoming and outgoing.
+ * Then it starts the transfer and shows the progress in the widget.
+*/
 class TransferWidget : public QWidget
 {
         Q_OBJECT

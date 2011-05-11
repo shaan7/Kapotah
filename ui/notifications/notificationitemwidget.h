@@ -29,6 +29,12 @@ namespace Ui {
     class NotificationItemWidget;
 }
 
+
+/** @brief Shows the particular notification message.
+ * 
+ * This class shows the particular notification message like recieved messages,
+ * recieved transfers and indexing completed for a particular directory.
+ */
 class NotificationItemWidget : public QWidget
 {
     Q_OBJECT

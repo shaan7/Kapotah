@@ -59,8 +59,17 @@ class SearchDialog : public QDialog
          * keeps the index to itself.
          */
         void setSharedDir();
+        
+        /** It appends file names for each search response to the search list.
+         */
         void addTransfer(Transfer *transfer);
+
+        /** Starts the transfer
+         */
+
         void startTransfer();
+        /** Notify the user that indexing is complete
+         */
         void notifyIndexingComplete(const QString& path);
 };
 

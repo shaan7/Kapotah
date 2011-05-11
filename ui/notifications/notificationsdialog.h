@@ -27,6 +27,13 @@
 class NotificationItemWidget;
 struct NotificationData;
 
+
+/** @brief Displays the notification dialog.
+ * 
+ * This class displays the notification dialog which contains various notification widgets.
+ * This dialog hides itself either in case of all the notification widgets are clicked
+ * by user or user has clicked on close button.
+ */
 class NotificationsDialog : public QDialog
 {
     Q_OBJECT
