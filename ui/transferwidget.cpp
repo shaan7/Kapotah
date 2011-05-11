@@ -82,11 +82,6 @@ TransferWidget::TransferWidget (Transfer* transfer, QWidget* parent, Qt::WindowF
     connect(m_transfer, SIGNAL(progress(quint64,quint64,quint32)), SLOT(updateProgress(quint64,quint64,quint32)));
 }
 
-TransferWidget::~TransferWidget()
-{
-
-}
-
 void TransferWidget::startTransfer()
 {
     if (m_transferStarted) {

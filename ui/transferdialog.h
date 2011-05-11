@@ -46,7 +46,6 @@ class TransferDialog : public QDialog
 
     public:
         explicit TransferDialog (QWidget* parent = 0, Qt::WindowFlags f = 0);
-        virtual ~TransferDialog();
 
     private slots:
         void addTransfer (Transfer *transfer);

@@ -46,7 +46,6 @@ class ChatDialog : public QDialog
 
     public:
         explicit ChatDialog (const QPersistentModelIndex &ipAddress, QWidget *parent = 0, Qt::WindowFlags f = 0);
-        virtual ~ChatDialog();
 
     private:
         Ui::ChatDialog ui;

@@ -32,11 +32,6 @@ TransferDialog::TransferDialog (QWidget* parent, Qt::WindowFlags f)
              SLOT (addTransfer (Transfer*)));
 }
 
-TransferDialog::~TransferDialog()
-{
-
-}
-
 void TransferDialog::addTransfer (Transfer* transfer)
 {
     if (transfer->isSearchResponse() && transfer->type() == Transfer::Incoming) {

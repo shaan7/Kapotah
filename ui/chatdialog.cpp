@@ -96,11 +96,6 @@ void ChatDialog::sendNewMessage()
     Kapotah::MessageDispatcher::instance()->sendNewMessage (ui.messageEdit->toPlainText(), m_peerIp);
 }
 
-ChatDialog::~ChatDialog()
-{
-
-}
-
 bool ChatDialog::eventFilter (QObject* obj, QEvent* event)
 {
     if (event->type() == QEvent::KeyPress) {

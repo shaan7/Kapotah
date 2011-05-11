@@ -50,7 +50,6 @@ class TransferWidget : public QWidget
 
     public:
         explicit TransferWidget (Kapotah::Transfer* transfer, QWidget* parent = 0, Qt::WindowFlags f = 0);
-        virtual ~TransferWidget();
 
     private:
         QLabel *m_peerLabel;
