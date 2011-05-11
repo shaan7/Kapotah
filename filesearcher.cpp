@@ -97,7 +97,6 @@ void FileSearcher::directoryLoaded (const QString& path)
     processIndex(m_fsModel.index(path));
 
     if (m_pendingDirs.length()==0) {
-        qDebug() << "Done Loading " << m_searchPath;
         m_isProcessing = false;
         doScheduling();
         emit initDone(m_searchPath);

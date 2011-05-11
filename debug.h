@@ -29,31 +29,34 @@
 namespace Kapotah
 {
 
-class DebugStream
-{
-public:
-    DebugStream(const QString &sender);
-    //friend DebugStream &operator<<(DebugStream &debug, const QString &message);
-    friend void blah(DebugStream &debug);
-    void done();
-
-private:
-    QString m_sender;
-    QString m_message;
-};
-
+/**
+ * \brief Kapotah's GUI-assisted debug messaging system
+ *
+ * Debug output printed through can be shown at any place
+ * in the GUI, making debugging easier.
+ */
 class Debug : public Singleton<Debug>
 {
     Q_OBJECT
 
-public:
-    
-
 public slots:
-    DebugStream &debug(const QString& sender);
+    /**
+     * Use to add a debug message
+     * \note Its generally easier to use the kaDebug(message) macro
+     * 
+     * @param   sender  name of the sender function, use the macro to guess
+     * @param   message debug message to display
+     */
     void add(const QString &sender, const QString &message);
 
 signals:
+    /**
+     * Emitted when a debug message is added, GUI debugging tools
+     * should listen to this signal and take proper action
+     *
+     * @param   sender  the sender function's signature
+     * @param   message the debug message to be displayed
+     */
     void added(const QString &sender, const QString &message);
 };
 

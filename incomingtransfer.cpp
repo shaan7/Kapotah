@@ -111,7 +111,6 @@ void IncomingTransfer::stop()
 {
     reportProgress(-m_sizeDone-1, m_totalSize);         //Send negative progress
     delete m_thread;
-    qDebug() << "killed thread";
     emit canceled();
     deleteLater();
 }

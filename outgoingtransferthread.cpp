@@ -22,8 +22,9 @@
 #include "transfermanager.h"
 #include "messagedispatcher.h"
 #include <xml/transferxmlparser.h>
-#include <messagesenderthread.h>
+#include "messagesenderthread.h"
 #include "outgoingtransfer.h"
+#include "debug.h"
 
 #include <QFileInfo>
 #include <QDir>
@@ -136,9 +137,8 @@ void OutgoingTransferThread::addFileToList (QString fullPath, QString relativePa
     m_totalSize += info.size();
     m_totalFileCount++;
     m_files.append(relativeFile);
-    /*qDebug() << "Adding " << fullPath;
-    qDebug() << QString("Total %1 bytes %2 MiB from %3 files and %4 directories")
-                    .arg(m_totalSize).arg(m_totalSize/1024/1024).arg(m_totalFileCount).arg(m_totalDirCount);*/
+    kaDebug("Adding " + fullPath + QString("Total %1 bytes %2 MiB from %3 files and %4 directories")
+                    .arg(m_totalSize).arg(m_totalSize/1024/1024).arg(m_totalFileCount).arg(m_totalDirCount));
 }
 
 void OutgoingTransferThread::setStatus(OutgoingTransferThread::Status status)

@@ -21,6 +21,7 @@
 
 #include "filesearcher.h"
 #include "transfermanager.h"
+#include "debug.h"
 #include <QFileSystemModel>
 
 #include <QDebug>
@@ -47,7 +48,7 @@ void FileSearcherThread::run()
             TransferFile file;
             file.path = path;
             fileList.append(file);
-            qDebug() << "MATCH " << file.path << " SIZE " << file.path;
+            kaDebug("MATCH " + file.path + " SIZE " + file.path);
         }
 
         m_fileSearcher.setMatchingFiles(fileList, m_host);
