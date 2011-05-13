@@ -77,7 +77,7 @@ TransferWidget::TransferWidget (Transfer* transfer, QWidget* parent, Qt::WindowF
     }
     setToolTip(itemsList);
 
-    connect(m_startStop, SIGNAL(clicked(bool)), SLOT(startTransfer()));
+    connect(m_startStop, SIGNAL(clicked()), SLOT(startTransfer()));
     connect(m_transfer, SIGNAL(done()), SLOT(transferFinished()));
     connect(m_transfer, SIGNAL(progress(quint64,quint64,quint32)), SLOT(updateProgress(quint64,quint64,quint32)));
 }
