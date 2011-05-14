@@ -1,0 +1,112 @@
+/**
+* @mainpage Kapotah Documentation
+* 
+* <P ALIGN=CENTER STYLE="margin-bottom: 0cm"><B>CROSS
+* PLATFORM LAN MESSAGING AND FILE TRANSFER </B><B>SYSTEM</B></P>
+* <P ALIGN=CENTER STYLE="margin-bottom: 0cm"><BR>
+* </P>
+* <OL>
+* 	<LI><P ALIGN=LEFT STYLE="margin-bottom: 0cm"><B>Introduction</B></P>
+* 	<P ALIGN=LEFT STYLE="margin-bottom: 0cm">The
+* 	software we are designing during this project will be a cross
+* 	platform messaging and file transfer system. The salient features
+* 	will be-</P>
+* </OL>
+* <OL>
+* 	<OL TYPE=a>
+* 		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0cm"><B>Allow
+* 		discovery of peers on the same LAN, (including other subnets)</B></P>
+* 		<P ALIGN=LEFT STYLE="margin-bottom: 0cm">The
+* 		system will allow the user to view other users (peers) using the
+* 		same system on their machines, so she can communicate with them.</P>
+* 		<P ALIGN=LEFT STYLE="margin-bottom: 0cm"><B>Implementation:</B>
+* 		UDP broadcasts with information about peer</P>
+* 		<P ALIGN=LEFT STYLE="margin-bottom: 0cm"></P>
+* 		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0cm"><B>Allow
+* 		transfer of messages from one peer to other</B></P>
+* 		<P ALIGN=LEFT STYLE="margin-bottom: 0cm">The
+* 		system will give an option to send messages (often called Instant
+* 		Messages) to another peer on the network.</P>
+* 		<P ALIGN=LEFT STYLE="margin-bottom: 0cm"><B>Implementation:</B>
+* 		Messages sent over TCP</P>
+* 		<P ALIGN=LEFT STYLE="margin-bottom: 0cm"></P>
+* 		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0cm"><B>Allow
+* 		transfer of digital data (in form of files and folders)</B></P>
+* 		<P ALIGN=LEFT STYLE="margin-bottom: 0cm">The
+* 		system can be used to transfer all kinds of digital data in form of
+* 		files over the network to another peer.</P>
+* 		<P ALIGN=LEFT STYLE="margin-bottom: 0cm"><B>Implementation:</B>
+* 		Data sent over TCP using a list of files</P>
+* 		<P ALIGN=LEFT STYLE="margin-bottom: 0cm"></P>
+* 		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0cm"><B>Allow
+* 		the user to use any of the major platforms – Linux, Mac and
+* 		Windows</B></P>
+* 		<P ALIGN=LEFT STYLE="margin-bottom: 0cm">The
+* 		system will be designed keeping in mind platform independence, so
+* 		that it can be used on all major platforms available today as a
+* 		typical network is heterogeneous.</P>
+* 		<P ALIGN=LEFT STYLE="margin-bottom: 0cm"><B>Implementation:</B>
+* 		Use Nokia's Qt cross platform application framework API
+* 		<A HREF="http://qt.nokia.com/">http://qt.nokia.com</A>
+* 		, <A HREF="http://vtunokia.net/">http://vtunokia.net/</A>
+* 		
+* 		</P>
+* 		<P ALIGN=LEFT STYLE="margin-bottom: 0cm"></P>
+* 		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0cm"><B>Allow
+* 		users to share a specific folder on the system</B></P>
+* 		<P ALIGN=LEFT STYLE="margin-bottom: 0cm">To
+* 		ease frequent transfers, the user can share a particular directory
+* 		which will then be visible on the network. Others can fetch data
+* 		from this share and use it.</P>
+* 		<P ALIGN=LEFT STYLE="margin-bottom: 0cm"><B>Implementation:</B>
+* 		List of shares along with the broadcast in (a)</P>
+* 		<P ALIGN=LEFT STYLE="margin-bottom: 0cm"></P>
+* 		<LI><P ALIGN=LEFT STYLE="margin-bottom: 0cm"><B>Allow
+* 		users to search for a specific file on the shares on the network</B></P>
+* 		<P ALIGN=LEFT STYLE="margin-bottom: 0cm">Take
+* 		for example a computer science laboratory, there are many packages
+* 		to be installed on each computer. Often administrators are unable
+* 		to keep track of which files are available on which system. This
+* 		can be solved by giving the user the ability to search among the
+* 		shares on the network.</P>
+* 		<P ALIGN=LEFT STYLE="margin-bottom: 0cm"><B>Implementation:</B>
+* 		Use a component which scans all the shares on the network taking a
+* 		specific file name pattern.</P>
+* 	</OL>
+* </OL>
+* <P ALIGN=LEFT STYLE="margin-bottom: 0cm; font-style: normal; font-weight: normal">
+* <BR>
+* </P>
+* <OL START=2>
+* 	<LI><P ALIGN=LEFT STYLE="margin-bottom: 0cm; font-style: normal"><B>Requirements</B></P>
+* </OL>
+* <UL>
+* 	<LI><P ALIGN=LEFT STYLE="margin-bottom: 0cm"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">Nokia's
+* 	Qt </SPAN></SPAN><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">Framework
+* 	</SPAN></SPAN><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">4.7
+* 	or higher</SPAN></SPAN></P>
+* 	<LI><P ALIGN=LEFT STYLE="margin-bottom: 0cm; font-style: normal; font-weight: normal">
+* 	Peers should be connected to a network which
+* 	support broadcasts</P>
+* 	<LI><P ALIGN=LEFT STYLE="margin-bottom: 0cm"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">Network's
+* 	</SPAN></SPAN><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">peer
+* 	to peer </SPAN></SPAN><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">latency
+* 	should not exceed 1000ms</SPAN></SPAN></P>
+* </UL>
+* <P ALIGN=LEFT STYLE="margin-bottom: 0cm"><BR>
+* </P>
+* <OL START=3>
+* 	<LI><P ALIGN=LEFT STYLE="margin-bottom: 0cm"><B>Team
+* 	Members</B></P>
+* </OL>
+* <UL>
+* 	<LI><P ALIGN=LEFT STYLE="margin-bottom: 0cm">Shantanu
+* 	Tushar,	8<SUP>th</SUP>
+* 	Sem CSE	( 1BM07CS068 )</P>
+* 	<LI><P ALIGN=LEFT STYLE="margin-bottom: 0cm">Sudhendu
+* 	Kumar,	8<SUP>th</SUP>
+* 	Sem ISE	( 1BM07IS082 )</P>
+* </UL>
+* 
+*/
+ 
