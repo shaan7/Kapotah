@@ -24,6 +24,7 @@
 #include <QFile>
 #include <QTcpSocket>
 #include <QDir>
+#include <qt4/QtCore/QDateTime>
 
 static const int s_fileTransferPort = 45002;
 
@@ -50,6 +51,7 @@ void IncomingTransferThread::run()
 {
     bool readyToReceive = false;
     quint64 bytesCopied;
+    qint64 startTime;
 
     QFile file;
 
@@ -125,6 +127,7 @@ void IncomingTransferThread::run()
 
                 readyToReceive = true;
                 setStatus(Receiving);
+                startTime = QDateTime::currentMSecsSinceEpoch();
             } else {
                 setStatus(ErrorTransferNotFound);
                 kaDebug(m_id + " not found on server: " + data);
@@ -133,6 +136,7 @@ void IncomingTransferThread::run()
         }
     }
 
+    qDebug() << "Elapsed " << (QDateTime::currentMSecsSinceEpoch() - startTime) << " ms";
     deleteLater();
 }
 
