@@ -45,6 +45,7 @@ void NotificationsDialog::notify (NotificationData data)
     } else {
         ui.horizontalScrollBar->setMaximum(ui.horizontalScrollBar->maximum()+1);
         NotificationItemWidget *widget = new NotificationItemWidget(data, this);
+        connect(widget, SIGNAL(destroyed(QObject*)), SLOT(removeNotificationWidgetFromHash(QObject*)));
         ui.tabWidget->addTab(widget, data.icon, data.title);
         m_notificationItems[data.handler] = widget;
     }
@@ -94,12 +95,11 @@ void NotificationsDialog::removeNotification (int index)
     ui.tabWidget->removeTab(index);
     ui.horizontalScrollBar->setMaximum(ui.horizontalScrollBar->maximum()-1);
     m_notificationItems.remove(m_notificationItems.key(static_cast<NotificationItemWidget*>(page)));
-    delete page;
+    page->deleteLater();
 }
 
 void NotificationsDialog::clearNotificationsAndClose()
 {
-
     while (ui.tabWidget->count()) {
         QWidget *page = ui.tabWidget->widget(0);
         ui.tabWidget->removeTab(0);
@@ -115,6 +115,11 @@ void NotificationsDialog::closeNotificationDialog (int index)
     if(index == -1) {
         hide();
     }
+}
+
+void NotificationsDialog::removeNotificationWidgetFromHash(QObject* obj)
+{
+    removeNotification(ui.tabWidget->indexOf(static_cast<QWidget*>(obj)));
 }
 
 #include "notificationsdialog.moc"

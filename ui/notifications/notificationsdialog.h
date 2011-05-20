@@ -55,6 +55,9 @@ public slots:
     void removeNotification(int index);
     void clearNotificationsAndClose();
     void closeNotificationDialog(int index);
+
+private slots:
+    void removeNotificationWidgetFromHash(QObject *obj);
 };
 
 #endif // NOTIFICATIONSDIALOG_H
