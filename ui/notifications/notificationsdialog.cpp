@@ -92,6 +92,10 @@ void NotificationsDialog::removeNotification (int index)
 {
     qDebug() << "Removing Tab " << index;
     QWidget *page = ui.tabWidget->widget(index);
+    if (!page) {
+        qDebug() << "Invalid page";
+        return;
+    }
     ui.tabWidget->removeTab(index);
     ui.horizontalScrollBar->setMaximum(ui.horizontalScrollBar->maximum()-1);
     m_notificationItems.remove(m_notificationItems.key(static_cast<NotificationItemWidget*>(page)));
@@ -104,7 +108,7 @@ void NotificationsDialog::clearNotificationsAndClose()
         QWidget *page = ui.tabWidget->widget(0);
         ui.tabWidget->removeTab(0);
         ui.horizontalScrollBar->setMaximum(ui.horizontalScrollBar->maximum()-1);
-        delete page;
+        page->deleteLater();
     }
     m_notificationItems.clear();
     hide();
@@ -113,7 +117,7 @@ void NotificationsDialog::clearNotificationsAndClose()
 void NotificationsDialog::closeNotificationDialog (int index)
 {
     if(index == -1) {
-        hide();
+        //clearNotificationsAndClose();
     }
 }
 

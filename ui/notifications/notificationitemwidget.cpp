@@ -37,11 +37,6 @@ NotificationItemWidget::NotificationItemWidget (const NotificationData notificat
     connect(ui.notificationMessage, SIGNAL(clicked()), this, SLOT(closeNotification()));
 }
 
-QToolButton* NotificationItemWidget::activateButton()
-{
-    return ui.notificationMessage;
-}
-
 void NotificationItemWidget::setNotificationData (const NotificationData& data)
 {
     m_data = data;

@@ -41,7 +41,6 @@ class NotificationItemWidget : public QWidget
 public:
     explicit NotificationItemWidget (const NotificationData notificationData, QWidget* parent = 0,
                                      Qt::WindowFlags f = 0);
-    QToolButton *activateButton();
     void setNotificationData(const NotificationData &data);
 
 private:

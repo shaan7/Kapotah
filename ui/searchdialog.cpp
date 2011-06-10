@@ -95,11 +95,17 @@ void SearchDialog::startTransfer()
 void SearchDialog::notifyIndexingComplete(const QString &path)
 {
     NotificationData data;
-    data.handler = 0;
+    data.handler = this;
     data.icon = ui.settingsButton->icon();
     data.title = "Indexing complete";
     data.message = "For " + path;
     Notifications::instance()->notify(data);
+}
+
+void SearchDialog::notificationActivated()
+{
+    show();
+    activateWindow();
 }
 
 #include "searchdialog.moc"

@@ -71,7 +71,15 @@ class SearchDialog : public QDialog
         /** Notify the user that indexing is complete
          */
         void notifyIndexingComplete(const QString& path);
+
+    public slots:
+
+        /**Whenever a new notification for message is shown and the user clicks on the notification,
+         * this function shows the ChatDialog along with the new message just arrived.
+         */
+        void notificationActivated();
 };
 
 #endif // SEARCHDIALOG_H
+
 
