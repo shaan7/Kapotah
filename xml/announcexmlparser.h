@@ -1,6 +1,6 @@
 /*
     This file is part of the Kapotah project.
-    Copyright (C) 2011 Shantanu Tushar <jhahoneyk@gmail.com>
+    Copyright (C) 2011 Shantanu Tushar <shaan7in@gmail.com>
     Copyright (C) 2011 Sudhendu Kumar <sudhendu.kumar.roy@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
